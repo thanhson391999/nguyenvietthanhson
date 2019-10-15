@@ -11,6 +11,15 @@ package com.dhpm.tuan5;
  */
 public class LuuGiaTri {
 
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+    
+    private String ID;
     private String name;
     private String address;
     private String gender;

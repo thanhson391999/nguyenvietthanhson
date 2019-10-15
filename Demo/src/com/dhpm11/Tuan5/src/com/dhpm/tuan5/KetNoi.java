@@ -28,6 +28,7 @@ public class KetNoi {
         String sql = "INSERT INTO Employee VALUES(?,?,?,?,?)";
         try {
              PreparedStatement ps = conn.prepareStatement(sql);
+            
              ps.setString(1, L.getName());
              ps.setString(2, L.getAddress());
              ps.setString(3, L.getGender());
@@ -47,6 +48,7 @@ public class KetNoi {
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 LuuGiaTri L = new LuuGiaTri();  
+                L.setID(rs.getString("id"));
                 L.setName(rs.getString("name"));              
                 L.setAddress(rs.getString("address"));
                 L.setGender(rs.getString("gender"));
@@ -64,6 +66,34 @@ public class KetNoi {
         
         
         return list;
+    }
+    public boolean DeleteData (LuuGiaTri L){
+        String sql = "DELETE FROM Employee WHERE ID=?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, L.getID());
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean UpdateData (LuuGiaTri L){
+        String sql = "UPDATE Employee SET name=?,address=?,gender=?,knowledge=?,subject=? WHERE id=?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(6, L.getID());
+            ps.setString(1, L.getName());
+            ps.setString(2, L.getAddress());
+            ps.setString(3, L.getGender());
+            ps.setString(4, L.getKnowledge());
+            ps.setString(5, L.getSubject());
+            
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
    
     public static void main(String[] args) {

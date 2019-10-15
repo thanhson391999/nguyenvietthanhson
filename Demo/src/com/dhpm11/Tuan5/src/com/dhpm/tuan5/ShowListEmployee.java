@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 /**
  *
@@ -31,7 +33,7 @@ public class ShowListEmployee extends javax.swing.JFrame {
     }
      public void showTable(){
         for(LuuGiaTri L : list){
-            model.addRow(new Object[] {L.getName(),L.getAddress(),
+            model.addRow(new Object[] {L.getID(),L.getName(),L.getAddress(),
                                       L.getGender(),L.getKnowledge(),L.getSubject()});
     
     
@@ -47,6 +49,7 @@ public class ShowListEmployee extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btngroup = new javax.swing.ButtonGroup();
         lblknowledge = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblListEmployee = new javax.swing.JTable();
@@ -63,6 +66,8 @@ public class ShowListEmployee extends javax.swing.JFrame {
         chkjava = new javax.swing.JCheckBox();
         lblgender = new javax.swing.JLabel();
         chkpython = new javax.swing.JCheckBox();
+        btnDelete = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,18 +78,25 @@ public class ShowListEmployee extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Name", "Address", "Gender", "Knowledge", "Subject"
+                "ID", "Name", "Address", "Gender", "Knowledge", "Subject"
             }
         ));
+        tblListEmployee.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblListEmployeeMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblListEmployee);
 
         lblsubject.setText("Subject");
 
+        btngroup.add(rdomale);
         rdomale.setText("Male");
 
+        btngroup.add(rdofemale);
         rdofemale.setText("Female");
 
-        cbosubject.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Management", "Computer Science", "Education", "Bussiness", " " }));
+        cbosubject.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Management", "Computer Science", "Education", "Bussiness", "" }));
         cbosubject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbosubjectActionPerformed(evt);
@@ -115,6 +127,20 @@ public class ShowListEmployee extends javax.swing.JFrame {
 
         chkpython.setText("Python");
 
+        btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
+
+        btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -122,49 +148,49 @@ public class ShowListEmployee extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(83, 83, 83)
-                        .addComponent(btnsave)
-                        .addGap(31, 31, 31)
-                        .addComponent(btnreset))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblname)
+                            .addComponent(lbladdress)
+                            .addComponent(lblgender)
+                            .addComponent(lblknowledge)
+                            .addComponent(lblsubject))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(44, 44, 44)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblname)
-                                    .addComponent(lbladdress)
-                                    .addComponent(lblgender)
-                                    .addComponent(lblknowledge)
-                                    .addComponent(lblsubject))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(61, 61, 61)
-                                        .addComponent(cbosubject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(28, 28, 28)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(chkjava)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(txtname)
-                                                .addComponent(txtaddress, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(rdomale)))))
+                                .addGap(61, 61, 61)
+                                .addComponent(cbosubject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(234, 234, 234)
+                                .addGap(28, 28, 28)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(chkpython)
-                                    .addComponent(rdofemale))))
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(chkjava)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(txtname)
+                                        .addComponent(txtaddress, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(rdomale)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(234, 234, 234)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chkpython)
+                            .addComponent(rdofemale)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(77, 77, 77)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnsave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(24, 24, 24)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnreset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblname)
@@ -188,11 +214,15 @@ public class ShowListEmployee extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cbosubject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblsubject))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnsave)
+                            .addComponent(btnreset))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnsave)
-                    .addComponent(btnreset))
-                .addGap(25, 25, 25))
+                    .addComponent(btnDelete)
+                    .addComponent(btnUpdate))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -204,32 +234,35 @@ public class ShowListEmployee extends javax.swing.JFrame {
         L.setName(txtname.getText());
         L.setAddress(txtaddress.getText());
         String tam = "";
-         String tam2 = "";
+        String tam2= "";
          if (rdomale.isSelected()){
-            tam ="Nam";
+            tam ="Male";
+        }else if (rdofemale.isSelected()){
+            tam ="Female";
         }else{
-            tam ="Nữ";
+            tam = null;
         }
         if (chkjava.isSelected()){
-            tam2 ="Java";
-        }else if (chkpython.isSelected()){
-            tam2 ="Python";
-        }else {
-            tam ="Java + Python";
+            tam2 = tam2+"Java@";
         }
+        if (chkpython.isSelected()){
+            tam2 = tam2+"Python@";}
+     
+        
         
         L.setGender(tam);
         L.setKnowledge(tam2);
+       
         L.setSubject(cbosubject.getSelectedItem().toString());
          if (new KetNoi().addData(L))
         {
-            JOptionPane.showMessageDialog(rootPane, "luu thanh cong !");
+            JOptionPane.showMessageDialog(rootPane, "Save Successfully !");
             list.add(L);
            
         }
         else
         {
-            JOptionPane.showMessageDialog(rootPane, "Luu that bai !");
+            JOptionPane.showMessageDialog(rootPane, "Save Fail !");
         }
          showResult();
     }//GEN-LAST:event_btnsaveActionPerformed
@@ -237,19 +270,132 @@ public class ShowListEmployee extends javax.swing.JFrame {
     private void cbosubjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbosubjectActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbosubjectActionPerformed
-
+   
     private void btnresetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnresetActionPerformed
         // TODO add your handling code here:
-       DefaultTableModel model = (DefaultTableModel) tblListEmployee.getModel();
-       while(model.getRowCount()>0){
-           for (int i=0;i<model.getRowCount();i++){
-               model.removeRow(i);
-           }
-       }
+       txtname.setText(" ");
+       txtaddress.setText(" ");
+       rdomale.setSelected(true);
+       chkjava.setSelected(false);
+       chkpython.setSelected(false);
+       cbosubject.setSelectedItem(null);
     }//GEN-LAST:event_btnresetActionPerformed
+
+    private void tblListEmployeeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblListEmployeeMouseClicked
+        // TODO add your handling code here:
+        loadData();
+    }//GEN-LAST:event_tblListEmployeeMouseClicked
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        LuuGiaTri L = new LuuGiaTri();
+        L.setName(txtname.getText());
+        DefaultTableModel dm = (DefaultTableModel) tblListEmployee.getModel();
+        L.setID(dm.getValueAt(tblListEmployee.getSelectedRow(),0).toString());
+        if (new KetNoi().DeleteData(L)){
+            JOptionPane.showMessageDialog(this, "Delete Successfullly !");
+            
+            dm.removeRow(tblListEmployee.getSelectedRow());
+        }else{
+            JOptionPane.showMessageDialog(this, "Delete Fail !");
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        LuuGiaTri L = new LuuGiaTri();
+        DefaultTableModel dm = (DefaultTableModel) tblListEmployee.getModel();
+        L.setID(dm.getValueAt(tblListEmployee.getSelectedRow(),0).toString());
+        L.setName(txtname.getText());
+        L.setAddress(txtaddress.getText());
+        String tam = "";
+        String tam2= "";
+         if (rdomale.isSelected()){
+            tam ="Male";
+        }else if (rdofemale.isSelected()){
+            tam ="Female";
+        }else{
+            tam = null;
+        }
+        if (chkjava.isSelected()){
+            tam2 = tam2+"Java@";
+        }
+        if (chkpython.isSelected()){
+            tam2 = tam2+"Python@";}
+        L.setGender(tam);
+        L.setKnowledge(tam2);
+       
+        L.setSubject(cbosubject.getSelectedItem().toString());;
+        
+        if (new KetNoi().UpdateData(L)){
+            JOptionPane.showMessageDialog(this, "Update Successfully !");
+             
+             dm.setValueAt(txtname.getText(), tblListEmployee.getSelectedRow(),1);
+             dm.setValueAt(txtaddress.getText(), tblListEmployee.getSelectedRow(),2);
+             dm.setValueAt(L.getGender(), tblListEmployee.getSelectedRow(),3);
+             dm.setValueAt(L.getKnowledge(),tblListEmployee.getSelectedRow(),4);
+             dm.setValueAt(L.getSubject(),tblListEmployee.getSelectedRow(),5);
+            
+        }else{
+            JOptionPane.showMessageDialog(this, "Update Fail !");
+        }
+    }//GEN-LAST:event_btnUpdateActionPerformed
+     public void loadData(){
+         tblListEmployee.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+             @Override
+             public void valueChanged(ListSelectionEvent e) {
+             if(tblListEmployee.getSelectedRow()>= 0){
+                txtname.setText(tblListEmployee.getValueAt(tblListEmployee.getSelectedRow(),1)+"");
+                txtaddress.setText(tblListEmployee.getValueAt(tblListEmployee.getSelectedRow(),2)+"");
+                String gender =tblListEmployee.getValueAt(tblListEmployee.getSelectedRow(),3).toString();
+                if(gender.equals("Male")){
+                    rdomale.setSelected(true);
+                }else{
+                    rdofemale.setSelected(true);
+                }
+                String Knowledge = tblListEmployee.getValueAt(tblListEmployee.getSelectedRow(),4).toString();
+                switch(Knowledge){
+                    case "Java@":
+                        chkjava.setSelected(true);
+                        chkpython.setSelected(false);
+                        break;
+                    case "Java@Python@":
+                        chkjava.setSelected(true);
+                        chkpython.setSelected(true);
+                        break;
+                    case "Python@":
+                        chkjava.setSelected(false);
+                        chkpython.setSelected(true);
+                        break;
+                    case "":
+                        chkjava.setSelected(false);
+                        chkpython.setSelected(false);
+                        break;
+                }
+                
+                String Subject = tblListEmployee.getValueAt(tblListEmployee.getSelectedRow(),5).toString();
+                switch(Subject){
+                    case "Management":
+                        cbosubject.setSelectedIndex(0);
+                        break;
+                    case "Computer Science":
+                        cbosubject.setSelectedIndex(1);
+                        break;
+                    case "Education":
+                        cbosubject.setSelectedIndex(2);
+                        break;
+                    case "Bussiness":
+                        cbosubject.setSelectedIndex(3);
+                        break;
+                }
+             }
+             }
+         }
+         );
+     }
     public void showResult(){
         LuuGiaTri L = list.get(list.size() -1);
-         model.addRow(new Object[] {L.getName(),L.getAddress(),
+         model.addRow(new Object[] {L.getID(),L.getName(),L.getAddress(),
                                       L.getGender(),L.getKnowledge(),L.getSubject()});
         
     }
@@ -289,6 +435,9 @@ public class ShowListEmployee extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnUpdate;
+    private javax.swing.ButtonGroup btngroup;
     private javax.swing.JButton btnreset;
     private javax.swing.JButton btnsave;
     private javax.swing.JComboBox<String> cbosubject;
