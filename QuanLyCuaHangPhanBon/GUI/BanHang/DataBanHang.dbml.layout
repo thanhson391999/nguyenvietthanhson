@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="DataHangHoa">
+  <DataContextMoniker Name="/DataHangHoaDataContext" />
+  <nestedChildShapes>
+    <classShape Id="a6e2a566-34a8-4b75-b106-eef2e48f0616" absoluteBounds="2.5, 1.125, 2, 2.3478011067708335">
+      <DataClassMoniker Name="/DataHangHoaDataContext/HangHoa" />
+      <nestedChildShapes>
+        <elementListCompartment Id="bb3bbc46-b01f-42b5-b7a6-8276505fba78" absoluteBounds="2.515, 1.585, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="42303e35-79c9-4009-abaa-8c6d1f097e46" absoluteBounds="4.875, 0.75, 2, 2.1554996744791666">
+      <DataClassMoniker Name="/DataHangHoaDataContext/KhachHang" />
+      <nestedChildShapes>
+        <elementListCompartment Id="15b4fd07-bf39-4483-961d-c6628ee8455d" absoluteBounds="4.89, 1.21, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="410772e1-473f-4260-994f-fdeb839ef73e" absoluteBounds="8.125, 1.625, 2, 1.9631982421875">
+      <DataClassMoniker Name="/DataHangHoaDataContext/CTHDBanHang" />
+      <nestedChildShapes>
+        <elementListCompartment Id="086f429c-9899-455c-b564-1a898c8f24b9" absoluteBounds="8.14, 2.085, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="7874deee-3c46-49d3-a26b-ac857c9a620a" absoluteBounds="6, 3.375, 2, 2.5401025390625">
+      <DataClassMoniker Name="/DataHangHoaDataContext/HoaDonBanHang" />
+      <nestedChildShapes>
+        <elementListCompartment Id="8f902354-2398-400c-aac3-5ccc32f70aec" absoluteBounds="6.015, 3.835, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(6.4375 : 2.90549967447917); (6.4375 : 3.375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/DataHangHoaDataContext/KhachHang/KhachHang_HoaDonBanHang" />
+      <nodes>
+        <classShapeMoniker Id="42303e35-79c9-4009-abaa-8c6d1f097e46" />
+        <classShapeMoniker Id="7874deee-3c46-49d3-a26b-ac857c9a620a" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>
