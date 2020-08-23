@@ -29,3 +29,5 @@ D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\obj\Debug\TeduShop.Data.cspr
 D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\obj\Debug\TeduShop.Data.csproj.CopyComplete
 D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\obj\Debug\TeduShop.Data.dll
 D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\obj\Debug\TeduShop.Data.pdb
+D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\obj\Debug\TeduShop.Data.Migrations.InitialDB.resources
+D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\obj\Debug\TeduShop.Data.csproj.GenerateResource.cache
