@@ -1,0 +1,100 @@
+﻿@model AppUserModelMVC
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Vehicle_Appraisal_WebMVC</title>
+    <!-- Font Awesome -->
+    <link href="~/ThemeLTE/plugins/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/ThemeLTE/dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="content">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>EDIT USERS</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/home/index">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/user/GetAll">Make</a></li>
+                            <li class="breadcrumb-item active">Edit</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <form asp-action="UpdateUsersAction" asp-controller="user" method="post">
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="card card-primary">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <input type="hidden" asp-for="appUserVM.Id" class="form-control">
+                                    <label for="inputUN">UserName</label>
+                                    <input type="text" asp-for="appUserVM.UserName" id="inputUN" class="form-control" required>
+                                    <label for="inputEmail">Email</label>
+                                    <input type="text" asp-for="appUserVM.Email" id="inputEmail" class="form-control" required>
+                                    <label for="inputFN">FullName</label>
+                                    <input type="text" asp-for="appUserVM.FullName" id="inputFN" class="form-control" required>
+                                    <label for="inputRole">Role</label>
+                                    <div>
+                                        <select id="inputRole" asp-for="appUserRoleVM.Name" class="Chosen" style="font-size:13.1rem" required>
+                                            <option></option>
+                                            @foreach (var item in Model.ListAppUserRoleVM)
+                                            {
+                                                <option>@Html.DisplayFor(Model => item.Name)</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <a href="/make/GetAll" class="btn btn-secondary">Cancel</a>
+                        <input type="submit" value="Change Make" class="btn btn-success">
+                    </div>
+                </div>
+            </form>
+
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- jQuery -->
+    <script src="~/ThemeLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/ThemeLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/ThemeLTE/dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/ThemeLTE/dist/js/demo.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
+    <script type="text/javascript">
+        $(".Chosen").chosen();
+    </script>
+</body>
+</html>
+

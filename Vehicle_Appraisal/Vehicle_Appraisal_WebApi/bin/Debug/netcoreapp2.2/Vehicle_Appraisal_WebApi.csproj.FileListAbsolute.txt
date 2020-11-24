@@ -1,0 +1,14 @@
+E:\Github\ss-training-son\Vehicle_Appraisal\Vehicle_Appraisal_WebApi\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebApi.AssemblyInfoInputs.cache
+E:\Github\ss-training-son\Vehicle_Appraisal\Vehicle_Appraisal_WebApi\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebApi.AssemblyInfo.cs
+E:\Github\ss-training-son\Vehicle_Appraisal\Vehicle_Appraisal_WebApi\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebApi.csproj.CoreCompileInputs.cache
+E:\Github\ss-training-son\Vehicle_Appraisal\Vehicle_Appraisal_WebApi\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebApi.RazorAssemblyInfo.cache
+E:\Github\ss-training-son\Vehicle_Appraisal\Vehicle_Appraisal_WebApi\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebApi.RazorAssemblyInfo.cs
+E:\Github\ss-training-son\Vehicle_Appraisal\Vehicle_Appraisal_WebApi\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebApi.TagHelpers.input.cache
+E:\Github\ss-training-son\Vehicle_Appraisal\Vehicle_Appraisal_WebApi\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebApi.dll
+E:\Github\ss-training-son\Vehicle_Appraisal\Vehicle_Appraisal_WebApi\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebApi.pdb
+E:\Github\ss-training-son\Vehicle_Appraisal\Vehicle_Appraisal_WebApi\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebApi.TagHelpers.output.cache
+E:\Github\ss-training-son\Vehicle_Appraisal\Vehicle_Appraisal_WebApi\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebApi.RazorCoreGenerate.cache
+E:\Github\ss-training-son\Vehicle_Appraisal\Vehicle_Appraisal_WebApi\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebApi.csprojAssemblyReference.cache
+E:\Github\ss-training-son\Vehicle_Appraisal\Vehicle_Appraisal_WebApi\obj\Debug\netcoreapp2.2\Razor\Pages\ResetPassword.cshtml.g.cs
+E:\Github\ss-training-son\Vehicle_Appraisal\Vehicle_Appraisal_WebApi\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebApi.RazorTargetAssemblyInfo.cache
+E:\Github\ss-training-son\Vehicle_Appraisal\Vehicle_Appraisal_WebApi\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebApi.RazorTargetAssemblyInfo.cs

@@ -1,0 +1,119 @@
+﻿@using Vehicle_Appraisal_WebApi.ViewModels
+@model AppUserVM
+@{
+    Layout = Layout;
+}
+
+
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Profile</h1>
+                </div>
+
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+
+                    <!-- Profile Image -->
+                    <div class="card card-primary card-outline">
+                        <div class="card-body box-profile">
+                            <div class="text-center">
+                                <img class="profile-user-img img-fluid img-circle"  
+                                     src="~/ThemeLTE/dist/img/user2-160x160.jpg"
+                                     alt="User profile picture">
+                            </div>
+
+                            <h3 class="profile-username text-center">@User.Claims.Where(x => x.Type.Equals("FullName")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()</h3>
+
+                            <p class="text-muted text-center">Software Engineer</p>
+
+                            <ul class="list-group list-group-unbordered mb-3">
+                                <li class="list-group-item">
+                                    <b>UserName</b><br>@User.Claims.Where(x => x.Type.Equals("UserName")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()
+                                </li>
+                                <li class="list-group-item">
+                                    <b>Email</b><br>@User.Claims.Where(x => x.Type.Equals("Email")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()
+                                </li>
+                                <li class="list-group-item">
+                                    <b>ConfirmEmail</b><br>@User.Claims.Where(x => x.Type.Equals("ConfirmEmail")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()
+                                </li>
+                                <li class="list-group-item">
+                                    <b>UserRole</b><br>@User.Claims.Where(x => x.Type.Equals("Role")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                    <!-- About Me Box -->
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+                <div class="col-md-9">
+                    <div class="card">
+                        <div class="card-header p-2">
+                            <ul class="nav nav-pills">
+                                <li class="nav-item"><a class="nav-link active" href="#" data-toggle="tab">Change Info</a></li>
+                            </ul>
+                        </div><!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="active tab-pane" id="activity">
+                                    <!-- Post -->
+                                    <form asp-action="Update" asp-controller="user" method="post">
+                                        <div class="post">
+                                            <div class="user-block">
+                                                <ul class="list-group list-group-unbordered mb-3">
+                                                    <li class="list-group-item">
+                                                        <b>UserName</b>
+                                                        <input type="hidden" asp-for="Id" value="@User.Claims.Where(x => x.Type.Equals("Id")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                                                        <input type="hidden" asp-for="AppUserRolesId" value="@User.Claims.Where(x => x.Type.Equals("AppUserRoleId")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                                                        <input type="text" asp-for="UserName" value="@User.Claims.Where(x => x.Type.Equals("UserName")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <b>Email</b><br>
+                                                        <input type="text" asp-for="Email" value="@User.Claims.Where(x => x.Type.Equals("Email")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <b>Full Name</b><br>
+                                                        <input type="text" asp-for="FullName" value="@User.Claims.Where(x => x.Type.Equals("FullName")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                                                    </li>
+                                                </ul>
+                                                <button type="submit" class="btn btn-primary btn-block">Save Change</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- /.post -->
+                                </div>
+                                <!-- /.tab-pane -->
+                                <!-- /.tab-content -->
+                            </div><!-- /.card-body -->
+                        </div>
+                        <!-- /.nav-tabs-custom -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+    </section>
+    <!-- /.content -->
+</div>
+
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+</aside>
+

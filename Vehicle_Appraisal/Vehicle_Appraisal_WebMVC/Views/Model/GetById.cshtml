@@ -1,0 +1,96 @@
+﻿@using Vehicle_Appraisal_WebApi.ViewModels
+@model ModelVM
+@{
+    Layout = Layout;
+}
+
+<div class="content-wrapper">
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1><a href="/model/getall">MODEL</a></h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/home/index">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/model/GetAll">Model</a></li>
+                            <li class="breadcrumb-item active">GetById</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+        <div class="card-header">
+            <a id="btn-create" class="btn btn-primary" href="/model/insert">
+                <i class="far fa-plus-square"></i>
+                Create
+            </a>
+        </div>
+        <form asp-action="GetById" method="get">
+            <div class="input-group mb-3" style="width:300px; margin-left:1.2rem">
+                <input type="text" name="Id" class="form-control" placeholder="Input ID" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                <div class="input-group-append">
+                    <button type="submit" class="input-group-text btn-primary" id="basic-addon2">Get Model</button>
+                </div>
+            </div>
+        </form>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Year</th>
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model != null)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Model.Id
+                                                </td>
+                                                <td>
+                                                    @Model.Name
+                                                </td>
+                                                <td>
+                                                    @Model.Year
+                                                </td>
+                                                <td>
+                                                    @Html.ActionLink("Edit", "update", "model", new { Model.Id, Model.Name, Model.Year }) |
+                                                    @Html.ActionLink("Details", "Details", new { }) |
+                                                    <a href="@Url.Action("DeleteAction","model",new { Model.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete model with ID = @Model.Id')">
+                                                        Delete
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+</div>

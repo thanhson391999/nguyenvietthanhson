@@ -10,37 +10,36 @@ namespace TeduShop.Model.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
+        public int ID { set; get; }
 
         [Required]
         [MaxLength(256)]
-        public string CustomerName { get; set; }
+        public string CustomerName { set; get; }
 
         [Required]
         [MaxLength(256)]
-        public string CustomerAddress { get; set; }
+        public string CustomerAddress { set; get; }
 
         [Required]
         [MaxLength(256)]
-        public string CustomerEmail { get; set; }
+        public string CustomerEmail { set; get; }
 
         [Required]
         [MaxLength(50)]
-        public string CustomerMobile { get; set; }
+        public string CustomerMobile { set; get; }
 
         [Required]
         [MaxLength(256)]
-        public string CustomerMessage { get; set; }
-
-        public DateTime? CreatedDate { get; set; }
-        public string createdBy { get; set; }
+        public string CustomerMessage { set; get; }
 
         [MaxLength(256)]
-        public string PaymentMethod { get; set; }
+        public string PaymentMethod { set; get; }
 
-        public string PaymentStatus { get; set; }
-        public bool Status { get; set; }
+        public DateTime? CreatedDate { set; get; }
+        public string CreatedBy { set; get; }
+        public string PaymentStatus { set; get; }
+        public bool Status { set; get; }
 
-        public virtual IEnumerable<OrderDetail> OrderDetails { get; set; }
+        public virtual IEnumerable<OrderDetail> OrderDetails { set; get; }
     }
 }

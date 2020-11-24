@@ -30,3 +30,7 @@ D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Service\obj\Debug\TeduShop.Servic
 D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Service\obj\Debug\TeduShop.Service.csproj.CopyComplete
 D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Service\obj\Debug\TeduShop.Service.dll
 D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Service\obj\Debug\TeduShop.Service.pdb
+D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Service\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Service\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Service\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Service\bin\Debug\Microsoft.AspNet.Identity.Core.xml

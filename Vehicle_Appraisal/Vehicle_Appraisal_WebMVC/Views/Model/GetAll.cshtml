@@ -1,0 +1,123 @@
+﻿@using Vehicle_Appraisal_WebApi.ViewModels
+@model List<ModelVM>
+@{
+    Layout = Layout;
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1><a href="/model/getall">MODEL</a></h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/home/index">Home</a></li>
+                        <li class="breadcrumb-item active">Model</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <div class="card-header">
+        <a id="btn-create" class="btn btn-primary" href="/model/insert">
+            <i class="far fa-plus-square"></i>
+            Create
+        </a>
+    </div>
+    <form asp-action="GetById" method="get">
+        <div class="input-group mb-3" style="width:300px; margin-left:1.2rem">
+            <input type="text" name="Id" class="form-control" placeholder="Input ID" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+            <div class="input-group-append">
+                <button type="submit" class="input-group-text btn-primary" id="basic-addon2">Get Model</button>
+            </div>
+            <div class="form-group" style="width:300px">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                    <input type="text" id="Search" placeholder="Name" class="form-control" />
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Year</th>
+                                        <th>Options</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null)
+                                    {
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr class="Search">
+                                                <td>
+                                                    @Html.DisplayFor(Model => item.Id)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(Model => item.Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(Model => item.Year)
+                                                </td>
+                                                <td>
+                                                    @Html.ActionLink("Edit", "update", "model", new { item.Id, item.Name, item.Year }) |
+                                                    @Html.ActionLink("Details", "Details", new { }) |
+                                                    <a href="@Url.Action("DeleteAction","model",new { item.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete model with ID = @item.Id')">
+                                                        Delete
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+<script src="~/ThemeLTE/plugins/jquery/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        function Contains(text_one, text_two) {
+            if (text_one.indexOf(text_two) != -1)
+                return true;
+        }
+        $("#Search").keyup(function () {
+            var searchText = $("#Search").val().toLowerCase();
+            $(".Search").each(function () {
+                if (!Contains($(this).text().toLowerCase(), searchText)) {
+                    $(this).hide();
+                }
+                else {
+                    $(this).show();
+                }
+            });
+        });
+    });
+</script>
+
+

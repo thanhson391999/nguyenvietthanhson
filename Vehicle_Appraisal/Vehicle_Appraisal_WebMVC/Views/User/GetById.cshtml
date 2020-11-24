@@ -1,0 +1,110 @@
+﻿@model AppUserModelMVC
+@{
+    Layout = Layout;
+}
+
+<div class="content-wrapper">
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1><a href="/user/getall">USERS</a></h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/home/index">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/user/GetAll">Users</a></li>
+                            <li class="breadcrumb-item active">GetById</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+        <form asp-action="GetById" method="get">
+            <div class="input-group mb-3" style="width:300px; margin-left:1.2rem">
+                <input type="text" name="Id" class="form-control" placeholder="Input ID" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                <div class="input-group-append">
+                    <button type="submit" class="input-group-text btn-primary" id="basic-addon2">Get Users</button>
+                </div>
+            </div>
+        </form>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>UserName</th>
+                                            <th>Email</th>
+                                            <th>ConfirmEmail</th>
+                                            <th>FullName</th>
+                                            <th>Role</th>
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model != null && Model.appUserVM.AppUserRolesId == 2) 
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(Model => Model.appUserVM.Id)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(Model => Model.appUserVM.UserName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(Model => Model.appUserVM.Email)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(Model => Model.appUserVM.ConfirmEmail)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(Model => Model.appUserVM.FullName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(Model => Model.appUserRoleVM.Name)
+                                                </td>
+                                                <td>
+                                                    @Html.ActionLink("Edit", "updateUsers", "user", new
+                                               {
+                                                   Model.appUserVM.Id,
+                                                   Model.appUserVM.UserName,
+                                                   Model.appUserVM.Email,
+                                                   Model.appUserVM.FullName,
+                                                   Model.appUserRoleVM.Name
+                                               }) |
+                                                    @Html.ActionLink("Details", "Details", new { }) |
+                                                    <a href="@Url.Action("DeleteAction", "user", new { Model.appUserVM.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete User with ID = @Model.appUserVM.Id')">
+                                                        Delete
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                         }
+                                    </tbody>
+
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+</div>

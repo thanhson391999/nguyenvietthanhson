@@ -1,0 +1,209 @@
+﻿@model List<VehicleModelMVC>
+@{
+    Layout = Layout;
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1><a href="/vehicle/getall">VEHICLE</a></h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/home/index">Home</a></li>
+                        <li class="breadcrumb-item active">Vehicle</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    @if (User.Claims.Where(x => x.Type.Equals("Role")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim() == "Admin")
+    {
+        <div class="card-header">
+            <a id="btn-create" class="btn btn-primary" href="/vehicle/insert">
+                <i class="far fa-plus-square"></i>
+                Create
+            </a>
+        </div>
+        <form asp-action="GetById" method="get">
+            <div class="input-group mb-3" style="width:300px; margin-left:1.2rem">
+                <input type="text" name="Id" class="form-control" placeholder="Input ID" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                <div class="input-group-append">
+                    <button type="submit" class="input-group-text btn-primary" id="basic-addon2">Get Vehicle</button>
+                </div>
+            </div>
+        </form>
+        <form asp-action="SearchAction" method="get">
+            <div class="row">
+                <div class="col" style="margin-left:1.2rem">
+                    <input type="text" name="customer" class="form-control" placeholder="customer" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                </div>
+                <div class="col">
+                    <input type="text" name="make" class="form-control" placeholder="make" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                </div>
+                <div class="col">
+                    <input type="text" name="model" class="form-control" placeholder="model" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col" style="margin-left:1.2rem">
+                    <input type="text" name="odometer" class="form-control" placeholder="odometer" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                </div>
+                <div class="col">
+                    <input type="text" name="VIN" class="form-control" placeholder="VIN" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                </div>
+                <div class="col">
+                    <input type="text" name="engine" class="form-control" placeholder="engine" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4" style="margin-left:1.2rem">
+                    <input type="text" name="appuser" class="form-control" placeholder="Users" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                </div>
+            </div>
+            <div class="input-group mb-3" style="width:300px; margin-left:1.2rem">
+                <button type="submit" class="input-group-text btn-primary" id="basic-addon2">Get Vehicle</button>
+            </div>
+        </form>
+    }
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Customer</th>
+                                        <th>Make</th>
+                                        <th>Model</th>
+                                        <th>VIN</th>
+                                        <th>Odometer</th>
+                                        <th>Engine</th>
+                                        <th>Users</th>
+                                        <th>Options</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null)
+                                    {
+                                        if (User.Claims.Where(c => c.Type.Equals("Role")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim() != "Admin")
+                                        {
+                                            foreach (var item in Model.Where(x => x.appUserVM.FullName.Equals(User.Claims.Where(c => c.Type.Equals("FullName")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim())))
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.vehicleVM.Id)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.customerVM.FirstName) @Html.DisplayFor(Model => item.customerVM.LastName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.makeVM.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.modelVM.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.vehicleVM.VIN)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.vehicleVM.Odometer)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.vehicleVM.Engine)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.appUserVM.FullName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.ActionLink("Edit", "update", "vehicle", new
+                                                   {
+                                                       item.vehicleVM.Id,
+                                                       item.vehicleVM.Odometer,
+                                                       item.vehicleVM.VIN,
+                                                       item.vehicleVM.Engine,
+                                                       item.makeVM.Name,
+                                                       item.appUserVM.FullName,
+                                                       item.vehicleVM.ModelId,
+                                                       item.customerVM.FirstName,
+                                                       item.customerVM.LastName,
+                                                   }) |
+                                                        @Html.ActionLink("Condition", "GetAllConditionById", new { item.vehicleVM.Id }) |
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            foreach (var item in Model)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.vehicleVM.Id)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.customerVM.FirstName) @Html.DisplayFor(Model => item.customerVM.LastName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.makeVM.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.modelVM.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.vehicleVM.VIN)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.vehicleVM.Odometer)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.vehicleVM.Engine)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.appUserVM.FullName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.ActionLink("Edit", "update", "vehicle", new
+                                                   {
+                                                       item.vehicleVM.Id,
+                                                       item.vehicleVM.Odometer,
+                                                       item.vehicleVM.VIN,
+                                                       item.vehicleVM.Engine,
+                                                       item.makeVM.Name,
+                                                       item.appUserVM.FullName,
+                                                       item.vehicleVM.ModelId,
+                                                       item.customerVM.FirstName,
+                                                       item.customerVM.LastName,
+                                                   }) |
+                                                        @Html.ActionLink("Condition", "GetAllConditionById", new { item.vehicleVM.Id }) |
+                                                        @Html.ActionLink("AppraisalValue", "GetAllAppraisalValueById", new { item.vehicleVM.Id }) |
+                                                        <a href="@Url.Action("DeleteAction", "vehicle", new { item.vehicleVM.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete vehicle with ID = @item.vehicleVM.Id')">
+                                                            Delete
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>

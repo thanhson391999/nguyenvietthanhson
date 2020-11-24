@@ -1,0 +1,139 @@
+﻿@using Vehicle_Appraisal_WebApi.ViewModels
+@model List<ConditionVM>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Vehicle_Appraisal_WebMVC</title>
+    <!-- Font Awesome -->
+    <link href="~/ThemeLTE/plugins/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/ThemeLTE/dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body>
+    <div class="wrapper">
+
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1><a href="#">CONDITIONS</a></h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="/home/index">Home</a></li>
+                                <li class="breadcrumb-item active"><a href="/vehicle/getall">Vehicle</a></li>
+                                <li class="breadcrumb-item active">@Model.Select(x => x.VehicleId).FirstOrDefault()</li>
+                                <li class="breadcrumb-item active">Condition</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div><!-- /.container-fluid -->
+            </section>
+            <div class="card-header">
+                <a id="btn-create" class="btn btn-primary" href="/condition/insert/@Model.Select(x => x.VehicleId).FirstOrDefault()">
+                    <i class="far fa-plus-square"></i>
+                    Create
+                </a>
+            </div>
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Type</th>
+                                                <th>Image</th>
+                                                <th>Note</th>
+                                                <th>Options</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model != null)
+                                            {
+                                                foreach (var item in Model)
+                                                {
+                                                    if (item.Id != 0)
+                                                    {
+                                                        <tr class="Search">
+                                                            <td>
+                                                                @Html.DisplayFor(Model => item.Id)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(Model => item.Type)
+                                                            </td>
+                                                            <td>
+                                                                <img src="/Images/@Html.DisplayFor(Model => item.ImagePath)" />
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(Model => item.Note)
+                                                            </td>
+                                                            <td>
+                                                                @Html.ActionLink("Edit", "update", "condition", new { item.Id, item.Type, item.ImagePath, item.Note, item.VehicleId }) |
+                                                                <a href="@Url.Action("DeleteAction","condition",new { item.Id , item.VehicleId })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete condition with ID = @item.Id')">
+                                                                    Delete
+                                                                </a>                     
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <div class="float-right d-none d-sm-block">
+                <b>Version</b> 3.0.5
+            </div>
+            <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong> All rights
+            reserved.
+        </footer>
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- jQuery -->
+    <script src="~/ThemeLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/ThemeLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/ThemeLTE/dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/ThemeLTE/dist/js/demo.js"></script>
+</body>
+</html>

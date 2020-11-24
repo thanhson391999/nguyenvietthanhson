@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E34D6ED6-6749-4097-93FF-D719C05CB54A}</ProjectGuid>
+    <ProjectGuid>{DE3F37B8-633A-4E83-A795-9DC7F148CD2A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TeduShop.Common</RootNamespace>

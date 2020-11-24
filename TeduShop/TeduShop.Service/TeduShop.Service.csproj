@@ -41,13 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ErrorService.cs" />
+    <Compile Include="PostCategoryService.cs" />
+    <Compile Include="PostService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TeduShop.Common\TeduShop.Common.csproj">
-      <Project>{e34d6ed6-6749-4097-93ff-d719c05cb54a}</Project>
-      <Name>TeduShop.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TeduShop.Data\TeduShop.Data.csproj">
       <Project>{1eaef588-b93c-4b53-888c-860baafd6ca7}</Project>
       <Name>TeduShop.Data</Name>

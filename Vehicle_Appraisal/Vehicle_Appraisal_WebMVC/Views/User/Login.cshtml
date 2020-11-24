@@ -1,0 +1,82 @@
+﻿@using Vehicle_Appraisal_WebApi.ViewModels
+@model LoginVM
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Vehicle_Appraisal_WebMVC</title>
+    <!-- Font Awesome -->
+    <link href="~/ThemeLTE/plugins/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/ThemeLTE/dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition login-page">
+    <div class="wrapper" style="display:flex; align-items:center">
+
+        <div class="login-box">
+            <div class="login-logo">
+                <a href="~/ThemeLTE/index2.html"><b>Vehicle Appraisal</b></a>
+            </div>
+            <!-- /.login-logo -->
+            <div class="card">
+                <div class="card-body login-card-body">
+                    <p class="login-box-msg">Sign in to start your session</p>
+
+                    <form asp-action="LoginAction" asp-controller="User" method="post">
+                        <div class="input-group mb-3">
+                            <input type="text" asp-for="UserName" class="form-control" placeholder="UserName or Email" required>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-user"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="password" asp-for="Password" class="form-control" placeholder="Password" required>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-lock"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- /.col -->
+                            <div class="col-4">
+                                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                    </form>
+                    <!-- /.social-auth-links -->
+
+                    <p class="mb-1">
+                        <a href="/User/ForgetPassword">I forgot my password</a>
+                    </p>
+                </div>
+                <!-- /.login-card-body -->
+            </div>
+        </div>
+        <!-- /.login-box -->
+    </div>
+    <!-- jQuery -->
+    <script src="~/ThemeLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/ThemeLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/ThemeLTE/dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/ThemeLTE/dist/js/demo.js"></script>
+
+
+</body>
+</html>

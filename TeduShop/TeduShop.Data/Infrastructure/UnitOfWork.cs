@@ -12,7 +12,7 @@
 
         public TeduShopDbContext DbContext
         {
-            get { return dbContext ?? (dbContext = new TeduShopDbContext()); }
+            get { return dbContext ?? (dbContext = dbFactory.Init()); }
         }
 
         public void commit()

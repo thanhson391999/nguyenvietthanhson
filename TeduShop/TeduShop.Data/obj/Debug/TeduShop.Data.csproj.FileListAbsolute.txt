@@ -31,3 +31,10 @@ D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\obj\Debug\TeduShop.Data.dll
 D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\obj\Debug\TeduShop.Data.pdb
 D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\obj\Debug\TeduShop.Data.Migrations.InitialDB.resources
 D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\obj\Debug\TeduShop.Data.csproj.GenerateResource.cache
+D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\obj\Debug\TeduShop.Data.Migrations.AddErrorTable.resources
+D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\obj\Debug\TeduShop.Data.Migrations.IntergrateAspnetIdentity.resources
+D:\Github\nguyenvietthanhson\TeduShop\TeduShop.Data\obj\Debug\TeduShop.Data.Migrations.changekey.resources
