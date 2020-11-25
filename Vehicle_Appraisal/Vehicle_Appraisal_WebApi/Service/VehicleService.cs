@@ -30,7 +30,8 @@ namespace Vehicle_Appraisal_WebApi.Service
             _mapper = mapper;
             dbset = dbContextDTO.Set<VehicleDTO>();
         }
-        public async Task<bool> Delete(int id)
+
+        public async Task<bool> BuyVehicle(int id)
         {
             var vehicleVM = await GetById(id);
             if (vehicleVM == null)
@@ -39,16 +40,41 @@ namespace Vehicle_Appraisal_WebApi.Service
                 return false;
             }
             var vehicleDTO = _mapper.Map<VehicleDTO>(vehicleVM);
-            vehicleDTO.isDelete = true;
+            vehicleDTO.isBought = true;
             vehicleDTO.UpdateAt = DateTime.Now;
             dbset.Update(vehicleDTO);
             await _dbContextDTO.SaveChangesAsync();
             return true;
         }
 
+        public async Task<bool> Delete(int id)
+        {
+            var vehicleDTO = await dbset.Where(x => x.Id.Equals(id)).AsNoTracking().SingleOrDefaultAsync();
+            if (vehicleDTO == null)
+            {
+                _dbContextDTO.Dispose();
+                return false;
+            }
+            var dbsetCondition = _dbContextDTO.Set<ConditionDTO>();
+            var dbsetVehicleAppraisal = _dbContextDTO.Set<VehicleAppraisalDTO>();
+            var condition = await dbsetCondition.Where(x => x.VehicleId.Equals(id)).AsNoTracking().ToListAsync();
+            var vehicleAppraisal = await dbsetVehicleAppraisal.Where(x => x.VehicleId.Equals(id)).AsNoTracking().ToListAsync();
+            foreach (var item in condition)
+            {
+                dbsetCondition.Remove(item);
+            }
+            foreach (var item in vehicleAppraisal)
+            {
+                dbsetVehicleAppraisal.Remove(item);
+            }
+            dbset.Remove(vehicleDTO);
+            await _dbContextDTO.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<List<VehicleVM>> GetAll()
         {
-            var listvehicleDTO = await dbset.Where(x => x.isDelete == false).ToListAsync();
+            var listvehicleDTO = await dbset.Where(x => x.isBought == false).ToListAsync();
             var listvehicleVM = _mapper.Map<List<VehicleVM>>(listvehicleDTO);
             return listvehicleVM;
         }
@@ -67,9 +93,16 @@ namespace Vehicle_Appraisal_WebApi.Service
             return conditionVM;
         }
 
+        public async Task<List<VehicleVM>> GetAllNotBuy()
+        {
+            var listvehicleDTO = await dbset.ToListAsync();
+            var listvehicleVM = _mapper.Map<List<VehicleVM>>(listvehicleDTO);
+            return listvehicleVM;
+        }
+
         public async Task<VehicleVM> GetById(int id)
         {
-            var vehicleDTO = await dbset.Where(x => x.Id.Equals(id)).Where(x => x.isDelete == false).AsNoTracking().SingleOrDefaultAsync();
+            var vehicleDTO = await dbset.Where(x => x.Id.Equals(id)).Where(x => x.isBought == false).AsNoTracking().SingleOrDefaultAsync();
             var vehicleVM = _mapper.Map<VehicleVM>(vehicleDTO);
             return vehicleVM;
         }
@@ -103,46 +136,53 @@ namespace Vehicle_Appraisal_WebApi.Service
         {
             if (customerId != null)
             {
-                var vehicleDTO = await dbset.Where(x => x.CustomerId.ToString().Equals(customerId)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
+                var vehicleDTO = await dbset.Where(x => x.CustomerId.ToString().Equals(customerId)).Where(x => x.isBought == false).AsNoTracking().ToListAsync();
                 var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
                 return vehicleVM;
             }
             if (makeId != null)
             {
-                var vehicleDTO = await dbset.Where(x => x.MakeId.ToString().Equals(makeId)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
+                var vehicleDTO = await dbset.Where(x => x.MakeId.ToString().Equals(makeId)).Where(x => x.isBought == false).AsNoTracking().ToListAsync();
                 var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
                 return vehicleVM;
             }
             if (modelId != null)
             {
-                var vehicleDTO = await dbset.Where(x => x.ModelId.ToString().Equals(modelId)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
+                var vehicleDTO = await dbset.Where(x => x.ModelId.ToString().Equals(modelId)).Where(x => x.isBought == false).AsNoTracking().ToListAsync();
                 var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
                 return vehicleVM;
             }
             if (odometer != null)
             {
-                var vehicleDTO = await dbset.Where(x => x.Odometer.Contains(odometer)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
+                var vehicleDTO = await dbset.Where(x => x.Odometer.Contains(odometer)).Where(x => x.isBought == false).AsNoTracking().ToListAsync();
                 var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
                 return vehicleVM;
             }
             if (VIN != null)
             {
-                var vehicleDTO = await dbset.Where(x => x.VIN.Contains(VIN)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
+                var vehicleDTO = await dbset.Where(x => x.VIN.Contains(VIN)).Where(x => x.isBought == false).AsNoTracking().ToListAsync();
                 var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
                 return vehicleVM;
             }
             if (engine != null)
             {
-                var vehicleDTO = await dbset.Where(x => x.Engine.Contains(engine)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
+                var vehicleDTO = await dbset.Where(x => x.Engine.Contains(engine)).Where(x => x.isBought == false).AsNoTracking().ToListAsync();
                 var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
                 return vehicleVM;
             }
             else
             {
-                var vehicleDTO = await dbset.Where(x => x.AppUserId.ToString().Equals(appuserId)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
+                var vehicleDTO = await dbset.Where(x => x.AppUserId.ToString().Equals(appuserId)).Where(x => x.isBought == false).AsNoTracking().ToListAsync();
                 var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
                 return vehicleVM;
             }
+        }
+
+        public async Task<List<VehicleVM>> SearchDate(DateTime fromDate, DateTime toDate)
+        {
+            var vehicleDTO = await dbset.Where(x => x.UpdateAt.Date >= fromDate.Date).Where(x=>x.UpdateAt.Date <= toDate).ToListAsync();
+            var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
+            return vehicleVM;
         }
 
         public async Task<bool> Update(VehicleVM vehicleVM, int id)

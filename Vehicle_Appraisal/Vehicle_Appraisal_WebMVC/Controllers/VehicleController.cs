@@ -212,5 +212,48 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             else
                 return BadRequest("Error 400");
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> BuyVehicle(int id)
+        {
+            if (ModelState.IsValid)
+            {
+                string token = HttpContext.Session.GetString("token_access");
+                var result = await _vehicleServiceApiClient.BuyVehicle(id, token);
+                if (result)
+                {
+                    return Redirect("/vehicle/GetAll");
+                }
+                return BadRequest("Can't buy this vehicle !");
+            }
+            return BadRequest("Error 400");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllVehicleBought()
+        {
+            if (ModelState.IsValid)
+            {
+                string token = HttpContext.Session.GetString("token_access");
+                var list = await _vehicleServiceApiClient.GetAllVehicleBought(token);
+                return View(list);
+            }
+            return BadRequest("Error 400");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> SearchDate(DateTime fromDate, DateTime toDate)
+        {
+            if (ModelState.IsValid)
+            {
+                string token = HttpContext.Session.GetString("token_access");
+                var list = await _vehicleServiceApiClient.SearchDate(fromDate, toDate, token);
+                return View("GetAllVehicleBought", list);
+            }
+            return BadRequest("Error 400");
+        }
     }
 }

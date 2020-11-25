@@ -123,19 +123,7 @@
                                                         @Html.DisplayFor(Model => item.appUserVM.FullName)
                                                     </td>
                                                     <td>
-                                                        @Html.ActionLink("Edit", "update", "vehicle", new
-                                                   {
-                                                       item.vehicleVM.Id,
-                                                       item.vehicleVM.Odometer,
-                                                       item.vehicleVM.VIN,
-                                                       item.vehicleVM.Engine,
-                                                       item.makeVM.Name,
-                                                       item.appUserVM.FullName,
-                                                       item.vehicleVM.ModelId,
-                                                       item.customerVM.FirstName,
-                                                       item.customerVM.LastName,
-                                                   }) |
-                                                        @Html.ActionLink("Condition", "GetAllConditionById", new { item.vehicleVM.Id }) |
+                                                        @Html.ActionLink("Condition", "GetAllConditionById", new { item.vehicleVM.Id })
                                                     </td>
                                                 </tr>
                                             }

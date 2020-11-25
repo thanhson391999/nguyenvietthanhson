@@ -41,7 +41,10 @@
                     <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="UserDropdown">
                         <a class="dropdown-item" href="/user/info">@User.Claims.Where(x => x.Type.Equals("UserName")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()</a>
-                        <a class="dropdown-item" href="/User/Register">Register a new membership</a>
+                        @if (User.Claims.Where(x => x.Type.Equals("Role")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim() == "Admin")
+                        {
+                            <a class="dropdown-item" href="/User/Register">Register a new membership</a>
+                        }
                         <a class="dropdown-item" href="/user/changepassword">Change Password</a>
                         <div class="dropdown-divider"></div>
                         <form method="get" asp-controller="User" asp-action="Logout">
@@ -55,7 +58,7 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4" style="height:auto;min-height:110vh">
             <!-- Brand Logo -->
-            <a href="#" class="brand-link">
+            <a href="~/ThemeLTE/index.html" class="brand-link">
                 <img src="~/ThemeLTE/dist/img/AdminLTELogo.png"
                      alt="Vehicle Appraisal Logo"
                      class="brand-image img-circle elevation-3"

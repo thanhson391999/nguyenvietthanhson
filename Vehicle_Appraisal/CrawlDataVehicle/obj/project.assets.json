@@ -7145,11 +7145,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Github\\ss-training-son\\Vehicle_Appraisal\\CrawlDataVehicle\\CrawlDataVehicle.csproj",
+      "projectUniqueName": "E:\\Github\\nguyenvietthanhson\\Vehicle_Appraisal\\CrawlDataVehicle\\CrawlDataVehicle.csproj",
       "projectName": "CrawlDataVehicle",
-      "projectPath": "E:\\Github\\ss-training-son\\Vehicle_Appraisal\\CrawlDataVehicle\\CrawlDataVehicle.csproj",
+      "projectPath": "E:\\Github\\nguyenvietthanhson\\Vehicle_Appraisal\\CrawlDataVehicle\\CrawlDataVehicle.csproj",
       "packagesPath": "C:\\Users\\Thanh Son\\.nuget\\packages\\",
-      "outputPath": "E:\\Github\\ss-training-son\\Vehicle_Appraisal\\CrawlDataVehicle\\obj\\",
+      "outputPath": "E:\\Github\\nguyenvietthanhson\\Vehicle_Appraisal\\CrawlDataVehicle\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Thanh Son\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -7166,8 +7166,8 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "projectReferences": {
-            "E:\\Github\\ss-training-son\\Vehicle_Appraisal\\Vehicle_Appraisal_WebApi\\Vehicle_Appraisal_WebApi.csproj": {
-              "projectPath": "E:\\Github\\ss-training-son\\Vehicle_Appraisal\\Vehicle_Appraisal_WebApi\\Vehicle_Appraisal_WebApi.csproj"
+            "E:\\Github\\nguyenvietthanhson\\Vehicle_Appraisal\\Vehicle_Appraisal_WebApi\\Vehicle_Appraisal_WebApi.csproj": {
+              "projectPath": "E:\\Github\\nguyenvietthanhson\\Vehicle_Appraisal\\Vehicle_Appraisal_WebApi\\Vehicle_Appraisal_WebApi.csproj"
             }
           }
         }

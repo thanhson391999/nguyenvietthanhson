@@ -1,7 +1,115 @@
-﻿@{
+﻿@model DashBoardModelMVC
+@{
     ViewData["Title"] = "Home Page";
 }
 <div class="content-wrapper">
-    <h1>WellCome to Home</h1>
-    This is website to appraisal old vehicle ! 
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Dashboard</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard v1</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Small boxes (Stat box) -->
+            <div class="row">
+                @if (Model != null)
+                {
+                    if (User.Claims.Where(x => x.Type.Equals("Role")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim() == "Admin")
+                    {
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3>@Model.ListCustomerVM.Count()</h3>
+
+                                    <p>Customer</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="ion ion-person-add"></i>
+                                </div>
+                                <a href="/customer/getall" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3>@Model.ListVehicleVM.Where(x => x.isBought.Equals(false)).Count()</h3>
+
+                                    <p>Vehicle Current</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-car-alt"></i>
+                                </div>
+                                <a href="/vehicle/getall" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3>@Model.ListAppuserVM.Where(x => x.AppUserRolesId == 2).Count()</h3>
+
+                                    <p>Users</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="ion ion-person-add"></i>
+                                </div>
+                                <a href="/user/getall" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    <h3>@Model.ListVehicleVM.Where(x => x.isBought.Equals(true)).Count()</h3>
+
+                                    <p>Vehicle Bought</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-car-alt"></i>
+                                </div>
+                                <a href="/vehicle/getallvehiclebought" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                    }
+                    if (User.Claims.Where(x => x.Type.Equals("Role")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim() == "Users")
+                    {
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3>@Model.ListVehicleVM.Where(x => x.isBought.Equals(false)).Where(x => x.AppUserId.ToString().Equals(User.Claims.Where(c => c.Type.Equals("Id")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim())).Count()</h3>
+                                    <p>Vehicle</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-car-alt"></i>
+                                </div>
+                                <a href="/vehicle/getall" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                    }
+                }
+            </div>
+        </div>
+    </section>
 </div>

@@ -12,25 +12,31 @@ namespace Vehicle_Appraisal_WebApi.Application
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
     public class UserRolesController : ControllerBase
     {
         private readonly IUserRoleService _UserRoleService;
+
         public UserRolesController(IUserRoleService UserRoleService)
         {
             _UserRoleService = UserRoleService;
         }
+
         [HttpGet]
+        [Authorize(Roles = "Admin,Users")]
         public async Task<List<AppUserRoleVM>> GetAll()
         {
             return await _UserRoleService.GetAll();
         }
+
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<AppUserRoleVM> GetById(int id)
         {
             return await _UserRoleService.GetById(id);
         }
+
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _UserRoleService.Delete(id);
@@ -48,7 +54,9 @@ namespace Vehicle_Appraisal_WebApi.Application
                 is_erro = true,
             });
         }
+
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Insert(AppUserRoleVM UserRoleVM)
         {
             var result = await _UserRoleService.Insert(UserRoleVM);
@@ -66,7 +74,9 @@ namespace Vehicle_Appraisal_WebApi.Application
                 is_erro = true,
             });
         }
+
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(AppUserRoleVM UserRoleVM, int id)
         {
             var result = await _UserRoleService.Update(UserRoleVM, id);

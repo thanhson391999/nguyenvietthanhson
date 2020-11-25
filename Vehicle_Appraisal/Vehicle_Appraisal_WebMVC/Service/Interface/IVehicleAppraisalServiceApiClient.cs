@@ -8,6 +8,7 @@ namespace Vehicle_Appraisal_WebMVC.Service.Interface
 {
     public interface IVehicleAppraisalServiceApiClient
     {
+        Task<List<VehicleAppraisalVM>> GetAll(string token);
         Task<bool> Insert(VehicleAppraisalVM vehicleAppraisalVM, string token);
         Task<bool> Delete(int id, string token);
         Task<bool> Update(VehicleAppraisalVM vehicleAppraisalVM, string token);

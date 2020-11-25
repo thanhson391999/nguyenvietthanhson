@@ -23,7 +23,7 @@ namespace Vehicle_Appraisal_WebApi.Application
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Users")]
         public async Task<List<AppUserVM>> GetAll()
         {
             return await _userService.GetAll();

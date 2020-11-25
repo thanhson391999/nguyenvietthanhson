@@ -12,7 +12,6 @@ namespace Vehicle_Appraisal_WebApi.Application
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerService _CustomerService;
@@ -23,24 +22,28 @@ namespace Vehicle_Appraisal_WebApi.Application
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Users")]
         public async Task<List<CustomerVM>> GetAll()
         {
             return await _CustomerService.GetAll();
         }
 
         [HttpGet("not-delete")]
+        [Authorize(Roles = "Admin, Users")]
         public async Task<List<CustomerVM>> GetAllNotDelete()
         {
             return await _CustomerService.GetAllNotDelete();
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<CustomerVM> GetById(int id)
         {
             return await _CustomerService.GetById(id);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _CustomerService.Delete(id);
@@ -60,6 +63,7 @@ namespace Vehicle_Appraisal_WebApi.Application
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Insert(CustomerVM CustomerVM)
         {
             var result = await _CustomerService.Insert(CustomerVM);
@@ -79,6 +83,7 @@ namespace Vehicle_Appraisal_WebApi.Application
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(CustomerVM CustomerVM, int id)
         {
             var result = await _CustomerService.Update(CustomerVM, id);
@@ -98,6 +103,7 @@ namespace Vehicle_Appraisal_WebApi.Application
         }
 
         [HttpGet("info")]
+        [Authorize(Roles = "Admin")]
         public async Task<List<CustomerVM>> Search(string name, string phone, string email, string address, string city, string country)
         {
             return await _CustomerService.Search(name, phone, email, address, city, country);

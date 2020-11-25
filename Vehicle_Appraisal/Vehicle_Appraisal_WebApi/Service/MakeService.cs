@@ -30,7 +30,7 @@ namespace Vehicle_Appraisal_WebApi.DALs
                 _dbContextDTO.Dispose();
                 return false;
             }
-            var checkConstraint = _dbContextDTO.Set<VehicleDTO>().Where(x => x.MakeId.Equals(id)).Where(x=>x.isDelete==false).AsNoTracking().FirstOrDefault();
+            var checkConstraint = _dbContextDTO.Set<VehicleDTO>().Where(x => x.MakeId.Equals(id)).Where(x => x.isBought == false).AsNoTracking().FirstOrDefault();
             if (checkConstraint != null)
             {
                 _dbContextDTO.Dispose();

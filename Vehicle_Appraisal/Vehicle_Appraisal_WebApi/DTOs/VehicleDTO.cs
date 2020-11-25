@@ -20,7 +20,7 @@ namespace Vehicle_Appraisal_WebApi.DTOs
         public string Odometer { get; set; }
         public string VIN { get; set; }
         public string Engine { get; set; }
-        public bool isDelete { get; set; } = false;
+        public bool isBought { get; set; } = false;
         
         public virtual AppUserDTO AppUserDTO { get; set; }
         public virtual CustomerDTO CustomerDTO { get; set; }

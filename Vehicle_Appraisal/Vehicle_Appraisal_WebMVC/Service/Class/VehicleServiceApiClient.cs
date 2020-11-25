@@ -19,10 +19,12 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
         private readonly IMakeServiceApiClient _makeServiceApiClient;
         private readonly IModelServiceApiClient _modelServiceApiClient;
         private readonly IUserServiceApiClient _userServiceApiClient;
+        private readonly IVehicleAppraisalServiceApiClient _vehicleAppraisalServiceApiClient;
         private readonly IConfiguration _configuration;
 
-        public VehicleServiceApiClient(IHttpClientFactory httpClientFactory, IUserServiceApiClient userServiceApiClient, IConfiguration configuration,ICustomerServiceApiClient customerServiceApiClient, IMakeServiceApiClient makeServiceApiClient, IModelServiceApiClient modelServiceApiClient)
+        public VehicleServiceApiClient(IHttpClientFactory httpClientFactory, IVehicleAppraisalServiceApiClient vehicleAppraisalServiceApiClient, IUserServiceApiClient userServiceApiClient, IConfiguration configuration,ICustomerServiceApiClient customerServiceApiClient, IMakeServiceApiClient makeServiceApiClient, IModelServiceApiClient modelServiceApiClient)
         {
+            _vehicleAppraisalServiceApiClient = vehicleAppraisalServiceApiClient;
             _userServiceApiClient = userServiceApiClient;
             _configuration = configuration;
             _customerServiceApiClient = customerServiceApiClient;
@@ -46,10 +48,10 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
 
         private async Task<List<VehicleModelMVC>> ReturnListVehicle(List<VehicleVM> vehicleVMs, string token)
         {
-            var customer = await _customerServiceApiClient.GetAllNotDelete(token);
-            var make = await _makeServiceApiClient.GetAllNotDelete(token);
-            var model = await _modelServiceApiClient.GetAllNotDelete(token);
-            var appuser = await _userServiceApiClient.GetAll(token);
+            var customer = await _customerServiceApiClient.GetAll(token);
+            var make = await _makeServiceApiClient.GetAll(token);
+            var model = await _modelServiceApiClient.GetAll(token);
+            var appUser = await _userServiceApiClient.GetAll(token);
             var list = (from _vehicle in vehicleVMs
                         join _customer in customer on _vehicle.CustomerId equals _customer.Id into customers
                         from _customers in customers.DefaultIfEmpty()
@@ -57,15 +59,15 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
                         from _makes in makes.DefaultIfEmpty()
                         join _model in model on _vehicle.ModelId equals _model.Id into models
                         from _models in models.DefaultIfEmpty()
-                        join _appuser in appuser on _vehicle.AppUserId equals _appuser.appUserVM.Id into appusers
-                        from _appusers in appusers.DefaultIfEmpty()
+                        join _appUser in appUser on _vehicle.AppUserId equals _appUser.appUserVM.Id into appUsers
+                        from _appUsers in appUsers.DefaultIfEmpty()
                         select new VehicleModelMVC
                         {
                             makeVM = _makes,
                             customerVM = _customers,
                             vehicleVM = _vehicle,
                             modelVM = _models,
-                            appUserVM = _appusers.appUserVM
+                            appUserVM = _appUsers.appUserVM
                         }).ToList();
             return list;
         }
@@ -306,6 +308,82 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
                 return true;
             }
             return false;
+        }
+
+        public async Task<bool> BuyVehicle(int id, string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            client.BaseAddress = new Uri(_configuration["UrlApi"]);
+            var result = await client.GetAsync("/api/vehicles/buyvehicle/" + id);
+            if (result.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private async Task<List<VehicleModelMVC>> ReturnListVehicleBought(List<VehicleVM> vehicleVMs, string token)
+        {
+            var customer = await _customerServiceApiClient.GetAll(token);
+            var make = await _makeServiceApiClient.GetAll(token);
+            var model = await _modelServiceApiClient.GetAll(token);
+            var appUser = await _userServiceApiClient.GetAll(token);
+            var vehicleAppraisal = await _vehicleAppraisalServiceApiClient.GetAll(token);
+            var list = (from _vehicle in vehicleVMs
+                        join _customer in customer on _vehicle.CustomerId equals _customer.Id into customers
+                        from _customers in customers.DefaultIfEmpty()
+                        join _make in make on _vehicle.MakeId equals _make.Id into makes
+                        from _makes in makes.DefaultIfEmpty()
+                        join _model in model on _vehicle.ModelId equals _model.Id into models
+                        from _models in models.DefaultIfEmpty()
+                        join _appUser in appUser on _vehicle.AppUserId equals _appUser.appUserVM.Id into appUsers
+                        from _appUsers in appUsers.DefaultIfEmpty()
+                        join _vehicleAppraisal in vehicleAppraisal on _vehicle.Id equals _vehicleAppraisal.VehicleId into vehicleAppraisals
+                        from _vehicleAppraisals in vehicleAppraisals.DefaultIfEmpty()
+                        select new VehicleModelMVC
+                        {
+                            makeVM = _makes,
+                            customerVM = _customers,
+                            vehicleVM = _vehicle,
+                            modelVM = _models,
+                            appUserVM = _appUsers.appUserVM,
+                            vehicleAppraisalVM = _vehicleAppraisals
+                        }).ToList();
+            return list;
+        }
+
+        public async Task<List<VehicleModelMVC>> GetAllVehicleBought(string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            client.BaseAddress = new Uri(_configuration["UrlApi"]);
+            var response = await client.GetAsync("/api/vehicles/not-buy");
+            var body = await response.Content.ReadAsStringAsync();
+            var vehicle = JsonConvert.DeserializeObject<List<VehicleVM>>(body);
+            return await ReturnListVehicleBought(vehicle, token);
+        }
+
+        public async Task<List<VehicleVM>> GetAllNotBuy(string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            client.BaseAddress = new Uri(_configuration["UrlApi"]);
+            var response = await client.GetAsync("/api/vehicles/not-buy");
+            var body = await response.Content.ReadAsStringAsync();
+            var list = JsonConvert.DeserializeObject<List<VehicleVM>>(body);
+            return list;
+        }
+
+        public async Task<List<VehicleModelMVC>> SearchDate(DateTime fromDate, DateTime toDate, string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            client.BaseAddress = new Uri(_configuration["UrlApi"]);
+            var response = await client.GetAsync("/api/vehicles/date?fromDate="+fromDate.Date+"&toDate="+toDate.Date);
+            var body = await response.Content.ReadAsStringAsync();
+            var vehicle = JsonConvert.DeserializeObject<List<VehicleVM>>(body);
+            return await ReturnListVehicleBought(vehicle, token);
         }
     }
 }

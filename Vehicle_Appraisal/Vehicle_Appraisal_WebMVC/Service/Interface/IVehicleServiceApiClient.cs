@@ -9,8 +9,12 @@ namespace Vehicle_Appraisal_WebMVC.Service.Interface
 {
     public interface IVehicleServiceApiClient : IServiceApiClient<VehicleModelMVC>
     {
+        Task<bool> BuyVehicle(int id, string token);
         Task<List<ConditionVM>> GetAllConditionById(int id, string token);
         Task<List<VehicleAppraisalVM>> GetAllAppraisalValueById(int id, string token);
         Task<List<VehicleModelMVC>> Search(string token, string customerId, string makeId, string modelId, string odometer, string VIN, string engine, string appuserId);
+        Task<List<VehicleModelMVC>> GetAllVehicleBought(string token);
+        Task<List<VehicleVM>> GetAllNotBuy(string token);
+        Task<List<VehicleModelMVC>> SearchDate(DateTime fromDate, DateTime toDate, string token);
     }
 }

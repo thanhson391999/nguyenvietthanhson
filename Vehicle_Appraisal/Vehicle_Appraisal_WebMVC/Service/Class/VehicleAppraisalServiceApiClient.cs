@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,17 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
                 return true;
             }
             return false;
+        }
+
+        public async Task<List<VehicleAppraisalVM>> GetAll(string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            client.BaseAddress = new Uri(_configuration["UrlApi"]);
+            var result = await client.GetAsync("/api/vehicleappraisals");
+            var body = await result.Content.ReadAsStringAsync();
+            var vehicleAppraisal = JsonConvert.DeserializeObject<List<VehicleAppraisalVM>>(body);
+            return vehicleAppraisal;
         }
 
         public async Task<bool> Insert(VehicleAppraisalVM vehicleAppraisalVM, string token)

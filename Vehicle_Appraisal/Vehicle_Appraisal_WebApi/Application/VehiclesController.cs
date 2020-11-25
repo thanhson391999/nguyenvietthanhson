@@ -28,6 +28,13 @@ namespace Vehicle_Appraisal_WebApi.Application
             return await _VehicleService.GetAll();
         }
 
+        [HttpGet("not-buy")]
+        [Authorize(Roles = "Admin,Users")]
+        public async Task<List<VehicleVM>> GetAllNotBuy()
+        {
+            return await _VehicleService.GetAllNotBuy();
+        }
+
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<VehicleVM> GetById(int id)
@@ -114,6 +121,33 @@ namespace Vehicle_Appraisal_WebApi.Application
         public async Task<List<VehicleAppraisalVM>> GetAllappraisalValueById(int id)
         {
             return await _VehicleService.GetAllAppraisalValueById(id);
+        }
+
+        [HttpGet("buyvehicle/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> BuyVehicle(int id)
+        {
+            var result = await _VehicleService.BuyVehicle(id);
+            if (result)
+            {
+                return Ok(new
+                {
+                    message = "Buy Success !",
+                    is_erro = false,
+                });
+            }
+            return BadRequest(new
+            {
+                message = "Buy Fail !",
+                is_erro = true,
+            });
+        }
+
+        [HttpGet("date")]
+        [Authorize(Roles ="Admin")]
+        public async Task<List<VehicleVM>> SearchDate(DateTime fromDate, DateTime toDate)
+        {
+            return await _VehicleService.SearchDate(fromDate, toDate);
         }
     }
 }

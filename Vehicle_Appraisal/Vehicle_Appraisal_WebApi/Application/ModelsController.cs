@@ -12,7 +12,6 @@ namespace Vehicle_Appraisal_WebApi.Application
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
     public class ModelsController : ControllerBase
     {
         private readonly IModelService _ModelService;
@@ -23,24 +22,28 @@ namespace Vehicle_Appraisal_WebApi.Application
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Users")]
         public async Task<List<ModelVM>> GetAll()
         {
             return await _ModelService.GetAll();
         }
 
         [HttpGet("not-delete")]
+        [Authorize(Roles = "Admin,Users")]
         public async Task<List<ModelVM>> GetAllNotDelete()
         {
             return await _ModelService.GetAllNotDelete();
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ModelVM> GetById(int id)
         {
             return await _ModelService.GetById(id);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _ModelService.Delete(id);
@@ -60,6 +63,7 @@ namespace Vehicle_Appraisal_WebApi.Application
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Insert(ModelVM ModelVM)
         {
             var result = await _ModelService.Insert(ModelVM);
@@ -79,6 +83,7 @@ namespace Vehicle_Appraisal_WebApi.Application
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(ModelVM ModelVM, int id)
         {
             var result = await _ModelService.Update(ModelVM, id);

@@ -12912,11 +12912,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Github\\ss-training-son\\Vehicle_Appraisal\\Vehicle_Appraisal_WebApi\\Vehicle_Appraisal_WebApi.csproj",
+      "projectUniqueName": "E:\\Github\\nguyenvietthanhson\\Vehicle_Appraisal\\Vehicle_Appraisal_WebApi\\Vehicle_Appraisal_WebApi.csproj",
       "projectName": "Vehicle_Appraisal_WebApi",
-      "projectPath": "E:\\Github\\ss-training-son\\Vehicle_Appraisal\\Vehicle_Appraisal_WebApi\\Vehicle_Appraisal_WebApi.csproj",
+      "projectPath": "E:\\Github\\nguyenvietthanhson\\Vehicle_Appraisal\\Vehicle_Appraisal_WebApi\\Vehicle_Appraisal_WebApi.csproj",
       "packagesPath": "C:\\Users\\Thanh Son\\.nuget\\packages\\",
-      "outputPath": "E:\\Github\\ss-training-son\\Vehicle_Appraisal\\Vehicle_Appraisal_WebApi\\obj\\",
+      "outputPath": "E:\\Github\\nguyenvietthanhson\\Vehicle_Appraisal\\Vehicle_Appraisal_WebApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Thanh Son\\AppData\\Roaming\\NuGet\\NuGet.Config",

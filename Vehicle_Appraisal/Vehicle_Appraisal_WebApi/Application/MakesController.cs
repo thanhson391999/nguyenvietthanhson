@@ -18,30 +18,38 @@ namespace Vehicle_Appraisal_WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
     public class MakesController : ControllerBase
     {
         private readonly IMakeService _makeService;
+
         public MakesController(IMakeService makeService)
         {
             _makeService = makeService;
         }
+
         [HttpGet]
+        [Authorize(Roles = "Admin,Users")]
         public async Task<List<MakeVM>> GetAll()
         {
             return await _makeService.GetAll();
         }
+
         [HttpGet("not-delete")]
+        [Authorize(Roles = "Admin,Users")]
         public async Task<List<MakeVM>> GetAllNotDelete()
         {
             return await _makeService.GetAllNotDelete();
         }
+
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<MakeVM> GetById(int id)
         {
             return await _makeService.GetById(id);
         }
+
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _makeService.Delete(id);
@@ -59,7 +67,9 @@ namespace Vehicle_Appraisal_WebApi.Controllers
                 is_erro = true,
             });
         }
+
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Insert(MakeVM makeVM)
         {
             var result = await _makeService.Insert(makeVM);
@@ -77,7 +87,9 @@ namespace Vehicle_Appraisal_WebApi.Controllers
                 is_erro = true,
             });
         }
+
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(MakeVM makeVM, int id)
         {
             var result = await _makeService.Update(makeVM, id);

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "nPLSmH2cL8vGtse2Zq2ItXjQ3nsQoBzzN5xPpCsawHzReKgxNb3Tf561lJOx392xaX78k6IzEc3xUyyb6Hc6BA==",
+  "dgSpecHash": "kiMthH/u/1lR8bRx+Z+0E7blDZJlEEGBS2dJ0uCbPkeJ8cQ20DBG7D3UsOLDOBggakYuZbabHd/+P0pIcx/OUg==",
   "success": true,
-  "projectFilePath": "E:\\Github\\ss-training-son\\Vehicle_Appraisal\\Vehicle_Appraisal_WebApi\\Vehicle_Appraisal_WebApi.csproj",
+  "projectFilePath": "E:\\Github\\nguyenvietthanhson\\Vehicle_Appraisal\\Vehicle_Appraisal_WebApi\\Vehicle_Appraisal_WebApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Thanh Son\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\3.2.0\\automapper.extensions.microsoft.dependencyinjection.3.2.0.nupkg.sha512",

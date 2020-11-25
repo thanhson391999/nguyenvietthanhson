@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3VBVYq0p2ZS6y8yE4qdp3i/NHn3gMg2Fzpz+tO1JHDhfgfM5Ky5dSBL87D3b4V+CQqjVMZ3ssMrgQsw9id5lcw==",
+  "dgSpecHash": "gChLlfoQ/Vj9zjzKHpux0Dc2zhve33nj8U9JqxecA6bwcmdXca8jPzwXghb/1OjWappxxeN6gZCoZKl7dewZHg==",
   "success": true,
-  "projectFilePath": "E:\\Github\\ss-training-son\\Vehicle_Appraisal\\CrawlDataVehicle\\CrawlDataVehicle.csproj",
+  "projectFilePath": "E:\\Github\\nguyenvietthanhson\\Vehicle_Appraisal\\CrawlDataVehicle\\CrawlDataVehicle.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Thanh Son\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\3.2.0\\automapper.extensions.microsoft.dependencyinjection.3.2.0.nupkg.sha512",

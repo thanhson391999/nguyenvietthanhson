@@ -19,5 +19,6 @@ namespace Vehicle_Appraisal_WebApi.DTOs
         public DbSet<AppUserDTO> appUserDTOs { get; set; }
         public DbSet<AppUserRoleDTO> appUserRolesDTOs { get; set; }
         public DbSet<VehicleCrawlDataDTO> vehicleCrawlDataDTOs { get; set; }
+
     }
 }

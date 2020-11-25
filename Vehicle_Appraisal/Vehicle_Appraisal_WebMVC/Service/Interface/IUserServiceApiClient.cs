@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.ViewModels;
 using Vehicle_Appraisal_WebMVC.Models;
 
-namespace Vehicle_Appraisal_WebMVC.Service
+namespace Vehicle_Appraisal_WebMVC.Service.Interface
 {
     public interface IUserServiceApiClient
     {

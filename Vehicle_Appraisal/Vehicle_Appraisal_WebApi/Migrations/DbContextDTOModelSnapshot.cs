@@ -231,7 +231,7 @@ namespace Vehicle_Appraisal_WebApi.Migrations
 
                     b.Property<string>("VIN");
 
-                    b.Property<bool>("isDelete");
+                    b.Property<bool>("isBought");
 
                     b.HasKey("Id");
 

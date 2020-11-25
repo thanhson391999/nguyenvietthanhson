@@ -54,8 +54,14 @@ namespace Vehicle_Appraisal_WebApi.Service
 
         public async Task<bool> Insert(VehicleAppraisalVM VehicleAppraisalVM)
         {
-            var vehicleId = await _vehicleService.GetById(VehicleAppraisalVM.VehicleId);
-            if (vehicleId == null || VehicleAppraisalVM.AppraisalValue == null)
+            var vehicle = await _vehicleService.GetById(VehicleAppraisalVM.VehicleId);
+            if (vehicle == null || VehicleAppraisalVM.AppraisalValue == null)
+            {
+                _dbContextDTO.Dispose();
+                return false;
+            }
+            var checkValue = await dbset.Where(x=>x.VehicleId.Equals(vehicle.Id)).AsNoTracking().SingleOrDefaultAsync();
+            if (checkValue != null)
             {
                 _dbContextDTO.Dispose();
                 return false;

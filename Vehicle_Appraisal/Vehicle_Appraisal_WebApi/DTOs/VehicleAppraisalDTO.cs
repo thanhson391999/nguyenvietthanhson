@@ -15,5 +15,7 @@ namespace Vehicle_Appraisal_WebApi.DTOs
         public int VehicleId { get; set; }
 
         public virtual VehicleDTO VehicleDTO { get; set; }
+
+
     }
 }

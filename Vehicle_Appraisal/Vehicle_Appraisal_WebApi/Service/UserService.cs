@@ -45,7 +45,7 @@ namespace Vehicle_Appraisal_WebApi.Service
                 _dbContextDTO.Dispose();
                 return false;
             }
-            var VehicleDTO = await _dbContextDTO.Set<VehicleDTO>().Where(x => x.AppUserId.Equals(id)).Where(x => x.isDelete == false).AsNoTracking().FirstOrDefaultAsync();
+            var VehicleDTO = await _dbContextDTO.Set<VehicleDTO>().Where(x => x.AppUserId.Equals(id)).Where(x => x.isBought == false).AsNoTracking().FirstOrDefaultAsync();
             if (VehicleDTO != null)
             {
                 _dbContextDTO.Dispose();

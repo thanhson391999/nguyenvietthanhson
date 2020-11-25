@@ -10,6 +10,8 @@
     <Compile Remove="Migrations\20201118033457_InitialCrawlDataDTO.Designer.cs" />
     <Compile Remove="Migrations\20201123015855_FK_AppUserDTO_VehicleDTO.cs" />
     <Compile Remove="Migrations\20201123015855_FK_AppUserDTO_VehicleDTO.Designer.cs" />
+    <Compile Remove="Migrations\20201124071231_UpdateVehicleBought1.cs" />
+    <Compile Remove="Migrations\20201124071231_UpdateVehicleBought1.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

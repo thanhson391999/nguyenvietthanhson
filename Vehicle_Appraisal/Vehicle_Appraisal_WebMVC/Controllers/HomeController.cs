@@ -7,15 +7,36 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Vehicle_Appraisal_WebMVC.Models;
+using Vehicle_Appraisal_WebMVC.Service.Interface;
 
 namespace Vehicle_Appraisal_WebMVC.Controllers
 {
     [Authorize(Roles = "Admin,Users")]
     public class HomeController : Controller
     {
-        public IActionResult index()
+        private readonly ICustomerServiceApiClient _customerServiceApiClient;
+        private readonly IVehicleServiceApiClient _vehicleServiceApiClient;
+        private readonly IUserServiceApiClient _userServiceApiClient;
+
+        public HomeController(ICustomerServiceApiClient customerServiceApiClient, IVehicleServiceApiClient vehicleServiceApiClient, IUserServiceApiClient userServiceApiClient)
         {
-            return View();
+            _customerServiceApiClient = customerServiceApiClient;
+            _userServiceApiClient = userServiceApiClient;
+            _vehicleServiceApiClient = vehicleServiceApiClient;
+        }
+        public async Task<IActionResult> index()
+        {
+            string token = HttpContext.Session.GetString("token_access");
+            var listCustomer = await _customerServiceApiClient.GetAll(token);
+            var listVehicle = await _vehicleServiceApiClient.GetAllNotBuy(token);
+            var listUsers = await _userServiceApiClient.GetAll(token);
+            var dashboard = new DashBoardModelMVC
+            {
+                ListAppuserVM = listUsers.Select(x=>x.appUserVM).ToList(),
+                ListCustomerVM = listCustomer,
+                ListVehicleVM = listVehicle
+            };
+            return View(dashboard);
         }
 
         public IActionResult Privacy()

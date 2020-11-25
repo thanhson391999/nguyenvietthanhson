@@ -13,6 +13,7 @@ namespace Vehicle_Appraisal_WebMVC.Models
         public MakeVM makeVM { get; set; }
         public ModelVM modelVM { get; set; }
         public AppUserVM appUserVM { get; set; }
+        public VehicleAppraisalVM vehicleAppraisalVM { get; set; }
         public List<CustomerVM> ListCustomerVM { get; set; }
         public List<MakeVM> ListMakeVM { get; set; }
         public List<ModelVM> ListModelVM { get; set; }
