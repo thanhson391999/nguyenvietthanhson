@@ -26,6 +26,8 @@ namespace Vehicle_Appraisal_WebApi.AutoMapper
             CreateMap<VehicleAppraisalVM, VehicleAppraisalDTO>();
             CreateMap<AppUserDTO, AppUserVM>();
             CreateMap<AppUserVM, AppUserDTO>();
+            CreateMap<AppUserDTO, RegisterVM>();
+            CreateMap<RegisterVM, AppUserDTO>();
             CreateMap<AppUserRoleDTO, AppUserRoleVM>();
             CreateMap<AppUserRoleVM, AppUserRoleDTO>();
             CreateMap<VehicleCrawlDataDTO, VehicleCrawlDataVM>();

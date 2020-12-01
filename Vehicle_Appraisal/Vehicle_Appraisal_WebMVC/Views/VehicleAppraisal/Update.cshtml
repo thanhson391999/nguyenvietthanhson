@@ -45,15 +45,17 @@
         <!-- Main content -->
         <section class="content">
             <form asp-action="UpdateAction" asp-controller="vehicleappraisal" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-row">
                     <div class="col-md-6">
                         <div class="card card-primary">
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="inputClientCompany">Name</label>
-                                    <input type="hidden" asp-for="Id" class="form-control">
+                                    <input type="hidden" asp-for="Id">
+                                    <input type="hidden" asp-for="CreateAt" />
                                     <input type="hidden" asp-for="VehicleId" class="form-control">
-                                    <input type="text" asp-for="AppraisalValue" id="inputClientCompany" class="form-control" required>
+                                    <input type="text" asp-for="AppraisalValue" id="inputClientCompany" class="form-control">
                                 </div>
                             </div>
                             <!-- /.card-body -->

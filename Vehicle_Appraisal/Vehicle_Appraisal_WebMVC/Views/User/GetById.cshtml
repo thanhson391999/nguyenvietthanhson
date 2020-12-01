@@ -44,6 +44,7 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
+                                            <th>Date</th>
                                             <th>UserName</th>
                                             <th>Email</th>
                                             <th>ConfirmEmail</th>
@@ -53,26 +54,29 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if (Model != null && Model.appUserVM.AppUserRolesId == 2) 
+                                        @if (Model != null && Model.appUserVM.AppUserRolesId == 2)
                                         {
                                             <tr>
                                                 <td>
-                                                    @Html.DisplayFor(Model => Model.appUserVM.Id)
+                                                    @Model.appUserVM.Id
                                                 </td>
                                                 <td>
-                                                    @Html.DisplayFor(Model => Model.appUserVM.UserName)
+                                                    @Model.appUserVM.CreateAt.ToString("dd/MM/yyyy")
                                                 </td>
                                                 <td>
-                                                    @Html.DisplayFor(Model => Model.appUserVM.Email)
+                                                    @Model.appUserVM.UserName
                                                 </td>
                                                 <td>
-                                                    @Html.DisplayFor(Model => Model.appUserVM.ConfirmEmail)
+                                                    @Model.appUserVM.Email
                                                 </td>
                                                 <td>
-                                                    @Html.DisplayFor(Model => Model.appUserVM.FullName)
+                                                    @Model.appUserVM.ConfirmEmail
                                                 </td>
                                                 <td>
-                                                    @Html.DisplayFor(Model => Model.appUserRoleVM.Name)
+                                                    @Model.appUserVM.FullName
+                                                </td>
+                                                <td>
+                                                    @Model.appUserRoleVM.Name
                                                 </td>
                                                 <td>
                                                     @Html.ActionLink("Edit", "updateUsers", "user", new
@@ -89,7 +93,7 @@
                                                     </a>
                                                 </td>
                                             </tr>
-                                         }
+                                        }
                                     </tbody>
 
                                 </table>

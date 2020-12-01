@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "kiMthH/u/1lR8bRx+Z+0E7blDZJlEEGBS2dJ0uCbPkeJ8cQ20DBG7D3UsOLDOBggakYuZbabHd/+P0pIcx/OUg==",
+  "dgSpecHash": "M/iJLkmN/WomK48Q6zczSrgwY0VnfhFhVwDu62rE8mID5zff8xV6tjUzKrIFzaplUzZoKIEbFS3JH6RoOfOx/Q==",
   "success": true,
   "projectFilePath": "E:\\Github\\nguyenvietthanhson\\Vehicle_Appraisal\\Vehicle_Appraisal_WebApi\\Vehicle_Appraisal_WebApi.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,9 @@
     "C:\\Users\\Thanh Son\\.nuget\\packages\\documentformat.openxml\\2.11.3\\documentformat.openxml.2.11.3.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\fizzler\\1.2.0\\fizzler.1.2.0.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\fizzler.systems.htmlagilitypack\\1.2.1\\fizzler.systems.htmlagilitypack.1.2.1.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\fluentvalidation\\9.3.0\\fluentvalidation.9.3.0.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\fluentvalidation.aspnetcore\\9.3.0\\fluentvalidation.aspnetcore.9.3.0.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\9.3.0\\fluentvalidation.dependencyinjectionextensions.9.3.0.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\htmlagilitypack\\1.11.28\\htmlagilitypack.1.11.28.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\ikvm\\8.1.5717\\ikvm.8.1.5717.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\microsoft.aspnet.webapi.client\\5.2.6\\microsoft.aspnet.webapi.client.5.2.6.nupkg.sha512",

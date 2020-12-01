@@ -18,10 +18,13 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
     public class MakeController : Controller
     {
         private readonly IMakeServiceApiClient _makeServiceApiClient;
+
         public MakeController(IMakeServiceApiClient makeServiceApiClient)
         {
             _makeServiceApiClient = makeServiceApiClient;
         }
+
+        // GET make/getall
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -29,14 +32,24 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             {
                 string token = HttpContext.Session.GetString("token_access");
                 var list = await _makeServiceApiClient.GetAll(token);
+                if (TempData["ErrorResult"] != null)
+                {
+                    ViewBag.ErrorMsg = TempData["ErrorResult"];
+                }
+                if (TempData["SuccessResult"] != null)
+                {
+                    ViewBag.SuccessMsg = TempData["SuccessResult"];
+                }
                 return View(list);
             }
             return BadRequest("Error 400 !");
         }
+
+        // GET make/getbyid
         [HttpGet]
         public async Task<IActionResult> GetById(int Id)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 string token = HttpContext.Session.GetString("token_access");
                 var list = await _makeServiceApiClient.GetById(Id, token);
@@ -45,11 +58,14 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             return BadRequest("Error 400 !");
         }
 
+        // GET make/insert
+        [HttpGet]
         public IActionResult Insert()
         {
             return View();
         }
 
+        // POST make/insertaction
         [HttpPost]
         public async Task<IActionResult> InsertAction(MakeVM makeVM)
         {
@@ -57,53 +73,65 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             {
                 string token = HttpContext.Session.GetString("token_access");
                 var result = await _makeServiceApiClient.Insert(makeVM, token);
-                if (result)
+                if (result.IsSuccessed == true)
                 {
+                    TempData["SuccessResult"] = result.Entity;
                     return RedirectToAction("GetAll", "make");
                 }
                 else
-                    return Ok("Insert Fail !");
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View("Insert", makeVM);
+                }
             }
-            return BadRequest("Error 400 !");
+            return View("Insert", makeVM);
         }
 
+        // GET make/deleteaction
         [HttpGet]
         public async Task<IActionResult> DeleteAction(int id)
         {
-            if (ModelState.IsValid)
+            string token = HttpContext.Session.GetString("token_access");
+            var result = await _makeServiceApiClient.Delete(id, token);
+            if (result.IsSuccessed == true)
             {
-                string token = HttpContext.Session.GetString("token_access");
-                var result = await _makeServiceApiClient.Delete(id,token);
-                if (result)
-                {
-                    return RedirectToAction("GetAll", "Make");
-                }
-                else
-                    return Ok("Delete Fail !");
+                TempData["SuccessResult"] = result.Entity;
+                return RedirectToAction("GetAll", "Make");
             }
-            return BadRequest("Error 400 !");
+            else
+            {
+                TempData["ErrorResult"] = result.Message;
+                return RedirectToAction("GetAll", "Make");
+            }
         }
 
+        // GET make/update
+        [HttpGet]
         public IActionResult Update(MakeVM makeVM)
         {
             return View(makeVM);
         }
 
+        // POST make/updateaction
         [HttpPost]
         public async Task<IActionResult> UpdateAction(MakeVM makeVM)
         {
             if (ModelState.IsValid)
             {
                 string token = HttpContext.Session.GetString("token_access");
-                var result = await _makeServiceApiClient.Update(makeVM,token);
-                if (result)
+                var result = await _makeServiceApiClient.Update(makeVM, token);
+                if (result.IsSuccessed == true)
                 {
+                    TempData["SuccessResult"] = result.Entity;
                     return RedirectToAction("GetAll", "Make");
                 }
                 else
-                    return Ok("Update Fail !");
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View("Update", makeVM);
+                }
             }
-            return BadRequest("Error 400 !");
+            return View("Update", makeVM);
         }
     }
 }

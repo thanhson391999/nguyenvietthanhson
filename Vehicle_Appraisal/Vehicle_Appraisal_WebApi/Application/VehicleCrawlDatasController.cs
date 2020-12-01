@@ -16,10 +16,13 @@ namespace Vehicle_Appraisal_WebApi.Application
     public class VehicleCrawlDatasController : ControllerBase
     {
         private readonly IVehicleCrawlDataService _vehicleCrawlDataService;
+
         public VehicleCrawlDatasController(IVehicleCrawlDataService vehicleCrawlDataService)
         {
             _vehicleCrawlDataService = vehicleCrawlDataService;
         }
+
+        // GET api/vehiclecrawldatas
         [HttpGet]
         public async Task<List<VehicleCrawlDataVM>> GetAllVehicleCrawlData()
         {

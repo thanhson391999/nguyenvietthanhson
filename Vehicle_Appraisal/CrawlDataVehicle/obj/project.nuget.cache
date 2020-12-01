@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "gChLlfoQ/Vj9zjzKHpux0Dc2zhve33nj8U9JqxecA6bwcmdXca8jPzwXghb/1OjWappxxeN6gZCoZKl7dewZHg==",
+  "dgSpecHash": "g5gPSVEZ7aQKyfjE6t8NxmVQjzNsN4OJhDHzlaxpllhsfaWzvbf9iV0tz3r1lj3JCcHvMZ9cStUuEciAbg0gsg==",
   "success": true,
   "projectFilePath": "E:\\Github\\nguyenvietthanhson\\Vehicle_Appraisal\\CrawlDataVehicle\\CrawlDataVehicle.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,9 @@
     "C:\\Users\\Thanh Son\\.nuget\\packages\\documentformat.openxml\\2.11.3\\documentformat.openxml.2.11.3.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\fizzler\\1.2.0\\fizzler.1.2.0.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\fizzler.systems.htmlagilitypack\\1.2.1\\fizzler.systems.htmlagilitypack.1.2.1.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\fluentvalidation\\9.3.0\\fluentvalidation.9.3.0.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\fluentvalidation.aspnetcore\\9.3.0\\fluentvalidation.aspnetcore.9.3.0.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\9.3.0\\fluentvalidation.dependencyinjectionextensions.9.3.0.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\htmlagilitypack\\1.11.28\\htmlagilitypack.1.11.28.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\ikvm\\8.1.5717\\ikvm.8.1.5717.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\microsoft.aspnetcore.hosting\\2.2.7\\microsoft.aspnetcore.hosting.2.2.7.nupkg.sha512",

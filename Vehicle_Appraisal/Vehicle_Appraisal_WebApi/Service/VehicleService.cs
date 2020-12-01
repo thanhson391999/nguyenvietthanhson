@@ -31,45 +31,48 @@ namespace Vehicle_Appraisal_WebApi.Service
             dbset = dbContextDTO.Set<VehicleDTO>();
         }
 
-        public async Task<bool> BuyVehicle(int id)
+        public async Task<ApiResultVM<string>> BuyVehicle(int id)
         {
             var vehicleVM = await GetById(id);
             if (vehicleVM == null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Vehicle doesn't exist");
             }
             var vehicleDTO = _mapper.Map<VehicleDTO>(vehicleVM);
             vehicleDTO.isBought = true;
             vehicleDTO.UpdateAt = DateTime.Now;
             dbset.Update(vehicleDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Buy Success");
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<ApiResultVM<string>> Delete(int id)
         {
             var vehicleDTO = await dbset.Where(x => x.Id.Equals(id)).AsNoTracking().SingleOrDefaultAsync();
             if (vehicleDTO == null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Vehicle doesn't exist");
             }
             var dbsetCondition = _dbContextDTO.Set<ConditionDTO>();
             var dbsetVehicleAppraisal = _dbContextDTO.Set<VehicleAppraisalDTO>();
             var condition = await dbsetCondition.Where(x => x.VehicleId.Equals(id)).AsNoTracking().ToListAsync();
-            var vehicleAppraisal = await dbsetVehicleAppraisal.Where(x => x.VehicleId.Equals(id)).AsNoTracking().ToListAsync();
-            foreach (var item in condition)
+            var appraisalValue = await dbsetVehicleAppraisal.Where(x => x.VehicleId.Equals(id)).AsNoTracking().FirstOrDefaultAsync();
+            if (condition != null)
             {
-                dbsetCondition.Remove(item);
+                foreach (var item in condition)
+                {
+                    dbsetCondition.Remove(item);
+                }
             }
-            foreach (var item in vehicleAppraisal)
+            if (appraisalValue != null)
             {
-                dbsetVehicleAppraisal.Remove(item);
+                dbsetVehicleAppraisal.Remove(appraisalValue);
             }
             dbset.Remove(vehicleDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Delete Success");
         }
 
         public async Task<List<VehicleVM>> GetAll()
@@ -107,29 +110,38 @@ namespace Vehicle_Appraisal_WebApi.Service
             return vehicleVM;
         }
 
-        public async Task<bool> Insert(VehicleVM vehicleVM)
+        public async Task<ApiResultVM<string>> Insert(VehicleVM vehicleVM)
         {
             var customerId = await _customerService.GetById(vehicleVM.CustomerId);
             var makeId = await _makeService.GetById(vehicleVM.MakeId);
             var modelId = await _modelService.GetById(vehicleVM.ModelId);
-            var appuserId = await _userService.GetById(vehicleVM.AppUserId);
-            if (customerId == null ||
-                makeId == null ||
-                modelId == null ||
-                appuserId == null ||
-                vehicleVM.VIN == null ||
-                vehicleVM.Odometer == null ||
-                vehicleVM.Engine == null)
+            var userId = await _userService.GetById(vehicleVM.AppUserId);
+            if (customerId == null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Customer doesn't exist");
+            }
+            if (makeId == null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("Make doesn't exist");
+            }
+            if (modelId == null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("Model doesn't exist");
+            }
+            if (userId == null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("Users doesn't exist");
             }
             var vehicleDTO = _mapper.Map<VehicleDTO>(vehicleVM);
             vehicleDTO.CreateAt = DateTime.Now;
             vehicleDTO.UpdateAt = DateTime.Now;
             await dbset.AddAsync(vehicleDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Insert Success");
         }
 
         public async Task<List<VehicleVM>> Search(string customerId, string makeId, string modelId, string odometer, string VIN, string engine, string appuserId)
@@ -180,36 +192,49 @@ namespace Vehicle_Appraisal_WebApi.Service
 
         public async Task<List<VehicleVM>> SearchDate(DateTime fromDate, DateTime toDate)
         {
-            var vehicleDTO = await dbset.Where(x => x.UpdateAt.Date >= fromDate.Date).Where(x=>x.UpdateAt.Date <= toDate).ToListAsync();
+            var vehicleDTO = await dbset.Where(x => x.UpdateAt.Date >= fromDate.Date).Where(x => x.UpdateAt.Date <= toDate).ToListAsync();
             var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
             return vehicleVM;
         }
 
-        public async Task<bool> Update(VehicleVM vehicleVM, int id)
+        public async Task<ApiResultVM<string>> Update(VehicleVM vehicleVM, int id)
         {
             var checkValue = await GetById(id);
             var customerId = await _customerService.GetById(vehicleVM.CustomerId);
             var makeId = await _makeService.GetById(vehicleVM.MakeId);
             var modelId = await _modelService.GetById(vehicleVM.ModelId);
-            var appuserId = await _userService.GetById(vehicleVM.AppUserId);
-            if (checkValue == null ||
-                customerId == null ||
-                makeId == null ||
-                modelId == null ||
-                appuserId == null ||
-                vehicleVM.VIN == null ||
-                vehicleVM.Odometer == null ||
-                vehicleVM.Engine == null)
+            var userId = await _userService.GetById(vehicleVM.AppUserId);
+            if (checkValue == null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Vehicle doesn't exist");
+            }
+            if (customerId == null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("Customer doesn't exist");
+            }
+            if (makeId == null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("Make doesn't exist");
+            }
+            if (modelId == null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("Model doesn't exist");
+            }
+            if (userId == null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("Users doesn't exist");
             }
             var vehicleDTO = _mapper.Map<VehicleDTO>(vehicleVM);
             vehicleDTO.Id = id;
             vehicleDTO.UpdateAt = DateTime.Now;
             dbset.Update(vehicleDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Update Success");
         }
     }
 }

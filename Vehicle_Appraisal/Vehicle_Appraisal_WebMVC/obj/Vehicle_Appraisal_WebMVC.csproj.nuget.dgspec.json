@@ -60,6 +60,10 @@
               "target": "Package",
               "version": "[1.2.1, )"
             },
+            "FluentValidation.AspNetCore": {
+              "target": "Package",
+              "version": "[9.3.0, )"
+            },
             "HtmlAgilityPack": {
               "target": "Package",
               "version": "[1.11.28, )"

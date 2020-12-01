@@ -14,97 +14,121 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
     public class CustomerController : Controller
     {
         private readonly ICustomerServiceApiClient _customerServiceApiClient;
+
         public CustomerController(ICustomerServiceApiClient customerServiceApiClient)
         {
             _customerServiceApiClient = customerServiceApiClient;
         }
+
+        // GET customer/insert
+        [HttpGet]
         public IActionResult Insert()
         {
             return View();
         }
+
+        // GET customer/update
+        [HttpGet]
         public IActionResult Update(CustomerVM CustomerVM)
         {
             return View(CustomerVM);
         }
 
+        // GET customer/getall
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            if (ModelState.IsValid)
+            string token = HttpContext.Session.GetString("token_access");
+            var list = await _customerServiceApiClient.GetAll(token);
+            if (TempData["ErrorResult"] != null)
             {
-                string token = HttpContext.Session.GetString("token_access");
-                var list = await _customerServiceApiClient.GetAll(token);
-                return View(list);
+                ViewBag.ErrorMsg = TempData["ErrorResult"];
             }
-            return BadRequest("Error 400");
+            if (TempData["SuccessResult"] != null)
+            {
+                ViewBag.SuccessMsg = TempData["SuccessResult"];
+            }
+            return View(list);
         }
 
+        // GET customer/getbyid
         [HttpGet]
         public async Task<IActionResult> GetById(int id)
         {
             if (ModelState.IsValid)
             {
                 string token = HttpContext.Session.GetString("token_access");
-                var list = await _customerServiceApiClient.GetById(id,token);
+                var list = await _customerServiceApiClient.GetById(id, token);
                 return View(list);
             }
             return BadRequest("Error 400");
         }
 
+        // GET customer/deleteaction
         [HttpGet]
         public async Task<IActionResult> DeleteAction(int id)
         {
-            if (ModelState.IsValid)
+            string token = HttpContext.Session.GetString("token_access");
+            var result = await _customerServiceApiClient.Delete(id, token);
+            if (result.IsSuccessed == true)
             {
-                string token = HttpContext.Session.GetString("token_access");
-                var result = await _customerServiceApiClient.Delete(id,token);
-                if (result)
-                {
-                    return RedirectToAction("GetAll", "customer");
-                }
-                else
-                    return Ok("Delete Fail !");
+                TempData["SuccessResult"] = result.Entity;
+                return RedirectToAction("GetAll", "customer");
             }
             else
-                return BadRequest("Error 400");
+            {
+                TempData["ErrorResult"] = result.Message;
+                return RedirectToAction("GetAll", "customer");
+            }
         }
 
+        // POST customer/insertaction
         [HttpPost]
         public async Task<IActionResult> InsertAction(CustomerVM CustomerVM)
         {
             if (ModelState.IsValid)
             {
                 string token = HttpContext.Session.GetString("token_access");
-                var result = await _customerServiceApiClient.Insert(CustomerVM,token);
-                if (result)
+                var result = await _customerServiceApiClient.Insert(CustomerVM, token);
+                if (result.IsSuccessed == true)
                 {
+                    TempData["SuccessResult"] = result.Entity;
                     return RedirectToAction("GetAll", "customer");
                 }
                 else
-                    return Ok("Insert Fail !");
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View("Insert", CustomerVM);
+                }
             }
             else
-                return BadRequest("Error 400");
+                return View("Insert", CustomerVM);
         }
 
+        // POST customer/updateaction
         [HttpPost]
         public async Task<IActionResult> UpdateAction(CustomerVM CustomerVM)
         {
             if (ModelState.IsValid)
             {
                 string token = HttpContext.Session.GetString("token_access");
-                var result = await _customerServiceApiClient.Update(CustomerVM,token);
-                if (result)
+                var result = await _customerServiceApiClient.Update(CustomerVM, token);
+                if (result.IsSuccessed == true)
                 {
+                    TempData["SuccessResult"] = result.Entity;
                     return RedirectToAction("GetAll", "customer");
                 }
                 else
-                    return Ok("Update Fail !");
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View("Update", CustomerVM);
+                }
             }
             else
-                return BadRequest("Error 400");
+                return View("Update", CustomerVM);
         }
 
+        // GET customer/searchaction
         [HttpGet]
         public async Task<IActionResult> SearchAction(string name, string phone, string email, string address, string city, string country)
         {

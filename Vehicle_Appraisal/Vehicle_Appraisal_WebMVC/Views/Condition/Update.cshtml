@@ -45,16 +45,18 @@
         <!-- Main content -->
         <section class="content">
             <form asp-action="UpdateAction" asp-controller="condition" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-row">
                     <div class="col-md-6">
                         <div class="card card-primary">
                             <div class="card-body">
                                 <div class="form-group">
-                                    <input type="hidden" asp-for="Id" class="form-control">
-                                    <input type="hidden" asp-for="ImagePath" class="form-control">
+                                    <input type="hidden" asp-for="Id">
+                                    <input type="hidden" asp-for="ImagePath">
                                     <input type="hidden" asp-for="VehicleId" />
+                                    <input type="hidden" asp-for="CreateAt" />
                                     <label for="inputType">Type</label>
-                                    <input type="text" asp-for="Type" id="inputType" class="form-control" required>
+                                    <input type="text" asp-for="Type" id="inputType" class="form-control">
                                     <label for="inputImage">Image</label>
                                     <input type="file" asp-for="file" id="inputImage" class="form-control">
                                     <label for="inputNote">Note</label>

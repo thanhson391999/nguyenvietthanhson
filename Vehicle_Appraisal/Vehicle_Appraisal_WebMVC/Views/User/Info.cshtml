@@ -72,23 +72,25 @@
                             <div class="tab-content">
                                 <div class="active tab-pane" id="activity">
                                     <!-- Post -->
-                                    <form asp-action="Update" asp-controller="user" method="post">
+                                    <form asp-action="UpdateInfo" asp-controller="user" method="post">
+                                        <div asp-validation-summary="All" class="text-danger"></div>
                                         <div class="post">
                                             <div class="user-block">
                                                 <ul class="list-group list-group-unbordered mb-3">
                                                     <li class="list-group-item">
                                                         <b>UserName</b>
-                                                        <input type="hidden" asp-for="Id" value="@User.Claims.Where(x => x.Type.Equals("Id")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
-                                                        <input type="hidden" asp-for="AppUserRolesId" value="@User.Claims.Where(x => x.Type.Equals("AppUserRoleId")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
-                                                        <input type="text" asp-for="UserName" value="@User.Claims.Where(x => x.Type.Equals("UserName")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                                                        <input type="hidden" asp-for="Id" value="@User.Claims.Where(x => x.Type.Equals("Id")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                                        <input type="hidden" asp-for="AppUserRolesId" value="@User.Claims.Where(x => x.Type.Equals("AppUserRoleId")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                                        <input type="hidden" asp-for="CreateAt" />
+                                                        <input type="text" asp-for="UserName" value="@User.Claims.Where(x => x.Type.Equals("UserName")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                                     </li>
                                                     <li class="list-group-item">
                                                         <b>Email</b><br>
-                                                        <input type="text" asp-for="Email" value="@User.Claims.Where(x => x.Type.Equals("Email")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                                                        <input type="email" asp-for="Email" value="@User.Claims.Where(x => x.Type.Equals("Email")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                                     </li>
                                                     <li class="list-group-item">
                                                         <b>Full Name</b><br>
-                                                        <input type="text" asp-for="FullName" value="@User.Claims.Where(x => x.Type.Equals("FullName")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                                                        <input type="text" asp-for="FullName" value="@User.Claims.Where(x => x.Type.Equals("FullName")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                                     </li>
                                                 </ul>
                                                 <button type="submit" class="btn btn-primary btn-block">Save Change</button>

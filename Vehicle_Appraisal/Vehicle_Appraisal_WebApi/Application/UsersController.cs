@@ -22,6 +22,7 @@ namespace Vehicle_Appraisal_WebApi.Application
             _userService = userService;
         }
 
+        // GET api/users
         [HttpGet]
         [Authorize(Roles = "Admin,Users")]
         public async Task<List<AppUserVM>> GetAll()
@@ -29,6 +30,7 @@ namespace Vehicle_Appraisal_WebApi.Application
             return await _userService.GetAll();
         }
 
+        // GET api/users/{id}
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<AppUserVM> GetById(int id)
@@ -36,6 +38,7 @@ namespace Vehicle_Appraisal_WebApi.Application
             return await _userService.GetById(id);
         }
 
+        // GET api/users/info
         [HttpGet("info")]
         [Authorize(Roles = "Admin")]
         public async Task<AppUserVM> GetUser(string emailorusername)
@@ -43,75 +46,32 @@ namespace Vehicle_Appraisal_WebApi.Application
             return await _userService.GetUser(emailorusername);
         }
 
+        // DELETE api/users/{id}
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _userService.Delete(id);
-            if (result)
-            {
-                return Ok(new
-                {
-                    message = "Delete Success !",
-                    is_erro = false
-                });
-            }
-            else
-            {
-                return BadRequest(new
-                {
-                    message = "Delete Fail !",
-                    is_erro = true
-                });
-            }
+            return Ok(result);
         }
 
+        // PUT api/users/{id}
         [HttpPut("{id}")]
         [Authorize(Roles ="Admin, Users")]
         public async Task<IActionResult> Update(AppUserVM userVM, int id)
         {
             var result = await _userService.Update(userVM, id);
-            if (result)
-            {
-                return Ok(new
-                {
-                    message = "Update Success !",
-                    is_erro = false
-                });
-            }
-            else
-            {
-                return BadRequest(new
-                {
-                    message = "Update Fail !",
-                    is_erro = true
-                });
-            }
+            return Ok(result);
         }
 
+        // PUT api/users/password
         [HttpPut("Password")]
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> ChangePassword(PasswordVM passwordVM)
         {
-            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault().Split(' ').ElementAt(1);
-            passwordVM.Token = token.ToString();
+            passwordVM.Token = HttpContext.Request.Headers["Authorization"].FirstOrDefault().Split(' ').ElementAt(1);
             var result = await _userService.ChangePassword(passwordVM);
-            if (result)
-            {
-                return Ok(new
-                {
-                    message = "Password has change !",
-                    is_erro = false
-                });
-            }
-            else
-            {
-                return BadRequest(new
-                {
-                    message = "Password change fail !",
-                    is_erro = true
-                });
-            }
+            return Ok(result);
         }
     }
 }

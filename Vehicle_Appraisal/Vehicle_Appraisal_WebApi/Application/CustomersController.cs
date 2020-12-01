@@ -21,6 +21,7 @@ namespace Vehicle_Appraisal_WebApi.Application
             _CustomerService = CustomerService;
         }
 
+        // GET api/customers
         [HttpGet]
         [Authorize(Roles = "Admin,Users")]
         public async Task<List<CustomerVM>> GetAll()
@@ -28,6 +29,7 @@ namespace Vehicle_Appraisal_WebApi.Application
             return await _CustomerService.GetAll();
         }
 
+        // GET api/customers/not-delete
         [HttpGet("not-delete")]
         [Authorize(Roles = "Admin, Users")]
         public async Task<List<CustomerVM>> GetAllNotDelete()
@@ -35,6 +37,7 @@ namespace Vehicle_Appraisal_WebApi.Application
             return await _CustomerService.GetAllNotDelete();
         }
 
+        // GET api/customers/{id}
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<CustomerVM> GetById(int id)
@@ -42,66 +45,34 @@ namespace Vehicle_Appraisal_WebApi.Application
             return await _CustomerService.GetById(id);
         }
 
+        // DELETE api/customers/{id}
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _CustomerService.Delete(id);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Delete Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Delete Fail !",
-                is_erro = true,
-            });
+            return Ok(result);
         }
 
+        // POST api/customers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Insert(CustomerVM CustomerVM)
         {
             var result = await _CustomerService.Insert(CustomerVM);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Insert Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Insert Fail !",
-                is_erro = true,
-            });
+            return Ok(result);
         }
 
+        // PUT api/customers/{id}
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(CustomerVM CustomerVM, int id)
         {
             var result = await _CustomerService.Update(CustomerVM, id);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Update Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Update Fail !",
-                is_erro = true,
-            });
+            return Ok(result);
         }
 
+        // GET api/customers/info
         [HttpGet("info")]
         [Authorize(Roles = "Admin")]
         public async Task<List<CustomerVM>> Search(string name, string phone, string email, string address, string city, string country)

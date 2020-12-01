@@ -10,74 +10,95 @@ using Vehicle_Appraisal_WebMVC.Service.Interface;
 
 namespace Vehicle_Appraisal_WebMVC.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class VehicleAppraisalController : Controller
     {
         private readonly IVehicleAppraisalServiceApiClient _vehicleAppraisalApiClient;
+
         public VehicleAppraisalController(IVehicleAppraisalServiceApiClient vehicleAppraisalApiClient)
         {
             _vehicleAppraisalApiClient = vehicleAppraisalApiClient;
         }
+
+        // GET vehicleappraisal/deleteaction
         [HttpGet]
         public async Task<IActionResult> DeleteAction(int id, int vehicleId)
         {
-            if (ModelState.IsValid)
+
+            string token = HttpContext.Session.GetString("token_access");
+            var result = await _vehicleAppraisalApiClient.Delete(id, token);
+            if (result.IsSuccessed == true)
             {
-                string token = HttpContext.Session.GetString("token_access");
-                var result = await _vehicleAppraisalApiClient.Delete(id, token);
-                if (result)
-                {
-                    return Redirect("/vehicle/GetAllAppraisalValueById/" + vehicleId);
-                }
-                else
-                    return Ok("Delete Fail !");
+                TempData["SuccessResult"] = result.Entity;
+                return Redirect("/vehicle/GetAllAppraisalValueById/" + vehicleId);
             }
             else
-                return BadRequest("Error 400");
+            {
+                TempData["ErrorResult"] = result.Message;
+                return Redirect("/vehicle/GetAllAppraisalValueById/" + vehicleId);
+            }
         }
+
+        // GET vehicleappraisal/insert
+        [HttpGet]
         public IActionResult Insert(int id)
         {
             var vehicleappraisalVM = new VehicleAppraisalVM();
             vehicleappraisalVM.VehicleId = id;
             return View(vehicleappraisalVM);
         }
+
+        // POST vehicleappraisal/insertaction
         [HttpPost]
-        public async Task<IActionResult> InsertAction([FromForm]VehicleAppraisalVM vehicleAppraisalVM)
+        public async Task<IActionResult> InsertAction([FromForm] VehicleAppraisalVM vehicleAppraisalVM)
         {
             if (ModelState.IsValid)
             {
                 string token = HttpContext.Session.GetString("token_access");
                 var result = await _vehicleAppraisalApiClient.Insert(vehicleAppraisalVM, token);
-                if (result)
+                if (result.IsSuccessed == true)
                 {
-                    return Redirect("/vehicle/GetAllAppraisalValueById/"+vehicleAppraisalVM.VehicleId);
+                    TempData["SuccessResult"] = result.Entity;
+                    return Redirect("/vehicle/GetAllAppraisalValueById/" + vehicleAppraisalVM.VehicleId);
                 }
                 else
-                    return Ok("Insert Fail !");
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View("Insert", vehicleAppraisalVM);
+                }
             }
             else
-                return BadRequest("Error 400");
+                return View("Insert", vehicleAppraisalVM);
         }
+
+        // GET vehicleappraisal/update
+        [HttpGet]
         public IActionResult Update(VehicleAppraisalVM vehicleAppraisalVM)
         {
             return View(vehicleAppraisalVM);
         }
+
+        // POST vehicleappraisal/updateaction
         [HttpPost]
         public async Task<IActionResult> UpdateAction(VehicleAppraisalVM vehicleAppraisalVM)
         {
             if (ModelState.IsValid)
             {
                 string token = HttpContext.Session.GetString("token_access");
-                var result = await _vehicleAppraisalApiClient.Update(vehicleAppraisalVM,token);
-                if (result)
+                var result = await _vehicleAppraisalApiClient.Update(vehicleAppraisalVM, token);
+                if (result.IsSuccessed == true)
                 {
+                    TempData["SuccessResult"] = result.Entity;
                     return Redirect("/vehicle/GetAllAppraisalValueById/" + vehicleAppraisalVM.VehicleId);
                 }
                 else
-                    return Ok("Update Fail !");
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View("Update", vehicleAppraisalVM);
+                }
             }
             else
-                return BadRequest("Error 400");
+                return View("Update", vehicleAppraisalVM);
         }
     }
 }

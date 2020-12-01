@@ -22,26 +22,26 @@ namespace Vehicle_Appraisal_WebApi.DALs
             dbset = dbContextDTO.Set<MakeDTO>();
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<ApiResultVM<string>> Delete(int id)
         {
             var makeVM = await GetById(id);
             if (makeVM == null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Make doesn't exist");
             }
             var checkConstraint = _dbContextDTO.Set<VehicleDTO>().Where(x => x.MakeId.Equals(id)).Where(x => x.isBought == false).AsNoTracking().FirstOrDefault();
             if (checkConstraint != null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Can't delete because make is existing in vehicle");
             }
             var makeDTO = _mapper.Map<MakeDTO>(makeVM);
             makeDTO.isDelete = true;
             makeDTO.UpdateAt = DateTime.Now;
             dbset.Update(makeDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Delete Success");
         }
 
         public async Task<List<MakeVM>> GetAll()
@@ -65,35 +65,42 @@ namespace Vehicle_Appraisal_WebApi.DALs
             return makeVM;
         }
 
-        public async Task<bool> Insert(MakeVM makeVM)
+        public async Task<ApiResultVM<string>> Insert(MakeVM makeVM)
         {
-            if (makeVM.Name == null)
+            var checkMake = await dbset.Where(x => x.Name.Equals(makeVM.Name)).Where(x => x.isDelete == false).AsNoTracking().FirstOrDefaultAsync();
+            if (checkMake != null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Make's name already exist");
             }
             var makeDTO = _mapper.Map<MakeDTO>(makeVM);
             makeDTO.CreateAt = DateTime.Now;
             makeDTO.UpdateAt = DateTime.Now;
             await dbset.AddAsync(makeDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Insert Success");
         }
 
-        public async Task<bool> Update(MakeVM makeVM, int id)
+        public async Task<ApiResultVM<string>> Update(MakeVM makeVM, int id)
         {
             var checkValue = await GetById(id);
-            if (checkValue == null || makeVM.Name == null) 
+            if (checkValue == null) 
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Make doesn't exist");
+            }
+            var checkMake = await dbset.Where(x=>x.Id != id).Where(x => x.Name.Equals(makeVM.Name)).Where(x => x.isDelete == false).AsNoTracking().FirstOrDefaultAsync();
+            if (checkMake != null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("Make's name already exist");
             }
             var makeDTO = _mapper.Map<MakeDTO>(makeVM);
             makeDTO.Id = id;
             makeDTO.UpdateAt = DateTime.Now;
             dbset.Update(makeDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Update Success");
         }
     }
 }

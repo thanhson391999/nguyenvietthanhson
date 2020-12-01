@@ -15,5 +15,7 @@ namespace Vehicle_Appraisal_WebApi.ViewModels
         public string VIN { get; set; }
         public string Engine { get; set; }
         public bool isBought { get; set; }
+        public DateTime UpdateAt { get; set; }
+
     }
 }

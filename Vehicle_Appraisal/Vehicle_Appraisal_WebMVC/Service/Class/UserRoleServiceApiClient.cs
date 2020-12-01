@@ -20,6 +20,7 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             _configuration = configuration;
             _httpClientFactory = httpClientFactory;
         }
+
         public async Task<List<AppUserRoleVM>> GetAll(string token)
         {
             var client = _httpClientFactory.CreateClient();

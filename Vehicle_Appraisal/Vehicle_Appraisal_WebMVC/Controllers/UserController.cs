@@ -33,6 +33,7 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         private readonly IConfiguration _configuration;
         private readonly IUserServiceApiClient _userApiClient;
         private readonly IUserRoleServiceApiClient _userRoleServiceApiClient;
+
         public UserController(IUserServiceApiClient userApiClient, IUserRoleServiceApiClient userRoleServiceApiClient, IConfiguration configuration)
         {
             _userRoleServiceApiClient = userRoleServiceApiClient;
@@ -40,13 +41,17 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             _userApiClient = userApiClient;
         }
 
+        // GET user/info
+        [HttpGet]
         [Authorize(Roles = "Admin,Users")]
         public IActionResult Info()
         {
             return View();
         }
 
-        [Authorize(Roles = "Admin,Users")]
+        // GET user/updateusers
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateUsers(AppUserVM appUserVM, AppUserRoleVM appUserRoleVM)
         {
             var appUserModelMVC = new AppUserModelMVC();
@@ -58,35 +63,57 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             return View(appUserModelMVC);
         }
 
+        // GET user/login
+        [HttpGet]
         public IActionResult Login()
         {
             if (User.Identity.IsAuthenticated)
             {
+                if (TempData["SuccessResult"] != null)
+                {
+                    ViewBag.SuccessMsg = TempData["SuccessResult"];
+                }
                 return RedirectToAction("Index", "Home");
+            }
+            if (TempData["SuccessResult"] != null)
+            {
+                ViewBag.SuccessMsg = TempData["SuccessResult"];
             }
             return View();
         }
 
-        [Authorize(Roles ="Admin")]
+        // GET user/register
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Register()
         {
             return View();
         }
 
-        public IActionResult ForgetPassword()
+        // GET user/forgotpassword
+        [HttpGet]
+        public IActionResult ForgotPassword()
         {
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Home");
             }
+            if (TempData["SuccessResult"] != null)
+            {
+                ViewBag.SuccessMsg = TempData["SuccessResult"];
+            }
             return View();
         }
+
+        // GET user/changepassword
+        [HttpGet]
         [Authorize(Roles = "Admin,Users")]
         public IActionResult ChangePassword()
         {
             return View();
         }
 
+        // POST user/changepasswordaction
         [HttpPost]
         [Authorize(Roles = "Admin,Users")]
         public async Task<IActionResult> ChangePasswordAction(PasswordVM passwordVM)
@@ -95,34 +122,40 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             {
                 passwordVM.Token = HttpContext.Session.GetString("token_access");
                 var result = await _userApiClient.ChangePassword(passwordVM);
-                if (result)
+                if (result.IsSuccessed == true)
                 {
                     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                     HttpContext.Session.Remove("token_access");
+                    TempData["SuccessResult"] = result.Entity;
                     return RedirectToAction("Login", "User");
                 }
                 else
-                    return Ok("Password changed fail");
-            }
-            return BadRequest("Error 400");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ForgetPasswordAction(string Email)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = await _userApiClient.ForgotPassword(Email);
-                if (result)
                 {
-                    return Ok("Email To reset password have sent to your Email. Check it out!");
+                    ModelState.AddModelError("", result.Message);
+                    return View("ChangePassword", passwordVM);
                 }
-                else
-                    return Ok("Can't send email !");
             }
-            return BadRequest("Error 400");
+            return View("ChangePassword", passwordVM);
         }
 
+        // POST user/forgotpasswordaction
+        [HttpPost]
+        public async Task<IActionResult> ForgotPasswordAction(string Email)
+        {
+            var result = await _userApiClient.ForgotPassword(Email);
+            if (result.IsSuccessed == true)
+            {
+                TempData["SuccessResult"] = result.Entity;
+                return View("ForgotPassword");
+            }
+            else
+            {
+                ModelState.AddModelError("", result.Message);
+                return View("ForgotPassword");
+            }
+        }
+
+        // POST user/register
         [HttpPost]
         public async Task<IActionResult> Register(RegisterVM registerVM)
         {
@@ -130,15 +163,18 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             {
                 string token = HttpContext.Session.GetString("token_access");
                 var result = await _userApiClient.Register(registerVM, token);
-                if (result)
+                if (result.IsSuccessed == true)
                 {
-                    return RedirectToAction("Login", "User");
+                    TempData["SuccessResult"] = result.Entity;
+                    return RedirectToAction("index", "home");
                 }
-                return Ok("Register fail");
+                ModelState.AddModelError("", result.Message);
+                return View(registerVM);
             }
-            return BadRequest("Error 400");
+            return View(registerVM);
         }
 
+        // GET user/logout
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
@@ -147,24 +183,30 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             return RedirectToAction("Login", "User");
         }
 
+        // POST user/loginaction
         [HttpPost]
         public async Task<IActionResult> LoginAction(LoginVM loginVM)
         {
-            string token = await _userApiClient.Login(loginVM);
-            if (token == "")
+            if (ModelState.IsValid)
             {
-                return Redirect("/user/login");
-            }
-            var userPrincipal = this.ValidateToken(token);
-            var authProperties = new AuthenticationProperties
-            {
-                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7),
-                IsPersistent = false
-            };
+                var result = await _userApiClient.Login(loginVM);
+                if (string.IsNullOrEmpty(result.Entity))
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View("Login", loginVM);
+                }
+                var userPrincipal = this.ValidateToken(result.Entity);
+                var authProperties = new AuthenticationProperties
+                {
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7),
+                    IsPersistent = false
+                };
 
-            HttpContext.Session.SetString("token_access", token);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, authProperties);
-            return RedirectToAction("index", "home");
+                HttpContext.Session.SetString("token_access", result.Entity);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, authProperties);
+                return RedirectToAction("index", "home");
+            }
+            return View("login", loginVM);
         }
 
         private ClaimsPrincipal ValidateToken(string jwtToken)
@@ -183,46 +225,62 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         }
 
         // update your info
+        // POST user/update
         [HttpPost]
         [Authorize(Roles = "Admin,Users")]
-        public async Task<IActionResult> Update(AppUserVM appUserVM)
+        public async Task<IActionResult> UpdateInfo(AppUserVM appUserVM)
         {
             if (ModelState.IsValid)
             {
                 string token = HttpContext.Session.GetString("token_access");
                 var result = await _userApiClient.Update(appUserVM, token);
-                if (result)
+                if (result.IsSuccessed == true)
                 {
-
+                    TempData["SuccessResult"] = result.Entity;
                     return Redirect("/user/logout");
                 }
                 else
-                    return BadRequest("Can't Update");
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View("info",appUserVM);
+                }
             }
             else
-                return BadRequest("Error 400");
+                return View("info",appUserVM);
         }
 
         // update info of users by Admin
+        // POST user/updateusersaction
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateUsersAction(AppUserModelMVC appUserModelMVC)
         {
+            string token = HttpContext.Session.GetString("token_access");
             if (ModelState.IsValid)
             {
-                string token = HttpContext.Session.GetString("token_access");
                 var result = await _userApiClient.UpdateUsers(appUserModelMVC, token);
-                if (result)
+                if (result.IsSuccessed == true)
                 {
+                    TempData["SuccessResult"] = result.Entity;
                     return Redirect("/user/getall");
                 }
                 else
-                    return BadRequest("Can't Update");
+                {
+                    ModelState.AddModelError("", result.Message);
+                    var list = await _userRoleServiceApiClient.GetAll(token);
+                    appUserModelMVC.ListAppUserRoleVM = list;
+                    return View("UpdateUsers", appUserModelMVC);
+                }
             }
             else
-                return BadRequest("Error 400");
+            {
+                var list = await _userRoleServiceApiClient.GetAll(token);
+                appUserModelMVC.ListAppUserRoleVM = list;
+                return View("UpdateUsers", appUserModelMVC);
+            }
         }
 
+        // GET user/getall
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
@@ -231,11 +289,20 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             {
                 string token = HttpContext.Session.GetString("token_access");
                 var list = await _userApiClient.GetAll(token);
+                if (TempData["ErrorResult"] != null)
+                {
+                    ViewBag.ErrorMsg = TempData["ErrorResult"];
+                }
+                if (TempData["SuccessResult"] != null)
+                {
+                    ViewBag.SuccessMsg = TempData["SuccessResult"];
+                }
                 return View(list);
             }
             return BadRequest("Error 400");
         }
 
+        // GET user/getbyid
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetById(int id)
@@ -249,23 +316,23 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             return BadRequest("Error 400");
         }
 
+        // GET user/deleteaction
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAction(int id)
         {
-            if (ModelState.IsValid)
+            string token = HttpContext.Session.GetString("token_access");
+            var result = await _userApiClient.Delete(id, token);
+            if (result.IsSuccessed == true)
             {
-                string token = HttpContext.Session.GetString("token_access");
-                var result = await _userApiClient.Delete(id, token);
-                if (result)
-                {
-                    return RedirectToAction("GetAll", "user");
-                }
-                else
-                    return BadRequest("Delete Fail !");
+                TempData["SuccessResult"] = result.Entity;
+                return RedirectToAction("GetAll", "user");
             }
             else
-                return BadRequest("Error 400");
+            {
+                TempData["ErrorResult"] = result.Message;
+                return RedirectToAction("GetAll", "user");
+            }
         }
     }
 }

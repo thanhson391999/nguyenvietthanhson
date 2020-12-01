@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,45 +23,36 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<bool> Delete(int id, string token)
+        public async Task<ApiResultVM<string>> Delete(int id, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var result = await client.DeleteAsync("/api/conditions/" + id);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.DeleteAsync("/api/conditions/" + id);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
-        public async Task<bool> Insert(ConditionVM conditionVM, string token)
+        public async Task<ApiResultVM<string>> Insert(ConditionVM conditionVM, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
             conditionVM.file = null;
-            var result = await client.PostAsJsonAsync("/api/conditions", conditionVM);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.PostAsJsonAsync("/api/conditions", conditionVM);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
-        public async Task<bool> Update(ConditionVM conditionVM, string token)
+        public async Task<ApiResultVM<string>> Update(ConditionVM conditionVM, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
             conditionVM.file = null;
-            var result = await client.PutAsJsonAsync("/api/conditions/" + conditionVM.Id, conditionVM);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.PutAsJsonAsync("/api/conditions/" + conditionVM.Id, conditionVM);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
         public async Task<string> UploadImage(IFormFile file, string token)
@@ -79,9 +71,9 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var result = await client.PostAsync("/api/conditions/image", requestcontent);
-            string image = await result.Content.ReadAsStringAsync();
-            return image;
+            var response = await client.PostAsync("/api/conditions/image", requestcontent);
+            var imagePath = await response.Content.ReadAsStringAsync();
+            return imagePath;
         }
     }
 }

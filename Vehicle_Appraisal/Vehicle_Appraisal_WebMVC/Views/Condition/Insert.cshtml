@@ -45,6 +45,7 @@
         <!-- Main content -->
         <section class="content">
             <form asp-action="InsertAction" asp-controller="condition" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-row">
                     <div class="col-md-6">
                         <div class="card card-primary">
@@ -52,9 +53,9 @@
                                 <div class="form-group">
                                     <label for="inputType">Type</label>
                                     <input type="hidden" asp-for="VehicleId" value="@Model.VehicleId" />
-                                    <input type="text" asp-for="Type" id="inputType" class="form-control" required>
+                                    <input type="text" asp-for="Type" id="inputType" class="form-control">
                                     <label for="inputImage">Image</label>
-                                    <input type="file" asp-for="file" id="inputImage" class="form-control">
+                                    <input type="file" asp-for="file" id="inputImage" class="form-control" required>
                                     <label for="inputNote">Note</label>
                                     <input type="text" asp-for="Note" id="inputNote" class="form-control">
                                 </div>

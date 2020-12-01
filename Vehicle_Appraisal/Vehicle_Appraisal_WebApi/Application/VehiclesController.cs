@@ -21,6 +21,7 @@ namespace Vehicle_Appraisal_WebApi.Application
             _VehicleService = VehicleService;
         }
 
+        // GET api/vehicles
         [HttpGet]
         [Authorize(Roles = "Admin,Users")]
         public async Task<List<VehicleVM>> GetAll()
@@ -28,6 +29,7 @@ namespace Vehicle_Appraisal_WebApi.Application
             return await _VehicleService.GetAll();
         }
 
+        // GET api/vehicles/not-buy
         [HttpGet("not-buy")]
         [Authorize(Roles = "Admin,Users")]
         public async Task<List<VehicleVM>> GetAllNotBuy()
@@ -35,6 +37,7 @@ namespace Vehicle_Appraisal_WebApi.Application
             return await _VehicleService.GetAllNotBuy();
         }
 
+        // GET api/vehicles/{id}
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<VehicleVM> GetById(int id)
@@ -42,66 +45,34 @@ namespace Vehicle_Appraisal_WebApi.Application
             return await _VehicleService.GetById(id);
         }
 
+        // DELETE api/vehicles/{id}
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _VehicleService.Delete(id);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Delete Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Delete Fail !",
-                is_erro = true,
-            });
+            return Ok(result);
         }
 
+        // POST api/vehicles
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Insert(VehicleVM VehicleVM)
         {
             var result = await _VehicleService.Insert(VehicleVM);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Insert Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Insert Fail !",
-                is_erro = true,
-            });
+            return Ok(result);
         }
 
+        // PUT api/vehicles/{id}
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(VehicleVM VehicleVM, int id)
         {
             var result = await _VehicleService.Update(VehicleVM, id);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Update Success !",
-                    is_erro = false
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Update Fail !",
-                is_erro = true
-            });
+            return Ok(result);
         }
 
+        // GET api/vehicles/info
         [HttpGet("info")]
         [Authorize(Roles = "Admin")]
         public async Task<List<VehicleVM>> Search(string customerId, string makeId, string modelId, string odometer, string VIN, string engine, string appuserId)
@@ -109,40 +80,32 @@ namespace Vehicle_Appraisal_WebApi.Application
             return await _VehicleService.Search(customerId, makeId, modelId, odometer, VIN, engine, appuserId);
         }
 
-        [HttpGet("{id}/condition")]
+        // GET api/vehicles/{id}/conditions
+        [HttpGet("{id}/conditions")]
         [Authorize(Roles = "Admin,Users")]
         public async Task<List<ConditionVM>> GetAllConditionById(int id)
         {
             return await _VehicleService.GetAllConditionById(id);
         }
 
-        [HttpGet("{id}/appraisalvalue")]
+        // GET api/vehicles/{id}/appraisalvalues
+        [HttpGet("{id}/appraisalvalues")]
         [Authorize(Roles = "Admin")]
         public async Task<List<VehicleAppraisalVM>> GetAllappraisalValueById(int id)
         {
             return await _VehicleService.GetAllAppraisalValueById(id);
         }
 
+        // GET api/vehicles/buyvehicle/{id}
         [HttpGet("buyvehicle/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> BuyVehicle(int id)
         {
             var result = await _VehicleService.BuyVehicle(id);
-            if (result)
-            {
-                return Ok(new
-                {
-                    message = "Buy Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Buy Fail !",
-                is_erro = true,
-            });
+            return Ok(result);
         }
 
+        // GET api/vehicles/date
         [HttpGet("date")]
         [Authorize(Roles ="Admin")]
         public async Task<List<VehicleVM>> SearchDate(DateTime fromDate, DateTime toDate)

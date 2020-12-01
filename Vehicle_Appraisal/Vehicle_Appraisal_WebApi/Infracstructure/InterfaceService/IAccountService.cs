@@ -8,8 +8,8 @@ namespace Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService
 {
     public interface IAccountService
     {
-        Task<string> Login(LoginVM loginVM);
-        Task<bool> Register(RegisterVM registerVM);
-        Task<bool> ForgotPassword(string email);
+        Task<ApiResultVM<string>> Login(LoginVM loginVM);
+        Task<ApiResultVM<string>> Register(RegisterVM registerVM);
+        Task<ApiResultVM<string>> ForgotPassword(string email);
     }
 }

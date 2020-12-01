@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -18,9 +19,11 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Vehicle_Appraisal_WebApi.Infracstructure.ValidatorDTO;
 using Vehicle_Appraisal_WebMVC.Service;
 using Vehicle_Appraisal_WebMVC.Service.Class;
 using Vehicle_Appraisal_WebMVC.Service.Interface;
+using Vehicle_Appraisal_WebMVC.Validator;
 
 namespace Vehicle_Appraisal_WebMVC
 {
@@ -68,7 +71,11 @@ namespace Vehicle_Appraisal_WebMVC
                 opt.Cookie.HttpOnly = true;
                 opt.Cookie.IsEssential = true;
             });
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                             // add fluent validation
+                             .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RegisterValidator>())
+                             .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AppUserModelMVCValidator>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,7 +96,6 @@ namespace Vehicle_Appraisal_WebMVC
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseSession();
-            app.UseCookiePolicy();
 
             app.UseMvc(routes =>
             {
@@ -97,6 +103,8 @@ namespace Vehicle_Appraisal_WebMVC
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            app.UseCookiePolicy();
+
         }
     }
 }

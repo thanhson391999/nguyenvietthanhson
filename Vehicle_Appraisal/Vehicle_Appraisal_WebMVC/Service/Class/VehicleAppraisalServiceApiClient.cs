@@ -21,17 +21,14 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<bool> Delete(int id, string token)
+        public async Task<ApiResultVM<string>> Delete(int id, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var result = await client.DeleteAsync("/api/vehicleappraisals/"+id);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.DeleteAsync("/api/vehicleappraisals/"+id);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
         public async Task<List<VehicleAppraisalVM>> GetAll(string token)
@@ -45,30 +42,24 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             return vehicleAppraisal;
         }
 
-        public async Task<bool> Insert(VehicleAppraisalVM vehicleAppraisalVM, string token)
+        public async Task<ApiResultVM<string>> Insert(VehicleAppraisalVM vehicleAppraisalVM, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var result = await client.PostAsJsonAsync("/api/vehicleappraisals/",vehicleAppraisalVM);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.PostAsJsonAsync("/api/vehicleappraisals/",vehicleAppraisalVM);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
-        public async Task<bool> Update(VehicleAppraisalVM vehicleAppraisalVM, string token)
+        public async Task<ApiResultVM<string>> Update(VehicleAppraisalVM vehicleAppraisalVM, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var result = await client.PutAsJsonAsync("/api/vehicleappraisals/"+vehicleAppraisalVM.Id, vehicleAppraisalVM);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.PutAsJsonAsync("/api/vehicleappraisals/"+vehicleAppraisalVM.Id, vehicleAppraisalVM);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
     }
 }

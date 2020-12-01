@@ -30,43 +30,33 @@ namespace Vehicle_Appraisal_WebMVC.Service
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<bool> ChangePassword(PasswordVM passwordVM)
+        public async Task<ApiResultVM<string>> ChangePassword(PasswordVM passwordVM)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + passwordVM.Token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var result = await client.PutAsJsonAsync("/api/users/password", passwordVM);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            else
-                return false;
+            var response = await client.PutAsJsonAsync("/api/users/password", passwordVM);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
-        public async Task<bool> Delete(int id, string token)
+        public async Task<ApiResultVM<string>> Delete(int id, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             var response = await client.DeleteAsync("/api/users/" + id);
-            if (response.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
-        public async Task<bool> ForgotPassword(string Email)
+        public async Task<ApiResultVM<string>> ForgotPassword(string Email)
         {
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var result = await client.GetAsync("/api/accounts/forgotpassword/?email="+Email);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.GetAsync("/api/accounts/forgotpassword/?email="+Email);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
         public async Task<List<AppUserModelMVC>> GetAll(string token)
@@ -110,44 +100,38 @@ namespace Vehicle_Appraisal_WebMVC.Service
             return appUserModelMVC;
         }
 
-        public async Task<string> Login(LoginVM loginVM)
+        public async Task<ApiResultVM<string>> Login(LoginVM loginVM)
         {
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
             var response = await client.PostAsJsonAsync("/api/accounts/login", loginVM);
-            var token = await response.Content.ReadAsStringAsync();
-            return token;
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
-        public async Task<bool> Register(RegisterVM registerVM, string token)
+        public async Task<ApiResultVM<string>> Register(RegisterVM registerVM, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-            var result = await client.PostAsJsonAsync("/api/accounts/register", registerVM);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.PostAsJsonAsync("/api/accounts/register", registerVM);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
         // update your info
-        public async Task<bool> Update(AppUserVM appUserVM, string token)
+        public async Task<ApiResultVM<string>> Update(AppUserVM appUserVM, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-            var result = await client.PutAsJsonAsync("/api/users/"+appUserVM.Id,appUserVM);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.PutAsJsonAsync("/api/users/"+appUserVM.Id,appUserVM);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
         // update info of user by Admin
-        public async Task<bool> UpdateUsers(AppUserModelMVC appUserModelMVC, string token)
+        public async Task<ApiResultVM<string>> UpdateUsers(AppUserModelMVC appUserModelMVC, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
@@ -159,17 +143,10 @@ namespace Vehicle_Appraisal_WebMVC.Service
                                  Id = u.Id,
                                  Name = u.Name
                              }).SingleOrDefault(x => x.Name.Equals(appUserModelMVC.appUserRoleVM.Name));
-            if (userroles == null)
-            {
-                return false;
-            }
             appUserModelMVC.appUserVM.AppUserRolesId = userroles.Id;
-            var result = await client.PutAsJsonAsync("/api/users/" + appUserModelMVC.appUserVM.Id, appUserModelMVC.appUserVM);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.PutAsJsonAsync("/api/users/" + appUserModelMVC.appUserVM.Id, appUserModelMVC.appUserVM);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
     }
 }

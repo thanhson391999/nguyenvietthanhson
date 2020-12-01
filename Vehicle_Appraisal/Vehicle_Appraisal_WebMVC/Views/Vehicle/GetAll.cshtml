@@ -20,6 +20,22 @@
             </div>
         </div><!-- /.container-fluid -->
     </section>
+    <div class="row">
+        <div class="col-md-auto" style="margin-left:1rem">
+            @if (ViewBag.SuccessMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-success" role="alert">
+                    @ViewBag.SuccessMsg
+                </div>
+            }
+            @if (ViewBag.ErrorMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMsg
+                </div>
+            }
+        </div>
+    </div>
     @if (User.Claims.Where(x => x.Type.Equals("Role")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim() == "Admin")
     {
         <div class="card-header">
@@ -80,6 +96,7 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
+                                        <th>Date</th>
                                         <th>Customer</th>
                                         <th>Make</th>
                                         <th>Model</th>
@@ -100,6 +117,9 @@
                                                 <tr>
                                                     <td>
                                                         @Html.DisplayFor(Model => item.vehicleVM.Id)
+                                                    </td>
+                                                    <td>
+                                                        @item.vehicleVM.CreateAt.ToString("dd/MM/yyyy");
                                                     </td>
                                                     <td>
                                                         @Html.DisplayFor(Model => item.customerVM.FirstName) @Html.DisplayFor(Model => item.customerVM.LastName)
@@ -137,6 +157,9 @@
                                                         @Html.DisplayFor(Model => item.vehicleVM.Id)
                                                     </td>
                                                     <td>
+                                                        @item.vehicleVM.CreateAt.ToString("dd/MM/yyyy")
+                                                    </td>
+                                                    <td>
                                                         @Html.DisplayFor(Model => item.customerVM.FirstName) @Html.DisplayFor(Model => item.customerVM.LastName)
                                                     </td>
                                                     <td>
@@ -164,9 +187,9 @@
                                                        item.vehicleVM.Odometer,
                                                        item.vehicleVM.VIN,
                                                        item.vehicleVM.Engine,
-                                                       item.makeVM.Name,
+                                                       MakeName = item.makeVM.Name,
                                                        item.appUserVM.FullName,
-                                                       item.vehicleVM.ModelId,
+                                                       ModelName = item.modelVM.Name,
                                                        item.customerVM.FirstName,
                                                        item.customerVM.LastName,
                                                    }) |
@@ -195,3 +218,10 @@
     </section>
     <!-- /.content -->
 </div>
+<script src="~/ThemeLTE/plugins/jquery/jquery.min.js"></script>
+<!-- /.Alert function -->
+<script>
+    setTimeout(function () {
+        $("#msgAlert").fadeOut('slow');
+    }, 5000);
+</script>

@@ -15,10 +15,13 @@ namespace Vehicle_Appraisal_WebApi.Application
     public class EmailsController : ControllerBase
     {
         private readonly IEmailService _emailService;
+
         public EmailsController(IEmailService emailService)
         {
             _emailService = emailService;
         }
+
+        // POST api/emails/resetpassword
         [HttpPost("resetpassword")]
         public async Task<IActionResult> ResetPassword([FromForm]PasswordVM passwordVM)
         {
@@ -48,6 +51,8 @@ namespace Vehicle_Appraisal_WebApi.Application
                 });
             }
         }
+
+        // GET api/emails/confirmemail
         [HttpGet("confirmemail")]
         public async Task<IActionResult> ConfirmEmail(string tokenEmail)
         {

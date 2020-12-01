@@ -12,8 +12,8 @@ namespace Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService
         Task<List<AppUserVM>> GetAll();
         Task<AppUserVM> GetUser(string emailorusername);
         Task<AppUserVM> GetById(int id);
-        Task<bool> Delete(int id);
-        Task<bool> Update(AppUserVM userVM, int id);
-        Task<bool> ChangePassword(PasswordVM passwordVM);
+        Task<ApiResultVM<string>> Delete(int id);
+        Task<ApiResultVM<string>> Update(AppUserVM userVM, int id);
+        Task<ApiResultVM<string>> ChangePassword(PasswordVM passwordVM);
     }
 }

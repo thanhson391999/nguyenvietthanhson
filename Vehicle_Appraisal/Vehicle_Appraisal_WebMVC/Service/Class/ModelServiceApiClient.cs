@@ -22,17 +22,14 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<bool> Delete(int id, string token)
+        public async Task<ApiResultVM<string>> Delete(int id, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var result = await client.DeleteAsync("/api/models/" + id);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.DeleteAsync("/api/models/" + id);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
         public async Task<List<ModelVM>> GetAll(string token)
@@ -68,30 +65,24 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             return list;
         }
 
-        public async Task<bool> Insert(ModelVM modelVM, string token)
+        public async Task<ApiResultVM<string>> Insert(ModelVM modelVM, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var result = await client.PostAsJsonAsync("/api/models", modelVM);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.PostAsJsonAsync("/api/models", modelVM);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
-        public async Task<bool> Update(ModelVM modelVM, string token)
+        public async Task<ApiResultVM<string>> Update(ModelVM modelVM, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var result = await client.PutAsJsonAsync("/api/models/"+modelVM.Id, modelVM);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.PutAsJsonAsync("/api/models/"+modelVM.Id, modelVM);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
     }
 }

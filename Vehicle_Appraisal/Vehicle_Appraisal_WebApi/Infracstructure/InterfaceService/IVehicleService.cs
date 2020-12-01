@@ -8,7 +8,7 @@ namespace Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService
 {
     public interface IVehicleService : IService<VehicleVM>
     {
-        Task<bool> BuyVehicle(int id);
+        Task<ApiResultVM<string>> BuyVehicle(int id);
         Task<List<VehicleVM>> Search(string customerId, string makeId, string modelId, string odometer, string VIN, string engine, string appuserId);
         Task<List<ConditionVM>> GetAllConditionById(int id);
         Task<List<VehicleAppraisalVM>> GetAllAppraisalValueById(int id);

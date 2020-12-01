@@ -43,21 +43,23 @@
         <!-- Main content -->
         <section class="content">
             <form asp-action="UpdateUsersAction" asp-controller="user" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-row">
                     <div class="col-md-6">
                         <div class="card card-primary">
                             <div class="card-body">
                                 <div class="form-group">
-                                    <input type="hidden" asp-for="appUserVM.Id" class="form-control">
+                                    <input type="hidden" asp-for="appUserVM.Id">
+                                    <input type="hidden" asp-for="appUserVM.CreateAt" />
                                     <label for="inputUN">UserName</label>
-                                    <input type="text" asp-for="appUserVM.UserName" id="inputUN" class="form-control" required>
+                                    <input type="text" asp-for="appUserVM.UserName" id="inputUN" class="form-control">
                                     <label for="inputEmail">Email</label>
-                                    <input type="text" asp-for="appUserVM.Email" id="inputEmail" class="form-control" required>
+                                    <input type="email" asp-for="appUserVM.Email" id="inputEmail" class="form-control">
                                     <label for="inputFN">FullName</label>
-                                    <input type="text" asp-for="appUserVM.FullName" id="inputFN" class="form-control" required>
+                                    <input type="text" asp-for="appUserVM.FullName" id="inputFN" class="form-control">
                                     <label for="inputRole">Role</label>
                                     <div>
-                                        <select id="inputRole" asp-for="appUserRoleVM.Name" class="Chosen" style="font-size:13.1rem" required>
+                                        <select id="inputRole" asp-for="appUserRoleVM.Name" class="Chosen" style="font-size:13.1rem">
                                             <option></option>
                                             @foreach (var item in Model.ListAppUserRoleVM)
                                             {
@@ -74,7 +76,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <a href="/make/GetAll" class="btn btn-secondary">Cancel</a>
+                        <a href="/user/GetAll" class="btn btn-secondary">Cancel</a>
                         <input type="submit" value="Change Make" class="btn btn-success">
                     </div>
                 </div>

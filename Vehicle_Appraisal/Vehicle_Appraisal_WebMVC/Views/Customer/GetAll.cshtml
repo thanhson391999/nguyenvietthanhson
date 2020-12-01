@@ -21,6 +21,22 @@
             </div>
         </div><!-- /.container-fluid -->
     </section>
+    <div class="row">
+        <div class="col-md-auto" style="margin-left:1rem">
+            @if (ViewBag.SuccessMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-success" role="alert">
+                    @ViewBag.SuccessMsg
+                </div>
+            }
+            @if (ViewBag.ErrorMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMsg
+                </div>
+            }
+        </div>
+    </div>
     <div class="card-header">
         <a id="btn-create" class="btn btn-primary" href="/customer/insert">
             <i class="far fa-plus-square"></i>
@@ -73,6 +89,7 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
+                                        <th>Date</th>
                                         <th>First Name</th>
                                         <th>LastName</th>
                                         <th>Phone</th>
@@ -92,6 +109,9 @@
                                             <tr>
                                                 <td>
                                                     @Html.DisplayFor(Model => item.Id)
+                                                </td>
+                                                <td>
+                                                    @item.CreateAt.ToString("dd/MM/yyyy")
                                                 </td>
                                                 <td>
                                                     @Html.DisplayFor(Model => item.FirstName)
@@ -134,7 +154,7 @@
                                                     @Html.ActionLink("Details", "Details", new { }) |
                                                     <a href="@Url.Action("DeleteAction","customer",new { item.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete customer with ID = @item.Id')">
                                                         Delete
-                                                    </a>                                               
+                                                    </a>
                                                 </td>
                                             </tr>
                                         }
@@ -155,3 +175,10 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<script src="~/ThemeLTE/plugins/jquery/jquery.min.js"></script>
+<!-- /.Alert function -->
+<script>
+    setTimeout(function () {
+        $("#msgAlert").fadeOut('slow');
+    }, 5000);
+</script>

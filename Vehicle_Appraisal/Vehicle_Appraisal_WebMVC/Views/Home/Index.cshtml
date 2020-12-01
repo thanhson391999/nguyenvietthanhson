@@ -21,6 +21,16 @@
     </div>
     <!-- /.content-header -->
     <!-- Main content -->
+    <div class="row">
+        <div class="col-md-auto" style="margin-left:1rem">
+            @if (ViewBag.SuccessMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-success" role="alert">
+                    @ViewBag.SuccessMsg
+                </div>
+            }
+        </div>
+    </div>
     <section class="content">
         <div class="container-fluid">
             <!-- Small boxes (Stat box) -->
@@ -113,3 +123,10 @@
         </div>
     </section>
 </div>
+<script src="~/ThemeLTE/plugins/jquery/jquery.min.js"></script>
+<!-- /.Alert function -->
+<script>
+    setTimeout(function () {
+        $("#msgAlert").fadeOut('slow');
+    }, 5000);
+</script>

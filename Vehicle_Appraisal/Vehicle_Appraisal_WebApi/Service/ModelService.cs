@@ -21,26 +21,26 @@ namespace Vehicle_Appraisal_WebApi.Service
             _dbContextDTO = dbContextDTO;
             dbset = dbContextDTO.Set<ModelDTO>();
         }
-        public async Task<bool> Delete(int id)
+        public async Task<ApiResultVM<string>> Delete(int id)
         {
             var modelVM = await GetById(id);
             if (modelVM == null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Model doesn't exist");
             }
             var checkConstraint = _dbContextDTO.Set<VehicleDTO>().Where(x => x.ModelId.Equals(id)).Where(x => x.isBought == false).AsNoTracking().FirstOrDefault();
             if (checkConstraint != null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Can't delete because model is existing in vehicle");
             }
             var modelDTO = _mapper.Map<ModelDTO>(modelVM);
             modelDTO.isDelete = true;
             modelDTO.UpdateAt = DateTime.Now;
             dbset.Update(modelDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Delete Success");
         }
 
         public async Task<List<ModelVM>> GetAll()
@@ -64,35 +64,42 @@ namespace Vehicle_Appraisal_WebApi.Service
             return modelVM;
         }
 
-        public async Task<bool> Insert(ModelVM modelVM)
+        public async Task<ApiResultVM<string>> Insert(ModelVM modelVM)
         {
-            if (modelVM.Name == null || modelVM.Year == null)
+            var checkModel = await dbset.Where(x => x.Name.Equals(modelVM.Name)).AsNoTracking().FirstOrDefaultAsync();
+            if (checkModel != null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Model already exist");
             }
             var modelDTO = _mapper.Map<ModelDTO>(modelVM);
             modelDTO.CreateAt = DateTime.Now;
             modelDTO.UpdateAt = DateTime.Now;
             await dbset.AddAsync(modelDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Insert Success");
         }
 
-        public async Task<bool> Update(ModelVM modelVM, int id)
+        public async Task<ApiResultVM<string>> Update(ModelVM modelVM, int id)
         {
             var checkValue = await GetById(id);
-            if (checkValue == null || modelVM.Name == null || modelVM.Year == null)
+            if (checkValue == null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Model doesn't exist");
+            }
+            var checkModel = await dbset.Where(x=>x.Id != id).Where(x => x.Name.Equals(modelVM.Name)).AsNoTracking().FirstOrDefaultAsync();
+            if (checkModel != null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("Model's name already exist");
             }
             var modelDTO = _mapper.Map<ModelDTO>(modelVM);
             modelDTO.Id = id;
             modelDTO.UpdateAt = DateTime.Now;
             dbset.Update(modelDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Update Success");
         }
     }
 }

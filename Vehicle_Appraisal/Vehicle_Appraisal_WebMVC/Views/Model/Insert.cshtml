@@ -43,15 +43,16 @@
         <!-- Main content -->
         <section class="content">
             <form asp-action="InsertAction" asp-controller="Model" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-row">
                     <div class="col-md-6">
                         <div class="card card-primary">
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="inputName">Name</label>
-                                    <input type="text" asp-for="Name" id="inputName" class="form-control" required>
+                                    <input type="text" asp-for="Name" id="inputName" class="form-control">
                                     <label for="inputYear">Year</label>
-                                    <input type="text" asp-for="Year" id="inputYear" class="form-control" required>
+                                    <input type="text" asp-for="Year" id="inputYear" class="form-control">
                                 </div>
                             </div>
                             <!-- /.card-body -->

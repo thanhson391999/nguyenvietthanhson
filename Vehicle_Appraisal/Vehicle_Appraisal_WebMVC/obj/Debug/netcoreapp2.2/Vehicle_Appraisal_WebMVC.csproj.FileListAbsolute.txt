@@ -138,6 +138,7 @@ E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\bin\Debu
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\bin\Debug\netcoreapp2.2\Vehicle_Appraisal_WebApi.Views.pdb
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\bin\Debug\netcoreapp2.2\appsettings.Development.json
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\bin\Debug\netcoreapp2.2\appsettings.json
+E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\bin\Debug\netcoreapp2.2\libman.json
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\bin\Debug\netcoreapp2.2\Vehicle_Appraisal_WebMVC.deps.json
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\bin\Debug\netcoreapp2.2\Vehicle_Appraisal_WebMVC.runtimeconfig.json
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\bin\Debug\netcoreapp2.2\Vehicle_Appraisal_WebMVC.runtimeconfig.dev.json
@@ -177,7 +178,6 @@ E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debu
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debug\netcoreapp2.2\Razor\Views\Shared\_Layout.cshtml.g.cs
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debug\netcoreapp2.2\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debug\netcoreapp2.2\Razor\Views\User\ChangePassword.cshtml.g.cs
-E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debug\netcoreapp2.2\Razor\Views\User\ForgetPassword.cshtml.g.cs
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debug\netcoreapp2.2\Razor\Views\User\GetAll.cshtml.g.cs
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debug\netcoreapp2.2\Razor\Views\User\GetById.cshtml.g.cs
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debug\netcoreapp2.2\Razor\Views\User\Info.cshtml.g.cs
@@ -212,3 +212,4 @@ E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debu
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebMVC.dll
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebMVC.pdb
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebMVC.genruntimeconfig.cache
+E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debug\netcoreapp2.2\Razor\Views\User\ForgotPassword.cshtml.g.cs

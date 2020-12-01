@@ -24,6 +24,9 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             _userServiceApiClient = userServiceApiClient;
             _vehicleServiceApiClient = vehicleServiceApiClient;
         }
+
+        // GET home/index
+        [HttpGet]
         public async Task<IActionResult> index()
         {
             string token = HttpContext.Session.GetString("token_access");
@@ -36,14 +39,19 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
                 ListCustomerVM = listCustomer,
                 ListVehicleVM = listVehicle
             };
+            if (TempData["SuccessResult"] != null)
+            {
+                ViewBag.SuccessMsg = TempData["SuccessResult"];
+            }
             return View(dashboard);
         }
 
+        // GET home/privacy
+        [HttpGet]
         public IActionResult Privacy()
         {
             return View();
         }
-
      
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

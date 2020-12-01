@@ -10,13 +10,13 @@ namespace Vehicle_Appraisal_WebMVC.Service.Interface
     {
         Task<List<AppUserModelMVC>> GetAll(string token);
         Task<AppUserModelMVC> GetById(int id, string token);
-        Task<bool> UpdateUsers(AppUserModelMVC appUserModelMVC, string token);
+        Task<ApiResultVM<string>> UpdateUsers(AppUserModelMVC appUserModelMVC, string token);
 
-        Task<bool> Update(AppUserVM appUserVM, string token);
-        Task<bool> Delete(int id, string token);
-        Task<string> Login(LoginVM loginVM);
-        Task<bool> Register(RegisterVM registerVM, string token);
-        Task<bool> ForgotPassword(string email);
-        Task<bool> ChangePassword(PasswordVM passwordVM);
+        Task<ApiResultVM<string>> Update(AppUserVM appUserVM, string token);
+        Task<ApiResultVM<string>> Delete(int id, string token);
+        Task<ApiResultVM<string>> Login(LoginVM loginVM);
+        Task<ApiResultVM<string>> Register(RegisterVM registerVM, string token);
+        Task<ApiResultVM<string>> ForgotPassword(string email);
+        Task<ApiResultVM<string>> ChangePassword(PasswordVM passwordVM);
     }
 }

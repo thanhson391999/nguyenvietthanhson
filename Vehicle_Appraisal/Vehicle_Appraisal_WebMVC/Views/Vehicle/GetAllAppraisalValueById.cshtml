@@ -44,6 +44,22 @@
                     </div>
                 </div><!-- /.container-fluid -->
             </section>
+            <div class="row">
+                <div class="col-md-auto" style="margin-left:1rem">
+                    @if (ViewBag.SuccessMsg != null)
+                    {
+                        <div id="msgAlert" class="alert alert-success" role="alert">
+                            @ViewBag.SuccessMsg
+                        </div>
+                    }
+                    @if (ViewBag.ErrorMsg != null)
+                    {
+                        <div id="msgAlert" class="alert alert-danger" role="alert">
+                            @ViewBag.ErrorMsg
+                        </div>
+                    }
+                </div>
+            </div>
             @if (Model.Where(x => x.Id == 0).SingleOrDefault() != null)
             {
                 <div class="card-header">
@@ -64,6 +80,7 @@
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
+                                                <th>Date</th>
                                                 <th>AppraisalValue</th>
                                                 <th>Options</th>
                                             </tr>
@@ -78,6 +95,9 @@
                                                         <tr class="Search">
                                                             <td>
                                                                 @Html.DisplayFor(Model => item.Id)
+                                                            </td>
+                                                            <td>
+                                                                @item.CreateAt.ToString("dd/MM/yyyy")
                                                             </td>
                                                             <td>
                                                                 @Html.DisplayFor(Model => item.AppraisalValue)
@@ -133,5 +153,11 @@
     <script src="~/ThemeLTE/dist/js/adminlte.min.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="~/ThemeLTE/dist/js/demo.js"></script>
+    <!-- /.Alert function -->
+    <script>
+        setTimeout(function () {
+            $("#msgAlert").fadeOut('slow');
+        }, 5000);
+    </script>
 </body>
 </html>

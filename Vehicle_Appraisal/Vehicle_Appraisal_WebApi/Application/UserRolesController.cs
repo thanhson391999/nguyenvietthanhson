@@ -21,6 +21,7 @@ namespace Vehicle_Appraisal_WebApi.Application
             _UserRoleService = UserRoleService;
         }
 
+        // GET api/userroles
         [HttpGet]
         [Authorize(Roles = "Admin,Users")]
         public async Task<List<AppUserRoleVM>> GetAll()
@@ -28,71 +29,12 @@ namespace Vehicle_Appraisal_WebApi.Application
             return await _UserRoleService.GetAll();
         }
 
+        // GET api/userroles/{id}
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<AppUserRoleVM> GetById(int id)
         {
             return await _UserRoleService.GetById(id);
-        }
-
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var result = await _UserRoleService.Delete(id);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Delete Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Delete Fail !",
-                is_erro = true,
-            });
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Insert(AppUserRoleVM UserRoleVM)
-        {
-            var result = await _UserRoleService.Insert(UserRoleVM);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Insert Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Insert Fail !",
-                is_erro = true,
-            });
-        }
-
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Update(AppUserRoleVM UserRoleVM, int id)
-        {
-            var result = await _UserRoleService.Update(UserRoleVM, id);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Update Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Update Fail !",
-                is_erro = true,
-            });
         }
     }
 }

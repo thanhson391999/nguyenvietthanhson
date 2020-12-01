@@ -4,9 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using com.sun.xml.@internal.bind.v2.runtime.output;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.EMMA;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,6 +23,8 @@ using Vehicle_Appraisal_WebApi.DALs;
 using Vehicle_Appraisal_WebApi.DTOs;
 using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
 using Vehicle_Appraisal_WebApi.Service;
+using FluentValidation.AspNetCore;
+using Vehicle_Appraisal_WebApi.Infracstructure.ValidatorDTO;
 
 namespace Vehicle_Appraisal_WebApi
 {
@@ -46,6 +45,8 @@ namespace Vehicle_Appraisal_WebApi
             // DB connection string (My SQL Server)
             services.AddDbContext<DbContextDTO>(opt =>
             opt.UseSqlServer(Configuration.GetConnectionString("VehicleAppraisal")));
+
+            // Validator
 
             // automapper
             var config = new MapperConfiguration(cfg =>
@@ -122,7 +123,10 @@ namespace Vehicle_Appraisal_WebApi
                 });
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                // add fluent validation
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RegisterValidator>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

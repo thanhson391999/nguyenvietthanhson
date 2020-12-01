@@ -31,17 +31,14 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<bool> Delete(int id, string token)
+        public async Task<ApiResultVM<string>> Delete(int id, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var result = await client.DeleteAsync("/api/makes/" + id);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.DeleteAsync("/api/makes/" + id);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
         public async Task<List<MakeVM>> GetAll(string token)
         {
@@ -76,30 +73,24 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             return makeVM;
         }
 
-        public async Task<bool> Insert(MakeVM makeVM, string token)
+        public async Task<ApiResultVM<string>> Insert(MakeVM makeVM, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var result = await client.PostAsJsonAsync("/api/makes", makeVM);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.PostAsJsonAsync("/api/makes", makeVM);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
-        public async Task<bool> Update(MakeVM makeVM, string token)
+        public async Task<ApiResultVM<string>> Update(MakeVM makeVM, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var result = await client.PutAsJsonAsync("/api/makes/" + makeVM.Id, makeVM);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.PutAsJsonAsync("/api/makes/" + makeVM.Id, makeVM);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
     }
 }

@@ -37,26 +37,27 @@ namespace Vehicle_Appraisal_WebApi.Service
             _mapper = mapper;
             dbset = dbContextDTO.Set<AppUserDTO>();
         }
-        public async Task<bool> Delete(int id)
+
+        public async Task<ApiResultVM<string>> Delete(int id)
         {
             var userVM = await GetById(id);
             if (userVM == null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Users doesn't exist");
             }
-            var VehicleDTO = await _dbContextDTO.Set<VehicleDTO>().Where(x => x.AppUserId.Equals(id)).Where(x => x.isBought == false).AsNoTracking().FirstOrDefaultAsync();
-            if (VehicleDTO != null)
+            var checkConstraint = await _dbContextDTO.Set<VehicleDTO>().Where(x => x.AppUserId.Equals(id)).Where(x => x.isBought == false).AsNoTracking().FirstOrDefaultAsync();
+            if (checkConstraint != null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Can't delete because users is existing in vehicle");
             }
             var userDTO = await dbset.Where(x => x.Id.Equals(id)).AsNoTracking().SingleOrDefaultAsync();
             userDTO.isDelete = true;
             userDTO.UpdateAt = DateTime.Now;
             dbset.Update(userDTO);
-             await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Delete Success");
         }
 
         public async Task<List<AppUserVM>> GetAll()
@@ -73,16 +74,31 @@ namespace Vehicle_Appraisal_WebApi.Service
             return userVM;
         }
 
-        public async Task<bool> Update(AppUserVM UserVM, int id)
+        public async Task<ApiResultVM<string>> Update(AppUserVM UserVM, int id)
         {
             var checkValue = dbset.Where(x => x.Id.Equals(id)).Where(x => x.isDelete == false).AsNoTracking().SingleOrDefault();
-            if (checkValue == null ||
-                UserVM.Email == null ||
-                UserVM.FullName == null ||
-                UserVM.UserName == null)
+            if (checkValue == null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Users doesn't exist");
+            }
+            var userName = await dbset.Where(x => x.Id != id).Where(x => x.UserName.Equals(UserVM.UserName)).AsNoTracking().FirstOrDefaultAsync();
+            var fullName = await dbset.Where(x => x.Id != id).Where(x => x.FullName.Equals(UserVM.FullName)).AsNoTracking().FirstOrDefaultAsync();
+            var email = await dbset.Where(x => x.Id != id).Where(x => x.Email.Equals(UserVM.Email)).AsNoTracking().FirstOrDefaultAsync();
+            if (userName != null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("UserName is exist");
+            }
+            if (email != null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("Email is exist");
+            }
+            if (fullName != null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("FullName is exist");
             }
             var userDTO = _mapper.Map<AppUserDTO>(UserVM);
             userDTO.Id = id;
@@ -91,8 +107,8 @@ namespace Vehicle_Appraisal_WebApi.Service
             userDTO.ConfirmEmail = checkValue.ConfirmEmail;
             userDTO.UpdateAt = DateTime.Now;
             dbset.Update(userDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Update Success");
         }
 
         public async Task<AppUserVM> GetUser(string emailorusername)
@@ -102,24 +118,19 @@ namespace Vehicle_Appraisal_WebApi.Service
             return userVM;
         }
 
-        public async Task<bool> ChangePassword(PasswordVM passwordVM)
+        public async Task<ApiResultVM<string>> ChangePassword(PasswordVM passwordVM)
         {
             var handler = new JwtSecurityTokenHandler();
             var token = handler.ReadJwtToken(passwordVM.Token);
             var username = token.Claims.Where(x => x.Type.Equals("UserName")).FirstOrDefault().ToString().Split(' ').ElementAt(1);
-            if (passwordVM.NewPassword != passwordVM.ConfirmNewPassword || passwordVM.NewPassword == null)
-            {
-                _dbContextDTO.Dispose();
-                return false;
-            }
             var passwordHash = new PasswordHash();
             var password = passwordHash.HashPassword(passwordVM.NewPassword);
-            var userDTO = dbset.Where(x => x.UserName.Equals(username)).AsNoTracking().SingleOrDefault();
+            var userDTO = await dbset.Where(x => x.UserName.Equals(username)).AsNoTracking().SingleOrDefaultAsync();
             userDTO.PassWord = password;
             userDTO.UpdateAt = DateTime.Now;
             dbset.Update(userDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Password has changed");
         }
     }
 }

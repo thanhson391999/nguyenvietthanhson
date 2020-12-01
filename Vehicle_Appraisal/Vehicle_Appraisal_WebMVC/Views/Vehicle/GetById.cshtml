@@ -50,6 +50,7 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
+                                            <th>Date</th>
                                             <th>Customer</th>
                                             <th>Make</th>
                                             <th>Model</th>
@@ -66,6 +67,9 @@
                                             <tr>
                                                 <td>
                                                     @Model.vehicleVM.Id
+                                                </td>
+                                                <td>
+                                                    @Model.vehicleVM.CreateAt.ToString("dd/MM/yyyy")
                                                 </td>
                                                 <td>
                                                     @Model.customerVM.FirstName @Model.customerVM.LastName

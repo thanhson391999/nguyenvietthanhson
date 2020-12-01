@@ -44,16 +44,16 @@ namespace Vehicle_Appraisal_WebApi.Service
             _dbContextDTO = dbContextDTO;
             dbset = dbContextDTO.Set<AppUserDTO>();
         }
-        public async Task<string> Login(LoginVM loginVM)
+
+        public async Task<ApiResultVM<string>> Login(LoginVM loginVM)
         {
-            string token = null;
             var userVM = await _userService.GetUser(loginVM.UserName);
-            var userDTO = await dbset.Where(x => x.Id.Equals(userVM.Id)).Where(x => x.isDelete == false).AsNoTracking().SingleOrDefaultAsync();
-            if (loginVM.UserName == null || loginVM.Password == null || userVM == null)
+            if (userVM == null)
             {
                 _dbContextDTO.Dispose();
-                return token;
+                return new ApiErrorResultVM<string>("User doesn't exist");
             }
+            var userDTO = await dbset.Where(x => x.Id.Equals(userVM.Id)).AsNoTracking().SingleOrDefaultAsync();
             var passwordHash = new PasswordHash();
             var password = passwordHash.HashPassword(loginVM.Password);
             if (password == userDTO.PassWord)
@@ -66,10 +66,12 @@ namespace Vehicle_Appraisal_WebApi.Service
                     var htmlContent = $"Please confirm your email by click here <a href='{url}'> Link</a>";
                     await _emailService.SendEmail(userDTO.Email, htmlContent, subject);
                 }
-                return token = GenarateToken(userVM);
+                string token = GenarateToken(userVM);
+                return new ApiSuccessResultVM<string>(token);
             }
-            return token;
+            return new ApiErrorResultVM<string>("Password is incorrect");
         }
+
         private string GenarateToken(AppUserVM UserVM)
         {
             var issuer = _configuration["JWT:Issuer"];
@@ -93,6 +95,7 @@ namespace Vehicle_Appraisal_WebApi.Service
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
         private string GenarateTokenEmail(string email)
         {
             var issuer = _configuration["JWT:Issuer"];
@@ -110,20 +113,25 @@ namespace Vehicle_Appraisal_WebApi.Service
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<bool> Register(RegisterVM registerVM)
+        public async Task<ApiResultVM<string>> Register(RegisterVM registerVM)
         {
-            var userEmail = await _userService.GetUser(registerVM.Email);
-            var userUserName = await _userService.GetUser(registerVM.UserName);
-            if (registerVM.Password == null ||
-                registerVM.Email == null ||
-                registerVM.FullName == null ||
-                registerVM.UserName == null ||
-                registerVM.Password != registerVM.ConfirmPassword ||
-                userEmail != null ||
-                userUserName != null)
+            var email = await _userService.GetUser(registerVM.Email);
+            var userName = await _userService.GetUser(registerVM.UserName);
+            var fullName = await dbset.Where(x => x.FullName.Equals(registerVM.FullName)).Where(x => x.isDelete == false).AsNoTracking().FirstOrDefaultAsync();
+            if (userName != null) 
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("UserName is exist");
+            }
+            if (email != null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("Email is exist");
+            }
+            if (fullName != null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("FullName is exist");
             }
             var passwordHash = new PasswordHash();
             var userDTO = _mapper.Map<AppUserDTO>(registerVM);
@@ -132,28 +140,28 @@ namespace Vehicle_Appraisal_WebApi.Service
             userDTO.CreateAt = DateTime.Now;
             userDTO.UpdateAt = DateTime.Now;
             await dbset.AddAsync(userDTO);
-            await _dbContextDTO.SaveChangesAsync();
+            //await _dbContextDTO.SaveChangesAsync();
             var tokenEmail = GenarateTokenEmail(userDTO.Email);
             string url = $"{ _configuration["AppUrl"]}/api/emails/confirmemail?tokenemail={tokenEmail}";
             var subject = "Email For Confirm Password";
             var htmlContent = $"Please confirm your email by click here <a href='{url}'> Link</a>";
             await _emailService.SendEmail(userDTO.Email, htmlContent, subject);
-            return true;
+            return new ApiSuccessResultVM<string>("Register Success");
         }
 
-        public async Task<bool> ForgotPassword(string email)
+        public async Task<ApiResultVM<string>> ForgotPassword(string email)
         {
             if (email == null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("email is empty");
             }
             var token = GenarateTokenEmail(email);
             var subject = "Email For Reset Password";
             string url = $"{ _configuration["AppUrl"]}/resetpassword?token={token}";
             var htmlContent = $"Please reset your password by click here <a href='{url}'> Link</a>";
             await _emailService.SendEmail(email, htmlContent,subject);
-            return true;
+            return new ApiSuccessResultVM<string>("Email to reset password has sent to you, check your email now !");
         }
     }
 }

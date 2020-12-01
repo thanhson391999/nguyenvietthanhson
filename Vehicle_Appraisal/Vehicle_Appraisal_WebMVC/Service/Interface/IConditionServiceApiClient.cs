@@ -10,8 +10,8 @@ namespace Vehicle_Appraisal_WebMVC.Service.Interface
     public interface IConditionServiceApiClient
     {
         Task<string> UploadImage(IFormFile file, string token);
-        Task<bool> Insert(ConditionVM conditionVM, string token);
-        Task<bool> Delete(int id, string token);
-        Task<bool> Update(ConditionVM conditionVM, string token);
+        Task<ApiResultVM<string>> Insert(ConditionVM conditionVM, string token);
+        Task<ApiResultVM<string>> Delete(int id, string token);
+        Task<ApiResultVM<string>> Update(ConditionVM conditionVM, string token);
     }
 }

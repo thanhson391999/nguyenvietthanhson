@@ -21,6 +21,7 @@ namespace Vehicle_Appraisal_WebApi.Application
             _ModelService = ModelService;
         }
 
+        // GET api/models
         [HttpGet]
         [Authorize(Roles = "Admin,Users")]
         public async Task<List<ModelVM>> GetAll()
@@ -28,6 +29,7 @@ namespace Vehicle_Appraisal_WebApi.Application
             return await _ModelService.GetAll();
         }
 
+        // GET api/models/not-delete
         [HttpGet("not-delete")]
         [Authorize(Roles = "Admin,Users")]
         public async Task<List<ModelVM>> GetAllNotDelete()
@@ -35,6 +37,7 @@ namespace Vehicle_Appraisal_WebApi.Application
             return await _ModelService.GetAllNotDelete();
         }
 
+        // GET api/models/{id}
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<ModelVM> GetById(int id)
@@ -42,64 +45,31 @@ namespace Vehicle_Appraisal_WebApi.Application
             return await _ModelService.GetById(id);
         }
 
+        // DELETE api/models/{id}
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _ModelService.Delete(id);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Delete Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Delete Fail !",
-                is_erro = true,
-            });
+            return Ok(result);
         }
 
+        // POST api/models
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Insert(ModelVM ModelVM)
         {
             var result = await _ModelService.Insert(ModelVM);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Insert Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Insert Fail !",
-                is_erro = true,
-            });
+            return Ok(result);
         }
 
+        // PUT api/models/{id}
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(ModelVM ModelVM, int id)
         {
             var result = await _ModelService.Update(ModelVM, id);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Update Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Update Fail !",
-                is_erro = true,
-            });
+            return Ok(result);
         }
     }
 }

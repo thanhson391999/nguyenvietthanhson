@@ -33,17 +33,14 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<bool> Delete(int id, string token)
+        public async Task<ApiResultVM<string>> Delete(int id, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var result = await client.DeleteAsync("/api/vehicles/" + id);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.DeleteAsync("/api/vehicles/" + id);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
         private async Task<List<VehicleModelMVC>> ReturnListVehicle(List<VehicleVM> vehicleVMs, string token)
@@ -88,7 +85,7 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var response = await client.GetAsync("/api/vehicles/" + id + "/condition");
+            var response = await client.GetAsync("/api/vehicles/" + id + "/conditions");
             var body = await response.Content.ReadAsStringAsync();
             var list = JsonConvert.DeserializeObject<List<ConditionVM>>(body);
             return list;
@@ -99,7 +96,7 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var response = await client.GetAsync("/api/vehicles/" + id + "/appraisalvalue");
+            var response = await client.GetAsync("/api/vehicles/" + id + "/appraisalvalues");
             var body = await response.Content.ReadAsStringAsync();
             var list = JsonConvert.DeserializeObject<List<VehicleAppraisalVM>>(body);
             return list;
@@ -132,7 +129,7 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             return vehicleModelMVC;
         }
 
-        public async Task<bool> Insert(VehicleModelMVC vehicleModelMVC, string token)
+        public async Task<ApiResultVM<string>> Insert(VehicleModelMVC vehicleModelMVC, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
@@ -166,9 +163,9 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
                                 Id = a.appUserVM.Id,
                                 FullName = a.appUserVM.FullName
                             }).SingleOrDefault(x => x.FullName.Equals(vehicleModelMVC.appUserVM.FullName));
-            if (customers == null || makes == null || models == null || appusers == null)
+            if (customers == null)
             {
-                return false;
+                return new ApiErrorResultVM<string>("Customer doesn't exist");
             }
             var vehicleModel = new VehicleVM()
             {
@@ -180,12 +177,9 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
                 Odometer = vehicleModelMVC.vehicleVM.Odometer,
                 VIN = vehicleModelMVC.vehicleVM.VIN
             };
-            var result = await client.PostAsJsonAsync("/api/vehicles", vehicleModel);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.PostAsJsonAsync("/api/vehicles", vehicleModel);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
         public async Task<List<VehicleModelMVC>> Search(string token, string Customer, string Make, string Model, string odometer, string VIN, string engine, string Appuser)
@@ -260,7 +254,7 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             return await ReturnListVehicle(vehicle, token);
         }
 
-        public async Task<bool> Update(VehicleModelMVC vehicleModelMVC, string token)
+        public async Task<ApiResultVM<string>> Update(VehicleModelMVC vehicleModelMVC, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
@@ -294,33 +288,27 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
                                  Id = a.appUserVM.Id,
                                  FullName = a.appUserVM.FullName
                              }).SingleOrDefault(x => x.FullName.Equals(vehicleModelMVC.appUserVM.FullName));
-            if (customers == null || makes == null || models == null || appusers == null)
+            if (customers == null)
             {
-                return false;
+                return new ApiErrorResultVM<string>("Customer doesn't exist");
             }
             vehicleModelMVC.vehicleVM.CustomerId = customers.Id;
             vehicleModelMVC.vehicleVM.MakeId = makes.Id;
             vehicleModelMVC.vehicleVM.ModelId = models.Id;
             vehicleModelMVC.vehicleVM.AppUserId = appusers.Id;
-            var result = await client.PutAsJsonAsync("/api/vehicles/" + vehicleModelMVC.vehicleVM.Id, vehicleModelMVC.vehicleVM);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.PutAsJsonAsync("/api/vehicles/" + vehicleModelMVC.vehicleVM.Id, vehicleModelMVC.vehicleVM);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
-        public async Task<bool> BuyVehicle(int id, string token)
+        public async Task<ApiResultVM<string>> BuyVehicle(int id, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var result = await client.GetAsync("/api/vehicles/buyvehicle/" + id);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            var response = await client.GetAsync("/api/vehicles/buyvehicle/" + id);
+            var body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
 
         private async Task<List<VehicleModelMVC>> ReturnListVehicleBought(List<VehicleVM> vehicleVMs, string token)

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebMVC.Service.Interface
 {
@@ -10,8 +11,8 @@ namespace Vehicle_Appraisal_WebMVC.Service.Interface
     {
         Task<List<T>> GetAll(string token);
         Task<T> GetById(int Id, string token);
-        Task<bool> Insert(T entity, string token);
-        Task<bool> Delete(int id, string token);
-        Task<bool> Update(T entity, string token);
+        Task<ApiResultVM<string>> Insert(T entity, string token);
+        Task<ApiResultVM<string>> Delete(int id, string token);
+        Task<ApiResultVM<string>> Update(T entity, string token);
     }
 }

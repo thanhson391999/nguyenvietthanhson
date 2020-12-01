@@ -31,6 +31,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             _dbContextDTO = dbContextDTO;
             dbset = dbContextDTO.Set<AppUserDTO>();
         }
+
         public async Task<bool> ConfirmEmail(string token)
         {
             var handler = new JwtSecurityTokenHandler();

@@ -45,6 +45,7 @@
         <!-- Main content -->
         <section class="content">
             <form asp-action="InsertAction" asp-controller="vehicleappraisal" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-row">
                     <div class="col-md-6">
                         <div class="card card-primary">
@@ -52,7 +53,7 @@
                                 <div class="form-group">
                                     <label for="inputClientCompany">AppraisalValue</label>
                                     <input type="hidden" asp-for="VehicleId" value="@Model.VehicleId" />
-                                    <input type="text" asp-for="AppraisalValue" id="inputClientCompany" class="form-control" required>
+                                    <input type="text" asp-for="AppraisalValue" id="inputClientCompany" class="form-control">
                                 </div>
                             </div>
                             <!-- /.card-body -->

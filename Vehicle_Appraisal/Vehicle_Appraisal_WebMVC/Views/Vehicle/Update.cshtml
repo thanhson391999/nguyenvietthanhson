@@ -43,20 +43,22 @@
         <!-- Main content -->
         <section class="content">
             <form asp-action="UpdateAction" asp-controller="vehicle" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-row">
                     <div class="col-md-6">
                         <div class="card card-primary">
                             <div class="card-body">
-                                <input type="hidden" asp-for="vehicleVM.Id" class="form-control">
+                                <input type="hidden" asp-for="vehicleVM.Id">
+                                <input type="hidden" asp-for="vehicleVM.CreateAt" />
                                 <label for="inputCustomer">Customer</label>
                                 <div class="input-group">
-                                    <select id="inputCustomer" asp-for="customerVM.FirstName" class="Chosen" style="font-size:6.6rem" required>
+                                    <select id="inputCustomer" asp-for="customerVM.FirstName" class="Chosen" style="font-size:6.5rem">
                                         @foreach (var item in Model.ListCustomerVM)
                                         {
                                             <option>@Html.DisplayFor(Model => item.FirstName)</option>
                                         }
                                     </select>
-                                    <select id="inputCustomer" asp-for="customerVM.LastName" class="Chosen" style="font-size:8.5rem" required>
+                                    <select id="inputCustomer" asp-for="customerVM.LastName" class="Chosen" style="font-size:8.5rem">
                                         <option></option>
                                         @foreach (var item in Model.ListCustomerVM)
                                         {
@@ -66,7 +68,7 @@
                                 </div>
                                 <label for="inputMake">Make</label>
                                 <div>
-                                    <select id="inputMake" asp-for="makeVM.Name" class="Chosen" style="font-size:11.5rem" required>
+                                    <select id="inputMake" asp-for="makeVM.Name" class="Chosen" style="font-size:11.5rem">
                                         <option></option>
                                         @foreach (var item in Model.ListMakeVM)
                                         {
@@ -76,7 +78,7 @@
                                 </div>
                                 <label for="inputModel">Model</label>
                                 <div>
-                                    <select id="inputModel" asp-for="modelVM.Name" class="Chosen" style="font-size:13.1rem" required>
+                                    <select id="inputModel" asp-for="modelVM.Name" class="Chosen" style="font-size:13.1rem">
                                         <option></option>
                                         @foreach (var item in Model.ListModelVM)
                                         {
@@ -85,14 +87,14 @@
                                     </select>
                                 </div>
                                 <label for="inputOdometer">Odometer</label>
-                                <input type="text" asp-for="vehicleVM.Odometer" id="inputOdometer" class="form-control" required>
+                                <input type="text" asp-for="vehicleVM.Odometer" id="inputOdometer" class="form-control">
                                 <label for="inputVIN">VIN</label>
-                                <input type="text" asp-for="vehicleVM.VIN" id="inputVIN" class="form-control" required>
+                                <input type="text" asp-for="vehicleVM.VIN" id="inputVIN" class="form-control">
                                 <label for="inputEngine">Engine</label>
-                                <input type="text" asp-for="vehicleVM.Engine" id="inputEngine" class="form-control" required>
+                                <input type="text" asp-for="vehicleVM.Engine" id="inputEngine" class="form-control">
                                 <label for="inputUsers">Users</label>
                                 <div>
-                                    <select id="inputUsers" asp-for="appUserVM.FullName" class="Chosen" style="font-size:4rem" required>
+                                    <select id="inputUsers" asp-for="appUserVM.FullName" class="Chosen" style="font-size:4rem">
                                         <option></option>
                                         @foreach (var item in Model.ListAppUserVM)
                                         {

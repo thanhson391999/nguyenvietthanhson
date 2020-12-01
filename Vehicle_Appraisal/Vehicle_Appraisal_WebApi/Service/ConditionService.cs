@@ -26,18 +26,19 @@ namespace Vehicle_Appraisal_WebApi.Service
             _mapper = mapper;
             dbset = dbContextDTO.Set<ConditionDTO>();
         }
-        public async Task<bool> Delete(int id)
+
+        public async Task<ApiResultVM<string>> Delete(int id)
         {
             var ConditionVM = await GetById(id);
             if (ConditionVM == null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Condition doesn't exist");
             }
             var ConditionDTO = _mapper.Map<ConditionDTO>(ConditionVM);
             dbset.Remove(ConditionDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Delete Success");
         }
 
         public async Task<List<ConditionVM>> GetAll()
@@ -54,15 +55,13 @@ namespace Vehicle_Appraisal_WebApi.Service
             return ConditionVM;
         }
 
-        public async Task<bool> Insert(ConditionVM conditionVM)
+        public async Task<ApiResultVM<string>> Insert(ConditionVM conditionVM)
         {
             var vehicleId = await _vehicleService.GetById(conditionVM.VehicleId);
-            if (vehicleId == null ||
-                conditionVM.Type == null ||
-                conditionVM.ImagePath == null)
+            if (vehicleId == null) 
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Vehicle doesn't exist to insert condition");
             }
             if (conditionVM.Note == null)
             {
@@ -72,21 +71,23 @@ namespace Vehicle_Appraisal_WebApi.Service
             ConditionDTO.CreateAt = DateTime.Now;
             ConditionDTO.UpdateAt = DateTime.Now;
             await dbset.AddAsync(ConditionDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Insert Success");
         }
 
-        public async Task<bool> Update(ConditionVM conditionVM, int id)
+        public async Task<ApiResultVM<string>> Update(ConditionVM conditionVM, int id)
         {
             var checkValue = await GetById(id);
             var vehicleId = await _vehicleService.GetById(conditionVM.VehicleId);
-            if (checkValue == null ||
-                vehicleId == null ||
-                conditionVM.Type == null ||
-                conditionVM.ImagePath == null)
+            if (checkValue == null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Condition doesn't exist");
+            }
+            if (vehicleId == null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("Vehicle doesn't exist to update condition");
             }
             if (conditionVM.Note == null)
             {
@@ -96,8 +97,8 @@ namespace Vehicle_Appraisal_WebApi.Service
             ConditionDTO.Id = id;
             ConditionDTO.UpdateAt = DateTime.Now;
             dbset.Update(ConditionDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Update Success");
         }
 
         public async Task<string> UploadImage(IFormFile file)

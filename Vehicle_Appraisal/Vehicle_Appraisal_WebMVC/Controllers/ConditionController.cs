@@ -10,37 +10,44 @@ using Vehicle_Appraisal_WebMVC.Service.Interface;
 
 namespace Vehicle_Appraisal_WebMVC.Controllers
 {
-    [Authorize(Roles ="Admin,Users")]
+    [Authorize(Roles = "Admin,Users")]
     public class ConditionController : Controller
     {
         private readonly IConditionServiceApiClient _conditionServiceApiClient;
+
         public ConditionController(IConditionServiceApiClient conditionServiceApiClient)
         {
             _conditionServiceApiClient = conditionServiceApiClient;
         }
+
+        // GET condition/deleteaction
         [HttpGet]
         public async Task<IActionResult> DeleteAction(int id, int vehicleId)
         {
-            if (ModelState.IsValid)
+            string token = HttpContext.Session.GetString("token_access");
+            var result = await _conditionServiceApiClient.Delete(id, token);
+            if (result.IsSuccessed == true)
             {
-                string token = HttpContext.Session.GetString("token_access");
-                var result = await _conditionServiceApiClient.Delete(id, token);
-                if (result)
-                {
-                    return Redirect("/vehicle/GetAllConditionById/" + vehicleId);
-                }
-                else
-                    return Ok("Delete Fail !");
+                TempData["SuccessResult"] = result.Entity;
+                return Redirect("/vehicle/GetAllConditionById/" + vehicleId);
             }
             else
-                return BadRequest("Error 400");
+            {
+                TempData["ErrorResult"] = result.Message;
+                return Redirect("/vehicle/GetAllConditionById/" + vehicleId);
+            }
         }
+
+        // GET condition/insert
+        [HttpGet]
         public IActionResult Insert(int id)
         {
             var conditionVM = new ConditionVM();
             conditionVM.VehicleId = id;
             return View(conditionVM);
         }
+
+        // POST condition/insertaction
         [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> InsertAction(ConditionVM conditionVM)
@@ -54,19 +61,28 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
                     conditionVM.ImagePath = image;
                 }
                 var result = await _conditionServiceApiClient.Insert(conditionVM, token);
-                if (result)
+                if (result.IsSuccessed == true)
                 {
-                    return Redirect("/vehicle/GetAllConditionById/"+conditionVM.VehicleId);
+                    TempData["SuccessResult"] = result.Entity;
+                    return Redirect("/vehicle/GetAllConditionById/" + conditionVM.VehicleId);
                 }
                 else
-                    return Ok("Insert Fail !");
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View("Insert", conditionVM);
+                }
             }
-            return BadRequest("Error 400");
+            return View("Insert", conditionVM);
         }
+
+        // GET condition/update
+        [HttpGet]
         public IActionResult Update(ConditionVM conditionVM)
         {
             return View(conditionVM);
         }
+
+        // POST condition/updateaction
         [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UpdateAction(ConditionVM conditionVM)
@@ -80,14 +96,18 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
                     conditionVM.ImagePath = image;
                 }
                 var result = await _conditionServiceApiClient.Update(conditionVM, token);
-                if (result)
+                if (result.IsSuccessed == true)
                 {
+                    TempData["SuccessResult"] = result.Entity;
                     return Redirect("/vehicle/GetAllConditionById/" + conditionVM.VehicleId);
                 }
                 else
-                    return Ok("Update Fail !");
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View("Update", conditionVM);
+                }
             }
-            return BadRequest("Error 400");
+            return View("Update", conditionVM);
         }
     }
 }

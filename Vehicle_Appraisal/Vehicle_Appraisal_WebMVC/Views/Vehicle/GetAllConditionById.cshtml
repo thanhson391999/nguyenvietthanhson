@@ -44,6 +44,22 @@
                     </div>
                 </div><!-- /.container-fluid -->
             </section>
+            <div class="row">
+                <div class="col-md-auto" style="margin-left:1rem">
+                    @if (ViewBag.SuccessMsg != null)
+                    {
+                        <div id="msgAlert" class="alert alert-success" role="alert">
+                            @ViewBag.SuccessMsg
+                        </div>
+                    }
+                    @if (ViewBag.ErrorMsg != null)
+                    {
+                        <div id="msgAlert" class="alert alert-danger" role="alert">
+                            @ViewBag.ErrorMsg
+                        </div>
+                    }
+                </div>
+            </div>
             <div class="card-header">
                 <a id="btn-create" class="btn btn-primary" href="/condition/insert/@Model.Select(x => x.VehicleId).FirstOrDefault()">
                     <i class="far fa-plus-square"></i>
@@ -61,6 +77,7 @@
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
+                                                <th>Date</th>
                                                 <th>Type</th>
                                                 <th>Image</th>
                                                 <th>Note</th>
@@ -79,6 +96,9 @@
                                                                 @Html.DisplayFor(Model => item.Id)
                                                             </td>
                                                             <td>
+                                                                @item.CreateAt.ToString("dd/MM/yyyy")
+                                                            </td>
+                                                            <td>
                                                                 @Html.DisplayFor(Model => item.Type)
                                                             </td>
                                                             <td>
@@ -91,7 +111,7 @@
                                                                 @Html.ActionLink("Edit", "update", "condition", new { item.Id, item.Type, item.ImagePath, item.Note, item.VehicleId }) |
                                                                 <a href="@Url.Action("DeleteAction","condition",new { item.Id , item.VehicleId })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete condition with ID = @item.Id')">
                                                                     Delete
-                                                                </a>                     
+                                                                </a>
                                                             </td>
                                                         </tr>
                                                     }
@@ -135,5 +155,11 @@
     <script src="~/ThemeLTE/dist/js/adminlte.min.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="~/ThemeLTE/dist/js/demo.js"></script>
+    <!-- /.Alert function -->
+    <script>
+        setTimeout(function () {
+            $("#msgAlert").fadeOut('slow');
+        }, 5000);
+    </script>
 </body>
 </html>

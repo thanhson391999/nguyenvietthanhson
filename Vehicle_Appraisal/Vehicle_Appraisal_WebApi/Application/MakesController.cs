@@ -27,6 +27,7 @@ namespace Vehicle_Appraisal_WebApi.Controllers
             _makeService = makeService;
         }
 
+        // GET api/makes
         [HttpGet]
         [Authorize(Roles = "Admin,Users")]
         public async Task<List<MakeVM>> GetAll()
@@ -34,6 +35,7 @@ namespace Vehicle_Appraisal_WebApi.Controllers
             return await _makeService.GetAll();
         }
 
+        // GET api/makes/not-delete
         [HttpGet("not-delete")]
         [Authorize(Roles = "Admin,Users")]
         public async Task<List<MakeVM>> GetAllNotDelete()
@@ -41,6 +43,7 @@ namespace Vehicle_Appraisal_WebApi.Controllers
             return await _makeService.GetAllNotDelete();
         }
 
+        // GET api/makes/{id}
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<MakeVM> GetById(int id)
@@ -48,64 +51,31 @@ namespace Vehicle_Appraisal_WebApi.Controllers
             return await _makeService.GetById(id);
         }
 
+        // DELETE api/makes/{id}
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _makeService.Delete(id);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Delete Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Delete Fail !",
-                is_erro = true,
-            });
+            return Ok(result);
         }
 
+        // POST api/makes
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Insert(MakeVM makeVM)
         {
             var result = await _makeService.Insert(makeVM);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Insert Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Insert Fail !",
-                is_erro = true,
-            });
+            return Ok(result);
         }
 
+        // PUT api/makes/{id}
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(MakeVM makeVM, int id)
         {
             var result = await _makeService.Update(makeVM, id);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Update Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Update Fail !",
-                is_erro = true,
-            });
+            return Ok(result);
         }
     }
 }

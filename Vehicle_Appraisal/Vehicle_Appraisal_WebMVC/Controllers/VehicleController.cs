@@ -29,49 +29,75 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             _vehicleServiceApiClient = vehicleServiceApiClient;
         }
 
+        private async Task<VehicleModelMVC> listChosen(string token, VehicleModelMVC vehicleModelMVC)
+        {
+            var customers = await _customerServiceApiClient.GetAll(token);
+            var makes = await _makeServiceApiClient.GetAll(token);
+            var models = await _modelServiceApiClient.GetAll(token);
+            var appusers = await _userServiceApiClient.GetAll(token);
+            vehicleModelMVC.ListCustomerVM = customers;
+            vehicleModelMVC.ListMakeVM = makes;
+            vehicleModelMVC.ListModelVM = models;
+            vehicleModelMVC.ListAppUserVM = appusers.Select(x => x.appUserVM).ToList();
+            return vehicleModelMVC;
+        }
+
+        // GET vehicle/insert
+        [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Insert(VehicleModelMVC vehicleModelMVC)
+        public async Task<IActionResult> Insert()
         {
             if (ModelState.IsValid)
             {
+                var vehicleModelMVC = new VehicleModelMVC();
                 string token = HttpContext.Session.GetString("token_access");
-                var customers = await _customerServiceApiClient.GetAll(token);
-                var makes = await _makeServiceApiClient.GetAll(token);
-                var models = await _modelServiceApiClient.GetAll(token);
-                var appusers = await _userServiceApiClient.GetAll(token);
-                vehicleModelMVC.ListCustomerVM = customers;
-                vehicleModelMVC.ListMakeVM = makes;
-                vehicleModelMVC.ListModelVM = models;
-                vehicleModelMVC.ListAppUserVM = appusers.Select(x=>x.appUserVM).ToList();
-                return View(vehicleModelMVC);
+                return View(await listChosen(token, vehicleModelMVC));
             }
             return BadRequest("Error 400");
         }
 
+        // GET vehicle/update
+        [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Update(VehicleVM VehicleVM,CustomerVM CustomerVM, MakeVM MakeVM, AppUserVM appUserVM)
+        public async Task<IActionResult> Update(int Id, string Odometer, string VIN, string Engine, string MakeName, string FullName, string ModelName, string FirstName, string LastName)
         {
+            var vehicleVM = new VehicleVM()
+            {
+                Id = Id,
+                Odometer = Odometer,
+                VIN = VIN,
+                Engine = Engine
+            };
+            var customerVM = new CustomerVM()
+            {
+                FirstName = FirstName,
+                LastName = LastName
+            };
+            var makeVM = new MakeVM()
+            {
+                Name = MakeName
+            };
+            var modelVM = new ModelVM()
+            {
+                Name = ModelName
+            };
+            var appUserVM = new AppUserVM()
+            {
+                FullName = FullName
+            };
             var vehicleModelMVC = new VehicleModelMVC()
             {
-                customerVM = CustomerVM,
-                makeVM = MakeVM,
-                vehicleVM = VehicleVM,
+                customerVM = customerVM,
+                makeVM = makeVM,
+                modelVM = modelVM,
+                vehicleVM = vehicleVM,
                 appUserVM = appUserVM
             };
             string token = HttpContext.Session.GetString("token_access");
-            var customers = await _customerServiceApiClient.GetAll(token);
-            var makes = await _makeServiceApiClient.GetAll(token);
-            var models = await _modelServiceApiClient.GetAll(token);
-            var appuers = await _userServiceApiClient.GetAll(token);
-            vehicleModelMVC.ListCustomerVM = customers;
-            vehicleModelMVC.ListMakeVM = makes;
-            vehicleModelMVC.ListModelVM = models;
-            vehicleModelMVC.ListAppUserVM = appuers.Select(x=>x.appUserVM).ToList();
-            var model = await _modelServiceApiClient.GetById(VehicleVM.ModelId,token);
-            vehicleModelMVC.modelVM = model;
-            return View(vehicleModelMVC);
+            return View(await listChosen(token, vehicleModelMVC));
         }
 
+        // GET vehicle/getall
         [HttpGet]
         [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> GetAll()
@@ -80,11 +106,20 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             {
                 string token = HttpContext.Session.GetString("token_access");
                 var list = await _vehicleServiceApiClient.GetAll(token);
+                if (TempData["ErrorResult"] != null)
+                {
+                    ViewBag.ErrorMsg = TempData["ErrorResult"];
+                }
+                if (TempData["SuccessResult"] != null)
+                {
+                    ViewBag.SuccessMsg = TempData["SuccessResult"];
+                }
                 return View(list);
             }
             return BadRequest("Error 400");
         }
 
+        // GET vehicle/getbyid
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetById(int id)
@@ -98,63 +133,78 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             return BadRequest("Error 400");
         }
 
+        // GET vehicle/deleteaction
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAction(int id)
         {
-            if (ModelState.IsValid)
+            string token = HttpContext.Session.GetString("token_access");
+            var result = await _vehicleServiceApiClient.Delete(id, token);
+            if (result.IsSuccessed == true)
             {
-                string token = HttpContext.Session.GetString("token_access");
-                var result = await _vehicleServiceApiClient.Delete(id, token);
-                if (result)
-                {
-                    return RedirectToAction("GetAll", "vehicle");
-                }
-                else
-                    return Ok("Delete Fail !");
+                TempData["SuccessResult"] = result.Entity;
+                return RedirectToAction("GetAll", "vehicle");
             }
             else
-                return BadRequest("Error 400");
+            {
+                TempData["ErrorResult"] = result.Message;
+                return RedirectToAction("GetAll", "vehicle");
+            }
         }
 
+        // POST vehicle/insertaction
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> InsertAction(VehicleModelMVC vehicleModelMVC)
         {
+            string token = HttpContext.Session.GetString("token_access");
             if (ModelState.IsValid)
             {
-                string token = HttpContext.Session.GetString("token_access");
                 var result = await _vehicleServiceApiClient.Insert(vehicleModelMVC, token);
-                if (result)
+                if (result.IsSuccessed == true)
                 {
+                    TempData["SuccessResult"] = result.Entity;
                     return RedirectToAction("GetAll", "vehicle");
                 }
                 else
-                    return Ok("Insert Fail !");
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View("Insert", await listChosen(token, vehicleModelMVC));
+                }
             }
             else
-                return BadRequest("Error 400");
+            {
+                return View("Insert", await listChosen(token, vehicleModelMVC));
+            }
         }
 
+        // POST vehicle/updateaction
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAction(VehicleModelMVC vehicleModelMVC)
         {
+            string token = HttpContext.Session.GetString("token_access");
             if (ModelState.IsValid)
             {
-                string token = HttpContext.Session.GetString("token_access");
                 var result = await _vehicleServiceApiClient.Update(vehicleModelMVC, token);
-                if (result)
+                if (result.IsSuccessed == true)
                 {
+                    TempData["SuccessResult"] = result.Entity;
                     return RedirectToAction("GetAll", "vehicle");
                 }
                 else
-                    return Ok("Update Fail !");
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View("Update", await listChosen(token, vehicleModelMVC));
+                }
             }
             else
-                return BadRequest("Error 400");
+            {
+                return View("Update", await listChosen(token, vehicleModelMVC));
+            }
         }
 
+        // GET vehicle/searchaction
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SearchAction(string customer, string make, string model, string odometer, string VIN, string engine, string appuser)
@@ -169,6 +219,7 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
                 return BadRequest("Error 400");
         }
 
+        // GET vehicle/getallconditionbyid
         [HttpGet]
         [Authorize(Roles = "Admin,Users")]
         public async Task<IActionResult> GetAllConditionById(int id)
@@ -185,12 +236,21 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
                     conditionVMs.Add(conditionVM);
                     return View(conditionVMs);
                 }
+                if (TempData["ErrorResult"] != null)
+                {
+                    ViewBag.ErrorMsg = TempData["ErrorResult"];
+                }
+                if (TempData["SuccessResult"] != null)
+                {
+                    ViewBag.SuccessMsg = TempData["SuccessResult"];
+                }
                 return View(list);
             }
             else
                 return BadRequest("Error 400");
         }
 
+        // GET vehicle/getallappraisalvaluebyid
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllAppraisalValueById(int id)
@@ -207,29 +267,40 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
                     vehicleAppraisalVMs.Add(vehicleAppraisalVM);
                     return View(vehicleAppraisalVMs);
                 }
+                if (TempData["ErrorResult"] != null)
+                {
+                    ViewBag.ErrorMsg = TempData["ErrorResult"];
+                }
+                if (TempData["SuccessResult"] != null)
+                {
+                    ViewBag.SuccessMsg = TempData["SuccessResult"];
+                }
                 return View(list);
             }
             else
                 return BadRequest("Error 400");
         }
 
+        // GET vehicle/buyvehicle
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> BuyVehicle(int id)
         {
-            if (ModelState.IsValid)
+            string token = HttpContext.Session.GetString("token_access");
+            var result = await _vehicleServiceApiClient.BuyVehicle(id, token);
+            if (result.IsSuccessed == true)
             {
-                string token = HttpContext.Session.GetString("token_access");
-                var result = await _vehicleServiceApiClient.BuyVehicle(id, token);
-                if (result)
-                {
-                    return Redirect("/vehicle/GetAll");
-                }
-                return BadRequest("Can't buy this vehicle !");
+                TempData["SuccessResult"] = result.Entity;
+                return Redirect("/vehicle/GetAll");
             }
-            return BadRequest("Error 400");
+            else
+            {
+                ModelState.AddModelError("", result.Message);
+                return Redirect("/vehicle/GetAll");
+            }
         }
 
+        // GET vehicle/getallvehiclebought
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllVehicleBought()
@@ -243,6 +314,7 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             return BadRequest("Error 400");
         }
 
+        // GET vehicle/searchdate
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SearchDate(DateTime fromDate, DateTime toDate)

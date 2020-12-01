@@ -21,26 +21,27 @@ namespace Vehicle_Appraisal_WebApi.Service
             _mapper = mapper;
             dbset = dbContextDTO.Set<CustomerDTO>();
         }
-        public async Task<bool> Delete(int id)
+
+        public async Task<ApiResultVM<string>> Delete(int id)
         {
             var customerVM = await GetById(id);
             if (customerVM == null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Customer doesn't exist");
             }
             var checkConstraint = _dbContextDTO.Set<VehicleDTO>().Where(x => x.CustomerId.Equals(id)).Where(x => x.isBought == false).AsNoTracking().FirstOrDefault();
             if (checkConstraint != null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Can't delete because customer is existing in vehicle");
             }
             var customerDTO = _mapper.Map<CustomerDTO>(customerVM);
             customerDTO.isDelete = true;
             customerDTO.UpdateAt = DateTime.Now;
             dbset.Update(customerDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Delete Success");
         }
 
         public async Task<List<CustomerVM>> GetAll()
@@ -63,20 +64,14 @@ namespace Vehicle_Appraisal_WebApi.Service
             var customerVM = _mapper.Map<CustomerVM>(customerDTO);
             return customerVM;
         }
-        public async Task<bool> Insert(CustomerVM customerVM)
+
+        public async Task<ApiResultVM<string>> Insert(CustomerVM customerVM)
         {
-            var checkCustomer = dbset.Where(x => (x.FirstName + " " + x.LastName).Equals(customerVM.FirstName + " " + customerVM.LastName)).AsNoTracking().FirstOrDefault();
-            if (customerVM.FirstName == null ||
-                customerVM.LastName == null ||
-                customerVM.Phone == null ||
-                customerVM.Email == null ||
-                customerVM.Address1 == null ||
-                customerVM.City == null ||
-                customerVM.Country == null ||
-                checkCustomer != null)
+            var checkCustomer = await dbset.Where(x => (x.FirstName + " " + x.LastName).Equals(customerVM.FirstName + " " + customerVM.LastName)).AsNoTracking().FirstOrDefaultAsync();
+            if (checkCustomer != null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Customer's name already exist");
             }
             if (customerVM.Address2 == null)
             {
@@ -86,8 +81,8 @@ namespace Vehicle_Appraisal_WebApi.Service
             customerDTO.CreateAt = DateTime.Now;
             customerDTO.UpdateAt = DateTime.Now;
             await dbset.AddAsync(customerDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Insert Success");
         }
 
         public async Task<List<CustomerVM>> Search(string name, string phone, string email, string address, string city, string country)
@@ -130,20 +125,19 @@ namespace Vehicle_Appraisal_WebApi.Service
             }
         }
 
-        public async Task<bool> Update(CustomerVM customerVM, int id)
+        public async Task<ApiResultVM<string>> Update(CustomerVM customerVM, int id)
         {
             var checkValue = await GetById(id);
-            if (checkValue == null ||
-                customerVM.FirstName == null ||
-                customerVM.LastName == null ||
-                customerVM.Phone == null ||
-                customerVM.Email == null ||
-                customerVM.Address1 == null ||
-                customerVM.City == null ||
-                customerVM.Country == null)
+            if (checkValue == null)
             {
                 _dbContextDTO.Dispose();
-                return false;
+                return new ApiErrorResultVM<string>("Customer doesn't exist");
+            }
+            var checkCustomer = await dbset.Where(x=>x.Id != (id)).Where(x => (x.FirstName + " " + x.LastName).Equals(customerVM.FirstName + " " + customerVM.LastName)).AsNoTracking().FirstOrDefaultAsync();
+            if (checkCustomer != null)
+            {
+                _dbContextDTO.Dispose();
+                return new ApiErrorResultVM<string>("Customer's name already exist");
             }
             if (customerVM.Address2 == null)
             {
@@ -153,8 +147,8 @@ namespace Vehicle_Appraisal_WebApi.Service
             customerDTO.Id = id;
             customerDTO.UpdateAt = DateTime.Now;
             dbset.Update(customerDTO);
-            await _dbContextDTO.SaveChangesAsync();
-            return true;
+            //await _dbContextDTO.SaveChangesAsync();
+            return new ApiSuccessResultVM<string>("Update Success");
         }
     }
 }

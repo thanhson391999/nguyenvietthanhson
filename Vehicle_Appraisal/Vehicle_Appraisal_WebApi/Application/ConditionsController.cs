@@ -16,81 +16,62 @@ namespace Vehicle_Appraisal_WebApi.Application
     public class ConditionsController : ControllerBase
     {
         private readonly IConditionService _ConditionService;
+
         public ConditionsController(IConditionService ConditionService)
         {
             _ConditionService = ConditionService;
         }
+
+        // GET api/conditions
         [HttpGet]
         public async Task<List<ConditionVM>> GetAll()
         {
             return await _ConditionService.GetAll();
         }
+
+        // GET api/conditions/{id}
         [HttpGet("{id}")]
         public async Task<ConditionVM> GetById(int id)
         {
             return await _ConditionService.GetById(id);
         }
+
+        // DELETE api/conditions/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _ConditionService.Delete(id);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Delete Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Delete Fail !",
-                is_erro = true,
-            });
+            return Ok(result);
         }
+
+        // POST api/conditions
         [HttpPost]
         public async Task<IActionResult> Insert(ConditionVM ConditionVM)
         {
             var result = await _ConditionService.Insert(ConditionVM);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Insert Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Insert Fail !",
-                is_erro = true,
-            });
+            return Ok(result);
         }
+
+        // PUT api/conditions/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(ConditionVM ConditionVM, int id)
         {
             var result = await _ConditionService.Update(ConditionVM, id);
-            if (result == true)
-            {
-                return Ok(new
-                {
-                    message = "Update Success !",
-                    is_erro = false,
-                });
-            }
-            return BadRequest(new
-            {
-                message = "Update Fail !",
-                is_erro = true,
-            });
+            return Ok(result);
         }
+
+        // POST api/conditions/image
         [HttpPost("image")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UploadImage([FromForm]IFormFile file)
         {
             if (file == null)
             {
-                return BadRequest("Error 400");
+                return BadRequest(new
+                {
+                    message = "File is empty",
+                    is_erro = true
+                });
             }
             string image = await _ConditionService.UploadImage(file);
             return Ok(image);

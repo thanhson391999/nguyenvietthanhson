@@ -51,6 +51,7 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
+                                            <th>Date</th>
                                             <th>Name</th>
                                             <th>Year</th>
                                             <th>Options</th>
@@ -62,6 +63,9 @@
                                             <tr>
                                                 <td>
                                                     @Model.Id
+                                                </td>
+                                                <td>
+                                                    @Model.CreateAt.ToString("dd/MM/yyyy")
                                                 </td>
                                                 <td>
                                                     @Model.Name
