@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.DTOs;
-using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
+using Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService;
 using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Service
@@ -39,14 +39,14 @@ namespace Vehicle_Appraisal_WebApi.Service
             modelDTO.isDelete = true;
             modelDTO.UpdateAt = DateTime.Now;
             dbset.Update(modelDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Delete Success");
         }
 
         public async Task<List<ModelVM>> GetAll()
         {
             var listmodelDTO = await dbset.Where(x => x.isDelete == false).ToListAsync();
-            var listmodelVM = _mapper.Map<List<ModelVM>>(listmodelDTO);
+            var listmodelVM = _mapper.Map<List<ModelVM>>(listmodelDTO).OrderByDescending(x=>x.CreateAt.Date).ToList();
             return listmodelVM;
         }
 
@@ -55,6 +55,18 @@ namespace Vehicle_Appraisal_WebApi.Service
             var listmodelDTO = await dbset.ToListAsync();
             var listmodelVM = _mapper.Map<List<ModelVM>>(listmodelDTO);
             return listmodelVM;
+        }
+
+        public async Task<PageResultVM<ModelVM>> GetAllPaging(PaginationVM paginationVM)
+        {
+            var listModelVM = await GetAll();
+            var listModelVMPaging = listModelVM.Skip((paginationVM.PageIndex - 1) * paginationVM.PageSize).Take(paginationVM.PageSize).ToList();
+            return new PageResultVM<ModelVM>
+            {
+                Items = listModelVMPaging,
+                PageIndex = paginationVM.PageIndex,
+                TotalRecord = listModelVM.Count()
+            };
         }
 
         public async Task<ModelVM> GetById(int id)
@@ -76,7 +88,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             modelDTO.CreateAt = DateTime.Now;
             modelDTO.UpdateAt = DateTime.Now;
             await dbset.AddAsync(modelDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Insert Success");
         }
 
@@ -88,7 +100,7 @@ namespace Vehicle_Appraisal_WebApi.Service
                 _dbContextDTO.Dispose();
                 return new ApiErrorResultVM<string>("Model doesn't exist");
             }
-            var checkModel = await dbset.Where(x=>x.Id != id).Where(x => x.Name.Equals(modelVM.Name)).AsNoTracking().FirstOrDefaultAsync();
+            var checkModel = await dbset.Where(x => x.Id != id).Where(x => x.Name.Equals(modelVM.Name)).AsNoTracking().FirstOrDefaultAsync();
             if (checkModel != null)
             {
                 _dbContextDTO.Dispose();
@@ -98,7 +110,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             modelDTO.Id = id;
             modelDTO.UpdateAt = DateTime.Now;
             dbset.Update(modelDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Update Success");
         }
     }

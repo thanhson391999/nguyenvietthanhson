@@ -2,9 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.ViewModels;
 using Vehicle_Appraisal_WebMVC.Service.Interface;
@@ -14,7 +12,7 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
     public class ModelServiceApiClient : IModelServiceApiClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IConfiguration _configuration; 
+        private readonly IConfiguration _configuration;
 
         public ModelServiceApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
@@ -40,7 +38,7 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             var response = await client.GetAsync("/api/models");
             var body = await response.Content.ReadAsStringAsync();
             var list = JsonConvert.DeserializeObject<List<ModelVM>>(body);
-            return list; 
+            return list;
         }
 
         public async Task<List<ModelVM>> GetAllNotDelete(string token)
@@ -54,12 +52,23 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             return list;
         }
 
+        public async Task<PageResultVM<ModelVM>> GetAllPaging(string token, PaginationVM paginationVM)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            client.BaseAddress = new Uri(_configuration["UrlApi"]);
+            var response = await client.GetAsync("/api/models/paging/?pageIndex=" + paginationVM.PageIndex);
+            var body = await response.Content.ReadAsStringAsync();
+            var pageResult = JsonConvert.DeserializeObject<PageResultVM<ModelVM>>(body);
+            return pageResult;
+        }
+
         public async Task<ModelVM> GetById(int Id, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var response = await client.GetAsync("/api/models/"+Id);
+            var response = await client.GetAsync("/api/models/" + Id);
             var body = await response.Content.ReadAsStringAsync();
             var list = JsonConvert.DeserializeObject<ModelVM>(body);
             return list;
@@ -80,7 +89,7 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var response = await client.PutAsJsonAsync("/api/models/"+modelVM.Id, modelVM);
+            var response = await client.PutAsJsonAsync("/api/models/" + modelVM.Id, modelVM);
             var body = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }

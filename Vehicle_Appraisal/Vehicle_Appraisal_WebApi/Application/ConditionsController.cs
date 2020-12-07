@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService;
 using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Application
@@ -63,7 +61,7 @@ namespace Vehicle_Appraisal_WebApi.Application
         // POST api/conditions/image
         [HttpPost("image")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UploadImage([FromForm]IFormFile file)
+        public async Task<IActionResult> UploadImage([FromForm] IFormFile file)
         {
             if (file == null)
             {

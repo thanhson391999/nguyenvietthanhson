@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.DTOs;
-using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
+using Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService;
 using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Service
@@ -34,7 +34,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             }
             var VehicleAppraisalDTO = _mapper.Map<VehicleAppraisalDTO>(VehicleAppraisalVM);
             dbset.Remove(VehicleAppraisalDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Delete Success");
         }
 
@@ -43,6 +43,11 @@ namespace Vehicle_Appraisal_WebApi.Service
             var listVehicleAppraisalDTO = await dbset.ToListAsync();
             var listVehicleAppraisalVM = _mapper.Map<List<VehicleAppraisalVM>>(listVehicleAppraisalDTO);
             return listVehicleAppraisalVM;
+        }
+
+        public Task<PageResultVM<VehicleAppraisalVM>> GetAllPaging(PaginationVM paginationVM)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<VehicleAppraisalVM> GetById(int id)
@@ -60,17 +65,17 @@ namespace Vehicle_Appraisal_WebApi.Service
                 _dbContextDTO.Dispose();
                 return new ApiErrorResultVM<string>("Vehicle doesn't exist to insert appraisal value");
             }
-            var checkValue = await dbset.Where(x=>x.VehicleId.Equals(vehicle.Id)).AsNoTracking().SingleOrDefaultAsync();
+            var checkValue = await dbset.Where(x => x.VehicleId.Equals(vehicle.Id)).AsNoTracking().SingleOrDefaultAsync();
             if (checkValue != null)
             {
                 _dbContextDTO.Dispose();
                 return new ApiErrorResultVM<string>("Vehicle had an appraisal value");
             }
             var VehicleAppraisalDTO = _mapper.Map<VehicleAppraisalDTO>(VehicleAppraisalVM);
-            VehicleAppraisalDTO.CreateAt = DateTime.Now; 
+            VehicleAppraisalDTO.CreateAt = DateTime.Now;
             VehicleAppraisalDTO.UpdateAt = DateTime.Now;
             await dbset.AddAsync(VehicleAppraisalDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Insert Success");
         }
 
@@ -92,7 +97,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             VehicleAppraisalDTO.Id = id;
             VehicleAppraisalDTO.UpdateAt = DateTime.Now;
             dbset.Update(VehicleAppraisalDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Update Success");
         }
     }

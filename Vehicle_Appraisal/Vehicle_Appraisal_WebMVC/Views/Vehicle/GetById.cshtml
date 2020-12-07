@@ -94,17 +94,18 @@
                                                 </td>
                                                 <td>
                                                     @Html.ActionLink("Edit", "update", "vehicle", new
-                                              {
-                                                  Model.vehicleVM.Id,
-                                                  Model.vehicleVM.Odometer,
-                                                  Model.vehicleVM.VIN,
-                                                  Model.vehicleVM.Engine,
-                                                  Model.makeVM.Name,
-                                                  Model.appUserVM.FullName,
-                                                  Model.vehicleVM.ModelId,
-                                                  Model.customerVM.FirstName,
-                                                  Model.customerVM.LastName,
-                                              }) |
+                                               {
+                                                   Model.vehicleVM.Id,
+                                                   Model.vehicleVM.CreateAt,
+                                                   Model.vehicleVM.Odometer,
+                                                   Model.vehicleVM.VIN,
+                                                   Model.vehicleVM.Engine,
+                                                   MakeName = Model.makeVM.Name,
+                                                   Model.appUserVM.FullName,
+                                                   ModelName = Model.modelVM.Name,
+                                                   Model.customerVM.FirstName,
+                                                   Model.customerVM.LastName,
+                                               }) |
                                                     @Html.ActionLink("Details", "Details", new { }) |
                                                     <a href="@Url.Action("DeleteAction","vehicle",new { Model.vehicleVM.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete vehicle with ID = @Model.vehicleVM.Id')">
                                                         Delete

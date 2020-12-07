@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Vehicle_Appraisal_WebApi.DTOs
 {
@@ -21,12 +18,12 @@ namespace Vehicle_Appraisal_WebApi.DTOs
         public string VIN { get; set; }
         public string Engine { get; set; }
         public bool isBought { get; set; } = false;
-        
+
         public virtual AppUserDTO AppUserDTO { get; set; }
         public virtual CustomerDTO CustomerDTO { get; set; }
         public virtual MakeDTO MakeDTO { get; set; }
         public virtual ModelDTO ModelDTO { get; set; }
-        
+
         public virtual ICollection<VehicleAppraisalDTO> VehicleAppraisalDTOs { get; set; }
         public virtual ICollection<ConditionDTO> ConditionDTOs { get; set; }
     }

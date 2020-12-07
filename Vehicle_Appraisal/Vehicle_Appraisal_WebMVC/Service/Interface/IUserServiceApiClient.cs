@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.ViewModels;
 using Vehicle_Appraisal_WebMVC.Models;
@@ -9,6 +8,8 @@ namespace Vehicle_Appraisal_WebMVC.Service.Interface
     public interface IUserServiceApiClient
     {
         Task<List<AppUserModelMVC>> GetAll(string token);
+        Task<List<AppUserVM>> GetAllNotDelete(string token);
+        Task<PageResultVM<AppUserModelMVC>> GetAllPaging(string token, PaginationVM paginationVM);
         Task<AppUserModelMVC> GetById(int id, string token);
         Task<ApiResultVM<string>> UpdateUsers(AppUserModelMVC appUserModelMVC, string token);
 

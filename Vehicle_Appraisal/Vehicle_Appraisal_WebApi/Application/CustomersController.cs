@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
+using Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService;
 using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Application
@@ -27,6 +27,14 @@ namespace Vehicle_Appraisal_WebApi.Application
         public async Task<List<CustomerVM>> GetAll()
         {
             return await _CustomerService.GetAll();
+        }
+
+        // GET api/customers/paging
+        [HttpGet("paging")]
+        [Authorize(Roles = "Admin")]
+        public async Task<PageResultVM<CustomerVM>> GetAllPaging([FromQuery] PaginationVM paginationVM)
+        {
+            return await _CustomerService.GetAllPaging(paginationVM);
         }
 
         // GET api/customers/not-delete

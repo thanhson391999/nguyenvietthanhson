@@ -1,29 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Rewrite.Internal.UrlActions;
-using Microsoft.AspNetCore.Session;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
-using sun.security.util;
 using Vehicle_Appraisal_WebApi.ViewModels;
 using Vehicle_Appraisal_WebMVC.Models;
-using Vehicle_Appraisal_WebMVC.Service;
 using Vehicle_Appraisal_WebMVC.Service.Interface;
 
 namespace Vehicle_Appraisal_WebMVC.Controllers
@@ -64,7 +53,6 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         }
 
         // GET user/login
-        [HttpGet]
         public IActionResult Login()
         {
             if (User.Identity.IsAuthenticated)
@@ -146,12 +134,12 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             if (result.IsSuccessed == true)
             {
                 TempData["SuccessResult"] = result.Entity;
-                return View("ForgotPassword");
+                return Redirect("/user/ForgotPassword");
             }
             else
             {
                 ModelState.AddModelError("", result.Message);
-                return View("ForgotPassword");
+                return Redirect("/user/ForgotPassword");
             }
         }
 
@@ -236,17 +224,17 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
                 var result = await _userApiClient.Update(appUserVM, token);
                 if (result.IsSuccessed == true)
                 {
-                    TempData["SuccessResult"] = result.Entity;
+                    TempData["SuccessResult"] = "Update info Success";
                     return Redirect("/user/logout");
                 }
                 else
                 {
                     ModelState.AddModelError("", result.Message);
-                    return View("info",appUserVM);
+                    return View("info", appUserVM);
                 }
             }
             else
-                return View("info",appUserVM);
+                return View("info", appUserVM);
         }
 
         // update info of users by Admin
@@ -283,12 +271,16 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         // GET user/getall
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int pageIndex = 1)
         {
             if (ModelState.IsValid)
             {
                 string token = HttpContext.Session.GetString("token_access");
-                var list = await _userApiClient.GetAll(token);
+                var paginationVM = new PaginationVM()
+                {
+                    PageIndex = pageIndex
+                };
+                var list = await _userApiClient.GetAllPaging(token, paginationVM);
                 if (TempData["ErrorResult"] != null)
                 {
                     ViewBag.ErrorMsg = TempData["ErrorResult"];

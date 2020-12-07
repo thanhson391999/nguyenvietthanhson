@@ -70,7 +70,7 @@
                                                     @Model.Name
                                                 </td>
                                                 <td>
-                                                    @Html.ActionLink("Edit", "update", "make", new { Model.Id, Model.Name }) |
+                                                    @Html.ActionLink("Edit", "update", "make", new { Model.Id, Model.CreateAt, Model.Name }) |
                                                     @Html.ActionLink("Details", "Details", new { }) |
                                                     <a href="@Url.Action("DeleteAction","make",new { Model.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete make with ID = @Model.Id')">
                                                         Delete

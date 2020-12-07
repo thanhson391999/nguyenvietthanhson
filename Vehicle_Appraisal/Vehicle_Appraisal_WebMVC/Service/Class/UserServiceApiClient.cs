@@ -1,15 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.ViewModels;
 using Vehicle_Appraisal_WebMVC.Models;
@@ -54,7 +48,7 @@ namespace Vehicle_Appraisal_WebMVC.Service
         {
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var response = await client.GetAsync("/api/accounts/forgotpassword/?email="+Email);
+            var response = await client.GetAsync("/api/accounts/password-forgot/?email=" + Email);
             var body = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
@@ -77,6 +71,43 @@ namespace Vehicle_Appraisal_WebMVC.Service
                             appUserVM = _user
                         }).ToList();
             return list;
+        }
+
+        public async Task<List<AppUserVM>> GetAllNotDelete(string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["UrlApi"]);
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            var response = await client.GetAsync("/api/users/not-delete");
+            var body = await response.Content.ReadAsStringAsync();
+            var list = JsonConvert.DeserializeObject<List<AppUserVM>>(body);
+            return list;
+        }
+
+        public async Task<PageResultVM<AppUserModelMVC>> GetAllPaging(string token, PaginationVM paginationVM)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            client.BaseAddress = new Uri(_configuration["UrlApi"]);
+            var response = await client.GetAsync("/api/users/paging/?pageIndex=" + paginationVM.PageIndex);
+            var body = await response.Content.ReadAsStringAsync();
+            var pageResult = JsonConvert.DeserializeObject<PageResultVM<AppUserVM>>(body);
+            var appuserroleVM = await _userRoleServiceApiClient.GetAll(token);
+            var listAppUserModelMVC = (from _user in pageResult.Items
+                        join _userrole in appuserroleVM on _user.AppUserRolesId equals _userrole.Id into userroles
+                        from _userroles in userroles.DefaultIfEmpty()
+                        select new AppUserModelMVC
+                        {
+                            appUserRoleVM = _userroles,
+                            appUserVM = _user
+                        }).ToList();
+            return new PageResultVM<AppUserModelMVC>
+            {
+                Items = listAppUserModelMVC,
+                PageIndex = pageResult.PageIndex,
+                PageSize = pageResult.PageSize,
+                TotalRecord = pageResult.TotalRecord
+            };
         }
 
         public async Task<AppUserModelMVC> GetById(int id, string token)
@@ -125,7 +156,7 @@ namespace Vehicle_Appraisal_WebMVC.Service
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-            var response = await client.PutAsJsonAsync("/api/users/"+appUserVM.Id,appUserVM);
+            var response = await client.PutAsJsonAsync("/api/users/" + appUserVM.Id, appUserVM);
             var body = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }

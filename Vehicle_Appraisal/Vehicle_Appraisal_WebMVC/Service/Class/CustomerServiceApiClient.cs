@@ -54,6 +54,17 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             return list;
         }
 
+        public async Task<PageResultVM<CustomerVM>> GetAllPaging(string token, PaginationVM paginationVM)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            client.BaseAddress = new Uri(_configuration["UrlApi"]);
+            var response = await client.GetAsync("/api/customers/paging/?pageIndex=" + paginationVM.PageIndex);
+            var body = await response.Content.ReadAsStringAsync();
+            var pageResult = JsonConvert.DeserializeObject<PageResultVM<CustomerVM>>(body);
+            return pageResult;
+        }
+
         public async Task<CustomerVM> GetById(int Id, string token)
         {
             var client = _httpClientFactory.CreateClient();

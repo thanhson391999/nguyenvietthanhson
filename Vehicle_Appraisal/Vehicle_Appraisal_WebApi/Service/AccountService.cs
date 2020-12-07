@@ -1,26 +1,17 @@
 ﻿using AutoMapper;
-using com.sun.org.apache.bcel.@internal.classfile;
-using com.sun.org.apache.bcel.@internal.generic;
-using java.net;
-using javax.swing.text;
-using Microsoft.AspNetCore.Rewrite.Internal;
-using Microsoft.AspNetCore.Rewrite.Internal.UrlActions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using SendGrid;
-using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.DTOs;
-using Vehicle_Appraisal_WebApi.Infrastructure;
-using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
+using Vehicle_Appraisal_WebApi.Infracstructure;
+using Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService;
 using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Service
@@ -62,7 +53,7 @@ namespace Vehicle_Appraisal_WebApi.Service
                 {
                     var subject = "Email For Confirm Password";
                     var tokenemail = GenarateTokenEmail(userDTO.Email);
-                    string url = $"{ _configuration["AppUrl"]}/api/emails/confirmemail?tokenemail={tokenemail}";
+                    string url = $"{ _configuration["AppUrl"]}/api/emails/email-confirm/?tokenemail={tokenemail}";
                     var htmlContent = $"Please confirm your email by click here <a href='{url}'> Link</a>";
                     await _emailService.SendEmail(userDTO.Email, htmlContent, subject);
                 }
@@ -118,7 +109,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             var email = await _userService.GetUser(registerVM.Email);
             var userName = await _userService.GetUser(registerVM.UserName);
             var fullName = await dbset.Where(x => x.FullName.Equals(registerVM.FullName)).Where(x => x.isDelete == false).AsNoTracking().FirstOrDefaultAsync();
-            if (userName != null) 
+            if (userName != null)
             {
                 _dbContextDTO.Dispose();
                 return new ApiErrorResultVM<string>("UserName is exist");
@@ -140,9 +131,9 @@ namespace Vehicle_Appraisal_WebApi.Service
             userDTO.CreateAt = DateTime.Now;
             userDTO.UpdateAt = DateTime.Now;
             await dbset.AddAsync(userDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             var tokenEmail = GenarateTokenEmail(userDTO.Email);
-            string url = $"{ _configuration["AppUrl"]}/api/emails/confirmemail?tokenemail={tokenEmail}";
+            string url = $"{ _configuration["AppUrl"]}/api/emails/email-confirm/?tokenemail={tokenEmail}";
             var subject = "Email For Confirm Password";
             var htmlContent = $"Please confirm your email by click here <a href='{url}'> Link</a>";
             await _emailService.SendEmail(userDTO.Email, htmlContent, subject);
@@ -158,9 +149,9 @@ namespace Vehicle_Appraisal_WebApi.Service
             }
             var token = GenarateTokenEmail(email);
             var subject = "Email For Reset Password";
-            string url = $"{ _configuration["AppUrl"]}/resetpassword?token={token}";
+            string url = $"{ _configuration["AppUrl"]}/password-reset/?token={token}";
             var htmlContent = $"Please reset your password by click here <a href='{url}'> Link</a>";
-            await _emailService.SendEmail(email, htmlContent,subject);
+            await _emailService.SendEmail(email, htmlContent, subject);
             return new ApiSuccessResultVM<string>("Email to reset password has sent to you, check your email now !");
         }
     }

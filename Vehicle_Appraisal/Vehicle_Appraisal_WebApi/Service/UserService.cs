@@ -1,23 +1,14 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using org.omg.IOP;
-using SendGrid.Helpers.Mail;
-using sun.security.util;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.DTOs;
-using Vehicle_Appraisal_WebApi.Infrastructure;
-using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
+using Vehicle_Appraisal_WebApi.Infracstructure;
+using Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService;
 using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Service
@@ -25,14 +16,10 @@ namespace Vehicle_Appraisal_WebApi.Service
     public class UserService : IUserService
     {
         private readonly DbContextDTO _dbContextDTO;
-        private readonly IConfiguration _configuration;
-        private readonly IUserRoleService _userRoleService;
         private DbSet<AppUserDTO> dbset;
         private IMapper _mapper;
-        public UserService(DbContextDTO dbContextDTO, IMapper mapper, IUserRoleService userRoleService, IConfiguration configuration)
+        public UserService(DbContextDTO dbContextDTO, IMapper mapper)
         {
-            _configuration = configuration;
-            _userRoleService = userRoleService;
             _dbContextDTO = dbContextDTO;
             _mapper = mapper;
             dbset = dbContextDTO.Set<AppUserDTO>();
@@ -56,7 +43,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             userDTO.isDelete = true;
             userDTO.UpdateAt = DateTime.Now;
             dbset.Update(userDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Delete Success");
         }
 
@@ -107,7 +94,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             userDTO.ConfirmEmail = checkValue.ConfirmEmail;
             userDTO.UpdateAt = DateTime.Now;
             dbset.Update(userDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Update Success");
         }
 
@@ -129,8 +116,28 @@ namespace Vehicle_Appraisal_WebApi.Service
             userDTO.PassWord = password;
             userDTO.UpdateAt = DateTime.Now;
             dbset.Update(userDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Password has changed");
+        }
+
+        public async Task<PageResultVM<AppUserVM>> GetAllPaging(PaginationVM paginationVM)
+        {
+            var listUserDTO = await dbset.Where(x => x.isDelete == false).Where(x => x.AppUserRolesId == 2).ToListAsync();
+            var listUserVM = _mapper.Map<List<AppUserVM>>(listUserDTO).OrderByDescending(x=>x.CreateAt.Date);
+            var listUserVMPagination = listUserVM.Skip((paginationVM.PageIndex - 1) * paginationVM.PageSize).Take(paginationVM.PageSize).ToList();
+            return new PageResultVM<AppUserVM>
+            {
+                Items = listUserVMPagination,
+                PageIndex = paginationVM.PageIndex,
+                TotalRecord = listUserVM.Count()
+            };
+        }
+
+        public async Task<List<AppUserVM>> GetAllNotDelete()
+        {
+            var listUserDTO = await dbset.ToListAsync();
+            var listUserVM = _mapper.Map<List<AppUserVM>>(listUserDTO);
+            return listUserVM;
         }
     }
 }

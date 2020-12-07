@@ -74,7 +74,7 @@
                                                     @Model.Year
                                                 </td>
                                                 <td>
-                                                    @Html.ActionLink("Edit", "update", "model", new { Model.Id, Model.Name, Model.Year }) |
+                                                    @Html.ActionLink("Edit", "update", "model", new { Model.Id, Model.CreateAt, Model.Name, Model.Year }) |
                                                     @Html.ActionLink("Details", "Details", new { }) |
                                                     <a href="@Url.Action("DeleteAction","model",new { Model.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete model with ID = @Model.Id')">
                                                         Delete

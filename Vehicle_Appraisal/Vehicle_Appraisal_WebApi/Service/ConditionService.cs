@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.DTOs;
-using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
+using Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService;
 using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Service
@@ -37,7 +36,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             }
             var ConditionDTO = _mapper.Map<ConditionDTO>(ConditionVM);
             dbset.Remove(ConditionDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Delete Success");
         }
 
@@ -58,7 +57,7 @@ namespace Vehicle_Appraisal_WebApi.Service
         public async Task<ApiResultVM<string>> Insert(ConditionVM conditionVM)
         {
             var vehicleId = await _vehicleService.GetById(conditionVM.VehicleId);
-            if (vehicleId == null) 
+            if (vehicleId == null)
             {
                 _dbContextDTO.Dispose();
                 return new ApiErrorResultVM<string>("Vehicle doesn't exist to insert condition");
@@ -71,7 +70,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             ConditionDTO.CreateAt = DateTime.Now;
             ConditionDTO.UpdateAt = DateTime.Now;
             await dbset.AddAsync(ConditionDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Insert Success");
         }
 
@@ -97,7 +96,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             ConditionDTO.Id = id;
             ConditionDTO.UpdateAt = DateTime.Now;
             dbset.Update(ConditionDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Update Success");
         }
 

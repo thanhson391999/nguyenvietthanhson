@@ -1,5 +1,3 @@
-using System;
-
 namespace Vehicle_Appraisal_WebMVC.Models
 {
     public class ErrorViewModel

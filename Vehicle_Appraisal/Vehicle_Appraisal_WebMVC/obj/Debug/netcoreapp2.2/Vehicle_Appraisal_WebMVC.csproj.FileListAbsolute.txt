@@ -213,3 +213,4 @@ E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debu
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebMVC.pdb
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debug\netcoreapp2.2\Vehicle_Appraisal_WebMVC.genruntimeconfig.cache
 E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debug\netcoreapp2.2\Razor\Views\User\ForgotPassword.cshtml.g.cs
+E:\Github\nguyenvietthanhson\Vehicle_Appraisal\Vehicle_Appraisal_WebMVC\obj\Debug\netcoreapp2.2\Razor\Views\Shared\Components\Pager\Default.cshtml.g.cs

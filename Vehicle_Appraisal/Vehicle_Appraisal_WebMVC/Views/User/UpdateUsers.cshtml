@@ -50,7 +50,6 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <input type="hidden" asp-for="appUserVM.Id">
-                                    <input type="hidden" asp-for="appUserVM.CreateAt" />
                                     <label for="inputUN">UserName</label>
                                     <input type="text" asp-for="appUserVM.UserName" id="inputUN" class="form-control">
                                     <label for="inputEmail">Email</label>
@@ -61,7 +60,7 @@
                                     <div>
                                         <select id="inputRole" asp-for="appUserRoleVM.Name" class="Chosen" style="font-size:13.1rem">
                                             <option></option>
-                                            @foreach (var item in Model.ListAppUserRoleVM)
+                                            @foreach (var item in Model.ListAppUserRoleVM.Where(x=>x.Name != "Admin"))
                                             {
                                                 <option>@Html.DisplayFor(Model => item.Name)</option>
                                             }

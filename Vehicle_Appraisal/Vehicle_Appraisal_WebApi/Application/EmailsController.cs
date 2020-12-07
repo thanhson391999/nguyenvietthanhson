@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
+using Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService;
 using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Application
@@ -21,9 +16,9 @@ namespace Vehicle_Appraisal_WebApi.Application
             _emailService = emailService;
         }
 
-        // POST api/emails/resetpassword
-        [HttpPost("resetpassword")]
-        public async Task<IActionResult> ResetPassword([FromForm]PasswordVM passwordVM)
+        // POST api/emails/password-reset
+        [HttpPost("password-reset")]
+        public async Task<IActionResult> ResetPassword([FromForm] PasswordVM passwordVM)
         {
             if (passwordVM.Token == null)
             {
@@ -52,8 +47,8 @@ namespace Vehicle_Appraisal_WebApi.Application
             }
         }
 
-        // GET api/emails/confirmemail
-        [HttpGet("confirmemail")]
+        // GET api/emails/email-confirm/?tokenEmail=
+        [HttpGet("email-confirm")]
         public async Task<IActionResult> ConfirmEmail(string tokenEmail)
         {
             if (tokenEmail == null)

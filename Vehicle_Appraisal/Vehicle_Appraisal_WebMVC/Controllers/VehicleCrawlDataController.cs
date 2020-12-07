@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.ViewModels;
 using Vehicle_Appraisal_WebMVC.Service.Interface;
 
@@ -20,80 +18,134 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             _vehicleCrawlDataServiceApiClient = vehicleCrawlDataServiceApiClient;
         }
 
-        private async Task<List<VehicleCrawlDataVM>> ListVehicleCrawlData()
+        // GET vehiclecrawldata/getallvehicleBMWcrawldata
+        [HttpGet]
+        public async Task<IActionResult> GetAllVehicleBMWCrawlData(int pageIndex = 1)
         {
             string token = HttpContext.Session.GetString("token_access");
-            return await _vehicleCrawlDataServiceApiClient.GetAllVehicleCrawlData(token);
-        }
-
-        // GET vehiclecrawldata/getallvehiclebmwcrawldata
-        [HttpGet]
-        public async Task<IActionResult> GetAllVehicleBMWCrawlData()
-        {
-            return View(await ListVehicleCrawlData());
+            var paginationVM = new PaginationVM
+            {
+                PageIndex = pageIndex
+            };
+            var pageResultVM = await _vehicleCrawlDataServiceApiClient.GetAllVehicleBMWCrawlData(token, paginationVM);
+            return View(pageResultVM);
         }
 
         // GET vehiclecrawldata/getallvehicleaudicrawldata
         [HttpGet]
-        public async Task<IActionResult> GetAllVehicleAudiCrawlData()
+        public async Task<IActionResult> GetAllVehicleAudiCrawlData(int pageIndex = 1)
         {
-            return View(await ListVehicleCrawlData());
+            string token = HttpContext.Session.GetString("token_access");
+            var paginationVM = new PaginationVM
+            {
+                PageIndex = pageIndex
+            };
+            var pageResultVM = await _vehicleCrawlDataServiceApiClient.GetAllVehicleAudiCrawlData(token, paginationVM);
+            return View(pageResultVM);
         }
 
         // GET vehiclecrawldata/getallvehiclevinfastcrawldata
         [HttpGet]
-        public async Task<IActionResult> GetAllVehicleVinfastCrawlData()
+        public async Task<IActionResult> GetAllVehicleVinfastCrawlData(int pageIndex = 1)
         {
-            return View(await ListVehicleCrawlData());
+            string token = HttpContext.Session.GetString("token_access");
+            var paginationVM = new PaginationVM
+            {
+                PageIndex = pageIndex
+            };
+            var pageResultVM = await _vehicleCrawlDataServiceApiClient.GetAllVehicleVinfastCrawlData(token, paginationVM);
+            return View(pageResultVM);
         }
 
         // GET vehiclecrawldata/getallvehiclefordcrawldata
         [HttpGet]
-        public async Task<IActionResult> GetAllVehicleFordCrawlData()
+        public async Task<IActionResult> GetAllVehicleFordCrawlData(int pageIndex = 1)
         {
-            return View(await ListVehicleCrawlData());
+            string token = HttpContext.Session.GetString("token_access");
+            var paginationVM = new PaginationVM
+            {
+                PageIndex = pageIndex
+            };
+            var pageResultVM = await _vehicleCrawlDataServiceApiClient.GetAllVehicleFordCrawlData(token, paginationVM);
+            return View(pageResultVM);
         }
 
         // GET vehiclecrawldata/getallvehiclehondacrawldata
         [HttpGet]
-        public async Task<IActionResult> GetAllVehicleHondaCrawlData()
+        public async Task<IActionResult> GetAllVehicleHondaCrawlData(int pageIndex = 1)
         {
-            return View(await ListVehicleCrawlData());
+            string token = HttpContext.Session.GetString("token_access");
+            var paginationVM = new PaginationVM
+            {
+                PageIndex = pageIndex
+            };
+            var pageResultVM = await _vehicleCrawlDataServiceApiClient.GetAllVehicleHondaCrawlData(token, paginationVM);
+            return View(pageResultVM);
         }
 
         // GET vehiclecrawldata/getallvehiclelexuscrawldata
         [HttpGet]
-        public async Task<IActionResult> GetAllVehicleLexusCrawlData()
+        public async Task<IActionResult> GetAllVehicleLexusCrawlData(int pageIndex = 1)
         {
-            return View(await ListVehicleCrawlData());
+            string token = HttpContext.Session.GetString("token_access");
+            var paginationVM = new PaginationVM
+            {
+                PageIndex = pageIndex
+            };
+            var pageResultVM = await _vehicleCrawlDataServiceApiClient.GetAllVehicleLexusCrawlData(token, paginationVM);
+            return View(pageResultVM);
         }
 
         // GET vehiclecrawldata/getallvehiclesuzukicrawldata
         [HttpGet]
-        public async Task<IActionResult> GetAllVehicleSuzukiCrawlData()
+        public async Task<IActionResult> GetAllVehicleSuzukiCrawlData(int pageIndex = 1)
         {
-            return View(await ListVehicleCrawlData());
+            string token = HttpContext.Session.GetString("token_access");
+            var paginationVM = new PaginationVM
+            {
+                PageIndex = pageIndex
+            };
+            var pageResultVM = await _vehicleCrawlDataServiceApiClient.GetAllVehicleSuzukiCrawlData(token, paginationVM);
+            return View(pageResultVM);
         }
 
         // GET vehiclecrawldata/getallvehicletoyotacrawldata
         [HttpGet]
-        public async Task<IActionResult> GetAllVehicleToyotaCrawlData()
+        public async Task<IActionResult> GetAllVehicleToyotaCrawlData(int pageIndex = 1)
         {
-            return View(await ListVehicleCrawlData());
+            string token = HttpContext.Session.GetString("token_access");
+            var paginationVM = new PaginationVM
+            {
+                PageIndex = pageIndex
+            };
+            var pageResultVM = await _vehicleCrawlDataServiceApiClient.GetAllVehicleToyotaCrawlData(token, paginationVM);
+            return View(pageResultVM);
         }
 
         // GET vehiclecrawldata/getallvehiclehyundaicrawldata
         [HttpGet]
-        public async Task<IActionResult> GetAllVehicleHyundaiCrawlData()
+        public async Task<IActionResult> GetAllVehicleHyundaiCrawlData(int pageIndex = 1)
         {
-            return View(await ListVehicleCrawlData());
+            string token = HttpContext.Session.GetString("token_access");
+            var paginationVM = new PaginationVM
+            {
+                PageIndex = pageIndex
+            };
+            var pageResultVM = await _vehicleCrawlDataServiceApiClient.GetAllVehicleHyundaiCrawlData(token, paginationVM);
+            return View(pageResultVM);
         }
 
         // GET vehiclecrawldata/getallvehiclemitsubishicrawldata
         [HttpGet]
-        public async Task<IActionResult> GetAllVehicleMitsubishiCrawlData()
+        public async Task<IActionResult> GetAllVehicleMitsubishiCrawlData(int pageIndex = 1)
         {
-            return View(await ListVehicleCrawlData());
+            string token = HttpContext.Session.GetString("token_access");
+            var paginationVM = new PaginationVM
+            {
+                PageIndex = pageIndex
+            };
+            var pageResultVM = await _vehicleCrawlDataServiceApiClient.GetAllVehicleMitsubishiCrawlData(token, paginationVM);
+            return View(pageResultVM);
         }
     }
 }

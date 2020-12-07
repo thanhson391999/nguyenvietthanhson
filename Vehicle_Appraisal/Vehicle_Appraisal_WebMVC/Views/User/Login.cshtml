@@ -23,16 +23,6 @@
 </head>
 <body class="hold-transition login-page">
     <div class="wrapper" style="display:flex; align-items:center">
-        <div class="row">
-            <div class="col-md-auto" style="margin-left:1rem">
-                @if (ViewBag.SuccessMsg != null)
-                {
-                    <div id="msgAlert" class="alert alert-success" role="alert">
-                        @ViewBag.SuccessMsg
-                    </div>
-                }
-            </div>
-        </div>
         <div class="login-box">
             <div class="login-logo">
                 <a href="~/ThemeLTE/index2.html"><b>Vehicle Appraisal</b></a>
@@ -41,6 +31,16 @@
             <div class="card">
                 <div class="card-body login-card-body">
                     <p class="login-box-msg">Sign in to start your session</p>
+                    <div class="row">
+                        <div class="col-sm-auto" style="margin-left:1rem">
+                            @if (ViewBag.SuccessMsg != null)
+                            {
+                                <div id="msgAlert" class="alert alert-success" role="alert">
+                                    @ViewBag.SuccessMsg
+                                </div>
+                            }
+                        </div>
+                    </div>
                     <form asp-action="LoginAction" asp-controller="User" method="post">
                         <div asp-validation-summary="All" class="text-danger"></div>
                         <div class="input-group mb-3">

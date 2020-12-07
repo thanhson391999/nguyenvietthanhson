@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Vehicle_Appraisal_WebMVC.Models;
 using Vehicle_Appraisal_WebMVC.Service.Interface;
 
@@ -30,14 +29,14 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         public async Task<IActionResult> index()
         {
             string token = HttpContext.Session.GetString("token_access");
-            var listCustomer = await _customerServiceApiClient.GetAll(token);
-            var listVehicle = await _vehicleServiceApiClient.GetAllNotBuy(token);
-            var listUsers = await _userServiceApiClient.GetAll(token);
+            var customerVMs = await _customerServiceApiClient.GetAll(token);
+            var vehicleVMs = await _vehicleServiceApiClient.GetAllNotBuy(token);
+            var userVMs = await _userServiceApiClient.GetAll(token);
             var dashboard = new DashBoardModelMVC
             {
-                ListAppuserVM = listUsers.Select(x=>x.appUserVM).ToList(),
-                ListCustomerVM = listCustomer,
-                ListVehicleVM = listVehicle
+                ListAppuserVM = userVMs.Select(x => x.appUserVM).ToList(),
+                ListCustomerVM = customerVMs,
+                ListVehicleVM = vehicleVMs
             };
             if (TempData["SuccessResult"] != null)
             {
@@ -52,7 +51,7 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         {
             return View();
         }
-     
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

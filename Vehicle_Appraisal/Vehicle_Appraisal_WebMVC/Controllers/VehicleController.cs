@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.ViewModels;
 using Vehicle_Appraisal_WebMVC.Models;
-using Vehicle_Appraisal_WebMVC.Service;
 using Vehicle_Appraisal_WebMVC.Service.Interface;
 
 namespace Vehicle_Appraisal_WebMVC.Controllers
@@ -100,12 +98,16 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         // GET vehicle/getall
         [HttpGet]
         [Authorize(Roles = "Admin, Users")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int pageIndex = 1)
         {
             if (ModelState.IsValid)
             {
                 string token = HttpContext.Session.GetString("token_access");
-                var list = await _vehicleServiceApiClient.GetAll(token);
+                var paginationVM = new PaginationVM()
+                {
+                    PageIndex = pageIndex
+                };
+                var list = await _vehicleServiceApiClient.GetAllPaging(token, paginationVM);
                 if (TempData["ErrorResult"] != null)
                 {
                     ViewBag.ErrorMsg = TempData["ErrorResult"];
@@ -222,20 +224,16 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         // GET vehicle/getallconditionbyid
         [HttpGet]
         [Authorize(Roles = "Admin,Users")]
-        public async Task<IActionResult> GetAllConditionById(int id)
+        public async Task<IActionResult> GetAllConditionById(int id, bool isBought, int pageIndex = 1)
         {
             if (ModelState.IsValid)
             {
                 string token = HttpContext.Session.GetString("token_access");
-                var list = await _vehicleServiceApiClient.GetAllConditionById(id, token);
-                if (list.Count == 0)
+                var paginationVM = new PaginationVM()
                 {
-                    var conditionVMs = new List<ConditionVM>();
-                    var conditionVM = new ConditionVM();
-                    conditionVM.VehicleId = id;
-                    conditionVMs.Add(conditionVM);
-                    return View(conditionVMs);
-                }
+                    PageIndex = pageIndex
+                };
+                var list = await _vehicleServiceApiClient.GetAllConditionByIdPaging(token, id, paginationVM);
                 if (TempData["ErrorResult"] != null)
                 {
                     ViewBag.ErrorMsg = TempData["ErrorResult"];
@@ -244,6 +242,8 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
                 {
                     ViewBag.SuccessMsg = TempData["SuccessResult"];
                 }
+                ViewBag.id = id;
+                ViewBag.isBought = isBought;
                 return View(list);
             }
             else
@@ -259,14 +259,6 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             {
                 string token = HttpContext.Session.GetString("token_access");
                 var list = await _vehicleServiceApiClient.GetAllAppraisalValueById(id, token);
-                if (list.Count == 0)
-                {
-                    var vehicleAppraisalVMs = new List<VehicleAppraisalVM>();
-                    var vehicleAppraisalVM = new VehicleAppraisalVM();
-                    vehicleAppraisalVM.VehicleId = id;
-                    vehicleAppraisalVMs.Add(vehicleAppraisalVM);
-                    return View(vehicleAppraisalVMs);
-                }
                 if (TempData["ErrorResult"] != null)
                 {
                     ViewBag.ErrorMsg = TempData["ErrorResult"];
@@ -275,14 +267,15 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
                 {
                     ViewBag.SuccessMsg = TempData["SuccessResult"];
                 }
+                ViewBag.id = id;
                 return View(list);
             }
             else
                 return BadRequest("Error 400");
         }
 
-        // GET vehicle/buyvehicle
-        [HttpGet]
+        // DELETE vehicle/buyvehicle/{id}
+        [HttpDelete]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> BuyVehicle(int id)
         {
@@ -303,27 +296,17 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         // GET vehicle/getallvehiclebought
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAllVehicleBought()
+        public async Task<IActionResult> GetAllVehicleBought(DateTime fromDate, DateTime toDate, int pageIndex = 1)
         {
             if (ModelState.IsValid)
             {
                 string token = HttpContext.Session.GetString("token_access");
-                var list = await _vehicleServiceApiClient.GetAllVehicleBought(token);
+                var paginationVM = new PaginationVM
+                {
+                    PageIndex = pageIndex,
+                };
+                var list = await _vehicleServiceApiClient.GetAllVehicleBoughtPaging(token, fromDate, toDate, paginationVM);
                 return View(list);
-            }
-            return BadRequest("Error 400");
-        }
-
-        // GET vehicle/searchdate
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> SearchDate(DateTime fromDate, DateTime toDate)
-        {
-            if (ModelState.IsValid)
-            {
-                string token = HttpContext.Session.GetString("token_access");
-                var list = await _vehicleServiceApiClient.SearchDate(fromDate, toDate, token);
-                return View("GetAllVehicleBought", list);
             }
             return BadRequest("Error 400");
         }

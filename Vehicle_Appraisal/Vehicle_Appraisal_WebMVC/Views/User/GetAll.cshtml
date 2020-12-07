@@ -1,4 +1,5 @@
-﻿@model List<AppUserModelMVC>
+﻿@using Vehicle_Appraisal_WebApi.ViewModels
+@model PageResultVM<AppUserModelMVC>
 @{
     Layout = Layout;
 }
@@ -57,65 +58,69 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <table class="table table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Date</th>
-                                        <th>UserName</th>
-                                        <th>Email</th>
-                                        <th>ConfirmEmail</th>
-                                        <th>FullName</th>
-                                        <th>Role</th>
-                                        <th>Options</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (Model != null)
-                                    {
-                                        foreach (var item in Model.Where(x => x.appUserVM.AppUserRolesId == 2))
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Date</th>
+                                            <th>UserName</th>
+                                            <th>Email</th>
+                                            <th>ConfirmEmail</th>
+                                            <th>FullName</th>
+                                            <th>Role</th>
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.Items != null)
                                         {
-                                            <tr class="Search">
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.appUserVM.Id)
-                                                </td>
-                                                <td>
-                                                    @item.appUserVM.CreateAt.ToString("dd/MM/yyyy")
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.appUserVM.UserName)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.appUserVM.Email)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.appUserVM.ConfirmEmail)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.appUserVM.FullName)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.appUserRoleVM.Name)
-                                                </td>
-                                                <td>
-                                                    @Html.ActionLink("Edit", "updateUsers", "user", new
-                                                    {
-                                                   item.appUserVM.Id,
-                                                   item.appUserVM.UserName,
-                                                   item.appUserVM.Email,
-                                                   item.appUserVM.FullName,
-                                                   item.appUserRoleVM.Name
-                                                    }) |
-                                                    @Html.ActionLink("Details", "Details", new { }) |
-                                                    <a href="@Url.Action("DeleteAction","user",new { item.appUserVM.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete User with ID = @item.appUserVM.Id')">
-                                                        Delete
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                            foreach (var item in Model.Items.Where(x => x.appUserVM.AppUserRolesId == 2))
+                                            {
+                                                <tr class="Search">
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.appUserVM.Id)
+                                                    </td>
+                                                    <td>
+                                                        @item.appUserVM.CreateAt.ToString("dd/MM/yyyy")
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.appUserVM.UserName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.appUserVM.Email)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.appUserVM.ConfirmEmail)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.appUserVM.FullName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.appUserRoleVM.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.ActionLink("Edit", "updateUsers", "user", new
+                                                        {
+                                                       item.appUserVM.Id,
+                                                       item.appUserVM.CreateAt,
+                                                       item.appUserVM.UserName,
+                                                       item.appUserVM.Email,
+                                                       item.appUserVM.FullName,
+                                                       item.appUserRoleVM.Name
+                                                        }) |
+                                                        @Html.ActionLink("Details", "Details", new { }) |
+                                                        <a href="@Url.Action("DeleteAction","user",new { item.appUserVM.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete User with ID = @item.appUserVM.Id')">
+                                                            Delete
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
                                         }
-                                    }
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                            @await Component.InvokeAsync("Pager", Model)
                         </div>
                         <!-- /.card-body -->
                     </div>

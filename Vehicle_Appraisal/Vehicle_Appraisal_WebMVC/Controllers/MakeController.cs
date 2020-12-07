@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using com.sun.java.swing.plaf.windows.resources;
-using java.awt;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Models;
+using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.ViewModels;
-using Vehicle_Appraisal_WebMVC.Service;
 using Vehicle_Appraisal_WebMVC.Service.Interface;
 
 namespace Vehicle_Appraisal_WebMVC.Controllers
@@ -26,12 +19,16 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
 
         // GET make/getall
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int pageIndex = 1)
         {
             if (ModelState.IsValid)
             {
                 string token = HttpContext.Session.GetString("token_access");
-                var list = await _makeServiceApiClient.GetAll(token);
+                var paginationVM = new PaginationVM()
+                {
+                    PageIndex = pageIndex
+                };
+                var list = await _makeServiceApiClient.GetAllPaging(token, paginationVM);
                 if (TempData["ErrorResult"] != null)
                 {
                     ViewBag.ErrorMsg = TempData["ErrorResult"];

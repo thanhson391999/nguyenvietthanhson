@@ -1,5 +1,5 @@
 ﻿@using Vehicle_Appraisal_WebApi.ViewModels
-@model List<MakeVM>
+@model PageResultVM<MakeVM>
 @{
     Layout = Layout;
 }
@@ -65,42 +65,45 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <table class="table table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Date</th>
-                                        <th>Name</th>
-                                        <th>Options</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (Model != null)
-                                    {
-                                        foreach (var item in Model)
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Date</th>
+                                            <th>Name</th>
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.Items != null)
                                         {
-                                            <tr class="Search">
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.Id)
-                                                </td>
-                                                <td>
-                                                    @item.CreateAt.ToString("dd/MM/yyyy")
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.Name)
-                                                </td>
-                                                <td>
-                                                    @Html.ActionLink("Edit", "update", "make", new { item.Id, item.Name }) |
-                                                    @Html.ActionLink("Details", "Details", new { }) |
-                                                    <a href="@Url.Action("DeleteAction","make",new { item.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete make with ID = @item.Id')">
-                                                        Delete
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                            foreach (var item in Model.Items)
+                                            {
+                                                <tr class="Search">
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.Id)
+                                                    </td>
+                                                    <td>
+                                                        @item.CreateAt.ToString("dd/MM/yyyy")
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.ActionLink("Edit", "update", "make", new { item.Id, item.CreateAt, item.Name }) |
+                                                        @Html.ActionLink("Details", "Details", new { }) |
+                                                        <a href="@Url.Action("DeleteAction","make",new { item.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete make with ID = @item.Id')">
+                                                            Delete
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
                                         }
-                                    }
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                            @await Component.InvokeAsync("Pager", Model)
                         </div>
                         <!-- /.card-body -->
                     </div>

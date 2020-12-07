@@ -37,7 +37,7 @@
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="/home/index">Home</a></li>
                                 <li class="breadcrumb-item active"><a href="/vehicle/getall">Vehicle</a></li>
-                                <li class="breadcrumb-item active">@Model.Select(x => x.VehicleId).FirstOrDefault()</li>
+                                <li class="breadcrumb-item active">@ViewBag.id</li>
                                 <li class="breadcrumb-item active">AppraisalValue</li>
                             </ol>
                         </div>
@@ -60,10 +60,10 @@
                     }
                 </div>
             </div>
-            @if (Model.Where(x => x.Id == 0).SingleOrDefault() != null)
+            @if (Model.Count == 0)
             {
                 <div class="card-header">
-                    <a id="btn-create" class="btn btn-primary" href="/vehicleappraisal/insert/@Model.Select(x => x.VehicleId).FirstOrDefault()">
+                    <a id="btn-create" class="btn btn-primary" href="/vehicleappraisal/insert/@ViewBag.id">
                         <i class="far fa-plus-square"></i>
                         Create
                     </a>
@@ -103,7 +103,7 @@
                                                                 @Html.DisplayFor(Model => item.AppraisalValue)
                                                             </td>
                                                             <td>
-                                                                @Html.ActionLink("Edit", "update", "vehicleappraisal", new { item.Id, item.AppraisalValue, item.VehicleId }) |
+                                                                @Html.ActionLink("Edit", "update", "vehicleappraisal", new { item.Id, item.CreateAt, item.AppraisalValue, item.VehicleId }) |
                                                                 <a href="@Url.Action("DeleteAction","vehicleappraisal",new { item.Id, item.VehicleId })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete appraisal value with ID = @item.Id')">
                                                                     Delete
                                                                 </a> |

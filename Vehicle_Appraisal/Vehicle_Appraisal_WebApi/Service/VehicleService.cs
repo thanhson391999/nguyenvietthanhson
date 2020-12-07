@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
-using com.sun.tools.corba.se.idl;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.DTOs;
-using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
+using Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService;
 using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Service
@@ -43,7 +42,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             vehicleDTO.isBought = true;
             vehicleDTO.UpdateAt = DateTime.Now;
             dbset.Update(vehicleDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Buy Success");
         }
 
@@ -71,14 +70,14 @@ namespace Vehicle_Appraisal_WebApi.Service
                 dbsetVehicleAppraisal.Remove(appraisalValue);
             }
             dbset.Remove(vehicleDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Delete Success");
         }
 
         public async Task<List<VehicleVM>> GetAll()
         {
             var listvehicleDTO = await dbset.Where(x => x.isBought == false).ToListAsync();
-            var listvehicleVM = _mapper.Map<List<VehicleVM>>(listvehicleDTO);
+            var listvehicleVM = _mapper.Map<List<VehicleVM>>(listvehicleDTO).OrderByDescending(x=>x.CreateAt.Date).ToList();
             return listvehicleVM;
         }
 
@@ -89,18 +88,64 @@ namespace Vehicle_Appraisal_WebApi.Service
             return vehicleappraisalVM;
         }
 
-        public async Task<List<ConditionVM>> GetAllConditionById(int id)
+        public async Task<PageResultVM<ConditionVM>> GetAllConditionByIdPaging(int id, PaginationVM paginationVM)
         {
-            var conditionDTO = await _dbContextDTO.Set<ConditionDTO>().Where(x => x.VehicleId.Equals(id)).AsNoTracking().ToListAsync();
-            var conditionVM = _mapper.Map<List<ConditionVM>>(conditionDTO);
-            return conditionVM;
+            var listConditionDTO = await _dbContextDTO.Set<ConditionDTO>().Where(x => x.VehicleId.Equals(id)).AsNoTracking().ToListAsync();
+            var listConditionVM = _mapper.Map<List<ConditionVM>>(listConditionDTO).OrderByDescending(x=>x.CreateAt.Date);
+            var listConditionVMPagination = listConditionVM.Skip((paginationVM.PageIndex - 1) * paginationVM.PageSize).Take(paginationVM.PageSize).ToList();
+            return new PageResultVM<ConditionVM>
+            {
+                Items = listConditionVMPagination,
+                PageIndex = paginationVM.PageIndex,
+                TotalRecord = listConditionVM.Count()
+            };
         }
 
-        public async Task<List<VehicleVM>> GetAllNotBuy()
+        public async Task<List<VehicleVM>> GetAllVehicleBought()
         {
-            var listvehicleDTO = await dbset.ToListAsync();
-            var listvehicleVM = _mapper.Map<List<VehicleVM>>(listvehicleDTO);
+            var listvehicleDTO = await dbset.Where(x => x.isBought == true).ToListAsync();
+            var listvehicleVM = _mapper.Map<List<VehicleVM>>(listvehicleDTO).OrderByDescending(x => x.UpdateAt.Date).ToList();
             return listvehicleVM;
+        }
+
+        public async Task<PageResultVM<VehicleVM>> GetAllPaging(PaginationVM paginationVM)
+        {
+            var listVehicleVM = await GetAll();
+            var listVehicleVMPagination = listVehicleVM.Skip((paginationVM.PageIndex - 1) * paginationVM.PageSize).Take(paginationVM.PageSize).ToList();
+            return new PageResultVM<VehicleVM>
+            {
+                Items = listVehicleVMPagination,
+                PageIndex = paginationVM.PageIndex,
+                TotalRecord = listVehicleVM.Count()
+            };
+        }
+
+        public async Task<PageResultVM<VehicleVM>> GetAllVehicleBoughtPaging(DateTime fromDate, DateTime toDate, PaginationVM paginationVM)
+        {
+            if (fromDate.Year != 0001 || toDate.Year != 0001)
+            {
+                var listVehicleDTO = await dbset.Where(x => x.isBought == true).Where(x => x.UpdateAt.Date >= fromDate.Date).Where(x => x.UpdateAt.Date <= toDate).ToListAsync();
+                var listVehicleVM = _mapper.Map<List<VehicleVM>>(listVehicleDTO).OrderByDescending(x=>x.UpdateAt.Date);
+                var listVehicleVMPagination = listVehicleVM.Skip((paginationVM.PageIndex - 1) * paginationVM.PageSize).Take(paginationVM.PageSize).ToList();
+                return new PageResultVM<VehicleVM>
+                {
+                    Items = listVehicleVMPagination,
+                    PageIndex = paginationVM.PageIndex,
+                    TotalRecord = listVehicleVM.Count()
+                };
+            }
+            else
+            {
+                var listVehicleVM = await GetAllVehicleBought();
+                var listVehicleVMPagination = listVehicleVM.Skip((paginationVM.PageIndex - 1) * paginationVM.PageSize).Take(paginationVM.PageSize).ToList();
+                return new PageResultVM<VehicleVM>
+                {
+                    Items = listVehicleVMPagination,
+                    PageIndex = paginationVM.PageIndex,
+                    PageSize = paginationVM.PageSize,
+                    TotalRecord = listVehicleVM.Count()
+                };
+            }
         }
 
         public async Task<VehicleVM> GetById(int id)
@@ -140,7 +185,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             vehicleDTO.CreateAt = DateTime.Now;
             vehicleDTO.UpdateAt = DateTime.Now;
             await dbset.AddAsync(vehicleDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Insert Success");
         }
 
@@ -190,13 +235,6 @@ namespace Vehicle_Appraisal_WebApi.Service
             }
         }
 
-        public async Task<List<VehicleVM>> SearchDate(DateTime fromDate, DateTime toDate)
-        {
-            var vehicleDTO = await dbset.Where(x => x.UpdateAt.Date >= fromDate.Date).Where(x => x.UpdateAt.Date <= toDate).ToListAsync();
-            var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
-            return vehicleVM;
-        }
-
         public async Task<ApiResultVM<string>> Update(VehicleVM vehicleVM, int id)
         {
             var checkValue = await GetById(id);
@@ -233,8 +271,15 @@ namespace Vehicle_Appraisal_WebApi.Service
             vehicleDTO.Id = id;
             vehicleDTO.UpdateAt = DateTime.Now;
             dbset.Update(vehicleDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Update Success");
+        }
+
+        public async Task<List<VehicleVM>> GetAllNotBuy()
+        {
+            var listVehicleDTO = await dbset.ToListAsync();
+            var listVehicleVM = _mapper.Map<List<VehicleVM>>(listVehicleDTO);
+            return listVehicleVM;
         }
     }
 }

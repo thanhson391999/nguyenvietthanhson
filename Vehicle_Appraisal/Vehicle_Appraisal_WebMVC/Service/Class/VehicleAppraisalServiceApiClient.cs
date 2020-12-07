@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.ViewModels;
@@ -26,7 +25,7 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var response = await client.DeleteAsync("/api/vehicleappraisals/"+id);
+            var response = await client.DeleteAsync("/api/vehicleappraisals/" + id);
             var body = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
@@ -47,7 +46,7 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var response = await client.PostAsJsonAsync("/api/vehicleappraisals/",vehicleAppraisalVM);
+            var response = await client.PostAsJsonAsync("/api/vehicleappraisals/", vehicleAppraisalVM);
             var body = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }
@@ -57,7 +56,7 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var response = await client.PutAsJsonAsync("/api/vehicleappraisals/"+vehicleAppraisalVM.Id, vehicleAppraisalVM);
+            var response = await client.PutAsJsonAsync("/api/vehicleappraisals/" + vehicleAppraisalVM.Id, vehicleAppraisalVM);
             var body = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
         }

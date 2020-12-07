@@ -1,4 +1,5 @@
-﻿@model List<VehicleModelMVC>
+﻿@using Vehicle_Appraisal_WebApi.ViewModels
+@model PageResultVM<VehicleModelMVC>
 @{
     Layout = Layout;
 }
@@ -19,7 +20,7 @@
             </div>
         </div><!-- /.container-fluid -->
     </section>
-    <form asp-action="SearchDate" asp-controller="vehicle" method="get" class="row card-header">
+    <form asp-action="GetAllVehicleBought" asp-controller="vehicle" method="get" class="row card-header">
         <label for="fromdate">FromDate</label>
         <div class="col-3" id="fromdate">
             <input type="date" name="fromDate" required />
@@ -42,63 +43,69 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <table class="table table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Date</th>
-                                        <th>Customer</th>
-                                        <th>Make</th>
-                                        <th>Model</th>
-                                        <th>VIN</th>
-                                        <th>Odometer</th>
-                                        <th>Engine</th>
-                                        <th>Users</th>
-                                        <th>Value</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (Model != null)
-                                    {
-
-                                        foreach (var item in Model.Where(x => x.vehicleVM.isBought.Equals(true)))
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Date</th>
+                                            <th>Customer</th>
+                                            <th>Make</th>
+                                            <th>Model</th>
+                                            <th>VIN</th>
+                                            <th>Odometer</th>
+                                            <th>Engine</th>
+                                            <th>Users</th>
+                                            <th>Value</th>
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.Items != null)
                                         {
-                                            <tr>
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.vehicleVM.Id)
-                                                </td>
-                                                <td>
-                                                    @item.vehicleVM.UpdateAt.ToString("dd/MM/yyyy")
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.customerVM.FirstName) @Html.DisplayFor(Model => item.customerVM.LastName)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.makeVM.Name)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.modelVM.Name)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.vehicleVM.VIN)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.vehicleVM.Odometer)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.vehicleVM.Engine)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.appUserVM.FullName)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(Model => item.vehicleAppraisalVM.AppraisalValue)
-                                                </td>
-                                            </tr>
+                                            foreach (var item in Model.Items.Where(x => x.vehicleVM.isBought.Equals(true)))
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.vehicleVM.Id)
+                                                    </td>
+                                                    <td>
+                                                        @item.vehicleVM.UpdateAt.ToString("dd/MM/yyyy")
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.customerVM.FirstName) @Html.DisplayFor(Model => item.customerVM.LastName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.makeVM.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.modelVM.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.vehicleVM.VIN)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.vehicleVM.Odometer)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.vehicleVM.Engine)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.appUserVM.FullName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(Model => item.vehicleAppraisalVM.AppraisalValue)
+                                                    </td>
+                                                    <td>
+                                                        @Html.ActionLink("Condition", "GetAllConditionById", new { item.vehicleVM.Id, item.vehicleVM.isBought })
+                                                    </td>
+                                                </tr>
+                                            }
                                         }
-                                    }
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                            @await Component.InvokeAsync("Pager", Model)
                         </div>
                         <!-- /.card-body -->
                     </div>

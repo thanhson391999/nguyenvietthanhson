@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using com.sun.corba.se.impl.protocol.giopmsgheaders;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
+using Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService;
 using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Application
@@ -28,6 +26,22 @@ namespace Vehicle_Appraisal_WebApi.Application
         public async Task<List<AppUserVM>> GetAll()
         {
             return await _userService.GetAll();
+        }
+
+        // GET api/users/paging
+        [HttpGet("paging")]
+        [Authorize(Roles = "Admin")]
+        public async Task<PageResultVM<AppUserVM>> GetAllPaging([FromQuery] PaginationVM paginationVM)
+        {
+            return await _userService.GetAllPaging(paginationVM);
+        }
+
+        // GET api/users/not-delete
+        [HttpGet("not-delete")]
+        [Authorize(Roles = "Admin")]
+        public async Task<List<AppUserVM>> GetAllNotDelete()
+        {
+            return await _userService.GetAllNotDelete();
         }
 
         // GET api/users/{id}
@@ -57,7 +71,7 @@ namespace Vehicle_Appraisal_WebApi.Application
 
         // PUT api/users/{id}
         [HttpPut("{id}")]
-        [Authorize(Roles ="Admin, Users")]
+        [Authorize(Roles = "Admin, Users")]
         public async Task<IActionResult> Update(AppUserVM userVM, int id)
         {
             var result = await _userService.Update(userVM, id);

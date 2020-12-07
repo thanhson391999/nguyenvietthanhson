@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
 
-namespace Vehicle_Appraisal_WebApi.Infrastructure
+namespace Vehicle_Appraisal_WebApi.Infracstructure
 {
     public class PasswordHash
     {

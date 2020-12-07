@@ -1,8 +1,4 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Infracstructure.ValidatorDTO
@@ -18,10 +14,10 @@ namespace Vehicle_Appraisal_WebApi.Infracstructure.ValidatorDTO
             RuleFor(x => x.ConfirmPassword).NotEmpty().WithMessage("ConfirmPassword is empty");
             RuleFor(x => x).Custom((list, context) =>
             {
-                  if (list.Password != list.ConfirmPassword)
-                  {
-                      context.AddFailure("ConfirmPassword doesn't match");
-                  }
+                if (list.Password != list.ConfirmPassword)
+                {
+                    context.AddFailure("ConfirmPassword doesn't match");
+                }
             });
         }
     }

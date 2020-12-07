@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Vehicle_Appraisal_WebApi.DALs;
 using Vehicle_Appraisal_WebApi.DTOs;
-using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
+using Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService;
 using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Controllers
@@ -33,6 +33,14 @@ namespace Vehicle_Appraisal_WebApi.Controllers
         public async Task<List<MakeVM>> GetAll()
         {
             return await _makeService.GetAll();
+        }
+
+        // GET api/makes/paging
+        [HttpGet("paging")]
+        [Authorize(Roles = "Admin")]
+        public async Task<PageResultVM<MakeVM>> GetAllPaging([FromQuery] PaginationVM paginationVM)
+        {
+            return await _makeService.GetAllPaging(paginationVM);
         }
 
         // GET api/makes/not-delete

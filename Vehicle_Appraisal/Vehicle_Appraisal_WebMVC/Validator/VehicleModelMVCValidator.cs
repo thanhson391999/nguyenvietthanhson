@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentValidation;
+﻿using FluentValidation;
+using System;
 using Vehicle_Appraisal_WebMVC.Models;
 
 namespace Vehicle_Appraisal_WebMVC.Validator

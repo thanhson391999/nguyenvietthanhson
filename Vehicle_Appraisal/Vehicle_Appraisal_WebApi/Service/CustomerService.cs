@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.DTOs;
-using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
+using Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService;
 using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Service
@@ -40,14 +40,14 @@ namespace Vehicle_Appraisal_WebApi.Service
             customerDTO.isDelete = true;
             customerDTO.UpdateAt = DateTime.Now;
             dbset.Update(customerDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Delete Success");
         }
 
         public async Task<List<CustomerVM>> GetAll()
         {
             var listcustomerDTO = await dbset.Where(x => x.isDelete == false).ToListAsync();
-            var listcustomerVM = _mapper.Map<List<CustomerVM>>(listcustomerDTO);
+            var listcustomerVM = _mapper.Map<List<CustomerVM>>(listcustomerDTO).OrderByDescending(x=>x.CreateAt.Date).ToList();
             return listcustomerVM;
         }
 
@@ -56,6 +56,18 @@ namespace Vehicle_Appraisal_WebApi.Service
             var listcustomerDTO = await dbset.ToListAsync();
             var listcustomerVM = _mapper.Map<List<CustomerVM>>(listcustomerDTO);
             return listcustomerVM;
+        }
+
+        public async Task<PageResultVM<CustomerVM>> GetAllPaging(PaginationVM paginationVM)
+        {
+            var listCustomerVM = await GetAll();
+            var listCustomerVMPaging = listCustomerVM.Skip((paginationVM.PageIndex - 1) * paginationVM.PageSize).Take(paginationVM.PageSize).ToList();
+            return new PageResultVM<CustomerVM>
+            {
+                Items = listCustomerVMPaging,
+                PageIndex = paginationVM.PageIndex,
+                TotalRecord = listCustomerVM.Count()
+            };
         }
 
         public async Task<CustomerVM> GetById(int id)
@@ -81,7 +93,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             customerDTO.CreateAt = DateTime.Now;
             customerDTO.UpdateAt = DateTime.Now;
             await dbset.AddAsync(customerDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Insert Success");
         }
 
@@ -107,7 +119,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             }
             if (address != null)
             {
-                var customerDTO = await dbset.Where(x => (x.Address1.Contains(address)||x.Address2.Contains(address))).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
+                var customerDTO = await dbset.Where(x => (x.Address1.Contains(address) || x.Address2.Contains(address))).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
                 var customerVM = _mapper.Map<List<CustomerVM>>(customerDTO);
                 return customerVM;
             }
@@ -133,7 +145,7 @@ namespace Vehicle_Appraisal_WebApi.Service
                 _dbContextDTO.Dispose();
                 return new ApiErrorResultVM<string>("Customer doesn't exist");
             }
-            var checkCustomer = await dbset.Where(x=>x.Id != (id)).Where(x => (x.FirstName + " " + x.LastName).Equals(customerVM.FirstName + " " + customerVM.LastName)).AsNoTracking().FirstOrDefaultAsync();
+            var checkCustomer = await dbset.Where(x => x.Id != (id)).Where(x => (x.FirstName + " " + x.LastName).Equals(customerVM.FirstName + " " + customerVM.LastName)).AsNoTracking().FirstOrDefaultAsync();
             if (checkCustomer != null)
             {
                 _dbContextDTO.Dispose();
@@ -147,7 +159,7 @@ namespace Vehicle_Appraisal_WebApi.Service
             customerDTO.Id = id;
             customerDTO.UpdateAt = DateTime.Now;
             dbset.Update(customerDTO);
-            //await _dbContextDTO.SaveChangesAsync();
+            await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Update Success");
         }
     }

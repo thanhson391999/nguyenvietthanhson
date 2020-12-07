@@ -99,8 +99,9 @@
                                                 </td>
                                                 <td>
                                                     @Html.ActionLink("Edit", "update", "customer", new
-                                                    {
+                                               {
                                                    Model.Id,
+                                                   Model.CreateAt,
                                                    Model.FirstName,
                                                    Model.LastName,
                                                    Model.Phone,
@@ -109,7 +110,7 @@
                                                    Model.Address2,
                                                    Model.City,
                                                    Model.Country
-                                                    }) |
+                                               }) |
                                                     @Html.ActionLink("Details", "Details", new { }) |
                                                     <a href="@Url.Action("DeleteAction","customer",new { Model.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete customer with ID = @Model.Id')">
                                                         Delete

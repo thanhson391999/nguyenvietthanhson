@@ -1,5 +1,5 @@
 ﻿@using Vehicle_Appraisal_WebApi.ViewModels
-@model List<VehicleCrawlDataVM>
+@model PageResultVM<VehicleCrawlDataVM>
 @{
     Layout = Layout;
 }
@@ -15,7 +15,7 @@
                             <div class="row row-small align-center list-bg" id="row-706255199">
                                 @if (Model != null)
                                 {
-                                    foreach (var item in Model.Where(x=>x.Name.Split(' ').ElementAt(0).Equals("BMW")))
+                                    foreach (var item in Model.Items)
                                     {
                                         <div id="col-83102025" class="col item-bg medium-3 small-12 large-3">
                                             <div class="col-inner">
@@ -36,6 +36,7 @@
                                     }
                                 }
                             </div>
+                            @await Component.InvokeAsync("Pager", Model)
                         </div>
                         <!-- /.card-body -->
                     </div>

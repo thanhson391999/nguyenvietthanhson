@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
+using System.Threading.Tasks;
+using Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService;
 using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Application
@@ -39,9 +35,9 @@ namespace Vehicle_Appraisal_WebApi.Application
             return Ok(result);
         }
 
-        // GET api/accounts/forgotpassword
-        [HttpGet("forgotpassword")]
-        public async Task<IActionResult> ResetPassword(string email)
+        // GET api/accounts/password-forgot/?email=
+        [HttpGet("password-forgot")]
+        public async Task<IActionResult> ForgotPassword(string email)
         {
             var result = await _accountService.ForgotPassword(email);
             return Ok(result);

@@ -1,30 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using org.omg.IOP;
-using Vehicle_Appraisal_WebApi.AutoMapper;
+using System.Collections.Generic;
+using System.Text;
+using Vehicle_Appraisal_WebApi.Infracstructure.AutoMapper;
 using Vehicle_Appraisal_WebApi.DALs;
 using Vehicle_Appraisal_WebApi.DTOs;
-using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
-using Vehicle_Appraisal_WebApi.Service;
-using FluentValidation.AspNetCore;
 using Vehicle_Appraisal_WebApi.Infracstructure.ValidatorDTO;
+using Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService;
+using Vehicle_Appraisal_WebApi.Service;
 
 namespace Vehicle_Appraisal_WebApi
 {
@@ -57,8 +49,8 @@ namespace Vehicle_Appraisal_WebApi
             services.AddSingleton(mapper);
 
             // add DI  
-            services.AddScoped<IMakeService,MakeService>();
-            services.AddScoped<IModelService,ModelService>();
+            services.AddScoped<IMakeService, MakeService>();
+            services.AddScoped<IModelService, ModelService>();
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IConditionService, ConditionService>();

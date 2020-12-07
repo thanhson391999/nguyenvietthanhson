@@ -81,7 +81,6 @@
                                                         <b>UserName</b>
                                                         <input type="hidden" asp-for="Id" value="@User.Claims.Where(x => x.Type.Equals("Id")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                                         <input type="hidden" asp-for="AppUserRolesId" value="@User.Claims.Where(x => x.Type.Equals("AppUserRoleId")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                                        <input type="hidden" asp-for="CreateAt" />
                                                         <input type="text" asp-for="UserName" value="@User.Claims.Where(x => x.Type.Equals("UserName")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim()" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                                     </li>
                                                     <li class="list-group-item">

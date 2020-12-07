@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Vehicle_Appraisal_WebApi.Infrastructure.InterfaceService;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService;
 using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Application
@@ -27,6 +24,14 @@ namespace Vehicle_Appraisal_WebApi.Application
         public async Task<List<ModelVM>> GetAll()
         {
             return await _ModelService.GetAll();
+        }
+
+        // GET api/models/paging
+        [HttpGet("paging")]
+        [Authorize(Roles = "Admin")]
+        public async Task<PageResultVM<ModelVM>> GetAllPaging([FromQuery] PaginationVM paginationVM)
+        {
+            return await _ModelService.GetAllPaging(paginationVM);
         }
 
         // GET api/models/not-delete
