@@ -294,20 +294,6 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             return BadRequest("Error 400");
         }
 
-        // GET user/getbyid
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetById(int id)
-        {
-            if (ModelState.IsValid)
-            {
-                string token = HttpContext.Session.GetString("token_access");
-                var appUser = await _userApiClient.GetById(id, token);
-                return View(appUser);
-            }
-            return BadRequest("Error 400");
-        }
-
         // GET user/deleteaction
         [HttpGet]
         [Authorize(Roles = "Admin")]

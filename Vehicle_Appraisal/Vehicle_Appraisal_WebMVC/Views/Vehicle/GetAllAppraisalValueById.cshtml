@@ -37,7 +37,7 @@
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="/home/index">Home</a></li>
                                 <li class="breadcrumb-item active"><a href="/vehicle/getall">Vehicle</a></li>
-                                <li class="breadcrumb-item active">@ViewBag.id</li>
+                                <li class="breadcrumb-item active">@ViewBag.i</li>
                                 <li class="breadcrumb-item active">AppraisalValue</li>
                             </ol>
                         </div>
@@ -79,7 +79,6 @@
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
                                                 <th>Date</th>
                                                 <th>AppraisalValue</th>
                                                 <th>Options</th>
@@ -93,9 +92,6 @@
                                                     if (item.Id != 0)
                                                     {
                                                         <tr class="Search">
-                                                            <td>
-                                                                @Html.DisplayFor(Model => item.Id)
-                                                            </td>
                                                             <td>
                                                                 @item.CreateAt.ToString("dd/MM/yyyy")
                                                             </td>

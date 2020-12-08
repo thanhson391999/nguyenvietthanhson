@@ -43,41 +43,19 @@
             Create
         </a>
     </div>
-    <form asp-action="GetById" method="get">
-        <div class="input-group mb-3" style="width:300px; margin-left:1.2rem">
-            <input type="text" name="Id" class="form-control" placeholder="Input ID" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
-            <div class="input-group-append">
-                <button type="submit" class="input-group-text btn-primary" id="basic-addon2">Get Customer</button>
+    <form class="input-group" asp-action="GetAll" method="get">
+            <select class="btn btn-primary" name="subjects" style="margin-left:1rem">
+                <option>Name</option>
+                <option>Phone</option>
+                <option>Email</option>
+                <option>Address</option>
+                <option>City</option>
+                <option>Country</option>
+            </select>
+            <div class="col-3">
+                <input type="text" name="keyWord" class="form-control" placeholder="Search for..." aria-label="Recipient's username" aria-describedby="basic-addon2">
             </div>
-        </div>
-    </form>
-    <form asp-action="SearchAction" method="get">
-        <div class="row">
-            <div class="col" style="margin-left:1.2rem">
-                <input type="text" name="name" class="form-control" placeholder="Name" aria-label="Recipient's username" aria-describedby="basic-addon2">
-            </div>
-            <div class="col">
-                <input type="text" name="phone" class="form-control" placeholder="Phone" aria-label="Recipient's username" aria-describedby="basic-addon2">
-            </div>
-            <div class="col">
-                <input type="text" name="email" class="form-control" placeholder="Email" aria-label="Recipient's username" aria-describedby="basic-addon2">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col" style="margin-left:1.2rem">
-                <input type="text" name="address" class="form-control" placeholder="address" aria-label="Recipient's username" aria-describedby="basic-addon2">
-            </div>
-            <div class="col">
-                <input type="text" name="city" class="form-control" placeholder="city" aria-label="Recipient's username" aria-describedby="basic-addon2">
-            </div>
-            <div class="col">
-                <input type="text" name="country" class="form-control" placeholder="country" aria-label="Recipient's username" aria-describedby="basic-addon2">
-            </div>
-        </div>
-        <div class="input-group mb-3" style="width:300px; margin-left:1.2rem">
-            <button type="submit" class="input-group-text btn-primary" id="basic-addon2">Get Customer</button>
-        </div>
-    </form>
+    </form><br />
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
@@ -89,7 +67,7 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>No.</th>
                                             <th>Date</th>
                                             <th>First Name</th>
                                             <th>LastName</th>
@@ -105,11 +83,15 @@
                                     <tbody>
                                         @if (Model.Items != null)
                                         {
-                                            @foreach (var item in Model.Items)
+                                            var i = 0;
+                                            foreach (var item in Model.Items)
                                             {
                                                 <tr>
                                                     <td>
-                                                        @Html.DisplayFor(Model => item.Id)
+                                                        @{
+                                                            i += 1;
+                                                        }
+                                                        @i
                                                     </td>
                                                     <td>
                                                         @item.CreateAt.ToString("dd/MM/yyyy")
@@ -141,20 +123,19 @@
 
                                                     <td>
                                                         @Html.ActionLink("Edit", "update", "customer", new
-                                                   {
-                                                       item.Id,
-                                                       item.CreateAt,
-                                                       item.FirstName,
-                                                       item.LastName,
-                                                       item.Phone,
-                                                       item.Email,
-                                                       item.Address1,
-                                                       item.Address2,
-                                                       item.City,
-                                                       item.Country
-                                                   }) |
-                                                        @Html.ActionLink("Details", "Details", new { }) |
-                                                        <a href="@Url.Action("DeleteAction","customer",new { item.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete customer with ID = @item.Id')">
+                                                        {
+                                                            item.Id,
+                                                            item.CreateAt,
+                                                            item.FirstName,
+                                                            item.LastName,
+                                                            item.Phone,
+                                                            item.Email,
+                                                            item.Address1,
+                                                            item.Address2,
+                                                            item.City,
+                                                            item.Country
+                                                        }) |
+                                                        <a href="@Url.Action("DeleteAction","customer",new { item.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete Customer: @item.FirstName @item.LastName')">
                                                             Delete
                                                         </a>
                                                     </td>

@@ -47,7 +47,7 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>No.</th>
                                             <th>Date</th>
                                             <th>Customer</th>
                                             <th>Make</th>
@@ -63,11 +63,15 @@
                                     <tbody>
                                         @if (Model.Items != null)
                                         {
+                                            var i = 0;
                                             foreach (var item in Model.Items.Where(x => x.vehicleVM.isBought.Equals(true)))
                                             {
                                                 <tr>
                                                     <td>
-                                                        @Html.DisplayFor(Model => item.vehicleVM.Id)
+                                                        @{
+                                                            i += 1;
+                                                        }
+                                                        @i
                                                     </td>
                                                     <td>
                                                         @item.vehicleVM.UpdateAt.ToString("dd/MM/yyyy")

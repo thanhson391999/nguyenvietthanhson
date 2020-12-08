@@ -4,8 +4,8 @@ namespace Vehicle_Appraisal_WebApi.ViewModels
 {
     public class PaginationVM
     {
-        public int PageIndex { get; set; }
-        public int PageSize { get; set; } = 3;
+        public int PageIndex { get; set; } = 1;
+        public int PageSize { get; set; } = 1;
         public int TotalRecord { get; set; }
         public int PageCount
         {

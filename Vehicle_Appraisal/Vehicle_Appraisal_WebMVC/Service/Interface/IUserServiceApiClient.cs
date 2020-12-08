@@ -5,11 +5,10 @@ using Vehicle_Appraisal_WebMVC.Models;
 
 namespace Vehicle_Appraisal_WebMVC.Service.Interface
 {
-    public interface IUserServiceApiClient
+    public interface IUserServiceApiClient : IPaginationServiceApiClient<AppUserModelMVC>
     {
         Task<List<AppUserModelMVC>> GetAll(string token);
         Task<List<AppUserVM>> GetAllNotDelete(string token);
-        Task<PageResultVM<AppUserModelMVC>> GetAllPaging(string token, PaginationVM paginationVM);
         Task<AppUserModelMVC> GetById(int id, string token);
         Task<ApiResultVM<string>> UpdateUsers(AppUserModelMVC appUserModelMVC, string token);
 

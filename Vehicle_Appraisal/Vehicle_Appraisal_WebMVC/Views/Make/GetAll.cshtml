@@ -44,17 +44,11 @@
             Create
         </a>
     </div>
-    <form asp-action="GetById" method="get">
-        <div class="input-group mb-3" style="width:300px; margin-left:1.2rem">
-            <input type="text" name="Id" class="form-control" placeholder="Input ID" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
-            <div class="input-group-append">
-                <button type="submit" class="input-group-text btn-primary" id="basic-addon2">Get Make</button>
-            </div>
-            <div class="form-group" style="width:300px">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-                    <input type="text" id="Search" placeholder="Name" class="form-control" />
-                </div>
+    <form>
+        <div class="form-group" style="width:300px; margin-left:1rem">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                <input type="text" id="Search" placeholder="Search for..." class="form-control" />
             </div>
         </div>
     </form>
@@ -69,7 +63,7 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>No.</th>
                                             <th>Date</th>
                                             <th>Name</th>
                                             <th>Options</th>
@@ -78,11 +72,15 @@
                                     <tbody>
                                         @if (Model.Items != null)
                                         {
+                                            var i = 0;
                                             foreach (var item in Model.Items)
                                             {
                                                 <tr class="Search">
                                                     <td>
-                                                        @Html.DisplayFor(Model => item.Id)
+                                                        @{
+                                                            i += 1;
+                                                        }
+                                                        @i
                                                     </td>
                                                     <td>
                                                         @item.CreateAt.ToString("dd/MM/yyyy")
@@ -92,8 +90,7 @@
                                                     </td>
                                                     <td>
                                                         @Html.ActionLink("Edit", "update", "make", new { item.Id, item.CreateAt, item.Name }) |
-                                                        @Html.ActionLink("Details", "Details", new { }) |
-                                                        <a href="@Url.Action("DeleteAction","make",new { item.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete make with ID = @item.Id')">
+                                                        <a href="@Url.Action("DeleteAction","make",new { item.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete Make: @item.Name')">
                                                             Delete
                                                         </a>
                                                     </td>
@@ -116,7 +113,6 @@
         <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
-
 </div>
 
 <!-- jQuery -->

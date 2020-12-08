@@ -98,16 +98,18 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         // GET vehicle/getall
         [HttpGet]
         [Authorize(Roles = "Admin, Users")]
-        public async Task<IActionResult> GetAll(int pageIndex = 1)
+        public async Task<IActionResult> GetAll(string keyWord, string subjects,int pageIndex = 1)
         {
             if (ModelState.IsValid)
             {
                 string token = HttpContext.Session.GetString("token_access");
-                var paginationVM = new PaginationVM()
+                var paginationSearchVM = new PaginationSearchVM()
                 {
-                    PageIndex = pageIndex
+                    PageIndex = pageIndex,
+                    keyWord = keyWord,
+                    subjects = subjects
                 };
-                var list = await _vehicleServiceApiClient.GetAllPaging(token, paginationVM);
+                var list = await _vehicleServiceApiClient.GetAllPaging(token, paginationSearchVM);
                 if (TempData["ErrorResult"] != null)
                 {
                     ViewBag.ErrorMsg = TempData["ErrorResult"];
@@ -117,20 +119,6 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
                     ViewBag.SuccessMsg = TempData["SuccessResult"];
                 }
                 return View(list);
-            }
-            return BadRequest("Error 400");
-        }
-
-        // GET vehicle/getbyid
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetById(int id)
-        {
-            if (ModelState.IsValid)
-            {
-                string token = HttpContext.Session.GetString("token_access");
-                var vehicle = await _vehicleServiceApiClient.GetById(id, token);
-                return View(vehicle);
             }
             return BadRequest("Error 400");
         }
@@ -224,7 +212,7 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         // GET vehicle/getallconditionbyid
         [HttpGet]
         [Authorize(Roles = "Admin,Users")]
-        public async Task<IActionResult> GetAllConditionById(int id, bool isBought, int pageIndex = 1)
+        public async Task<IActionResult> GetAllConditionById(int id, int i, bool isBought, int pageIndex = 1)
         {
             if (ModelState.IsValid)
             {
@@ -243,6 +231,7 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
                     ViewBag.SuccessMsg = TempData["SuccessResult"];
                 }
                 ViewBag.id = id;
+                ViewBag.i = i;
                 ViewBag.isBought = isBought;
                 return View(list);
             }
@@ -253,7 +242,7 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         // GET vehicle/getallappraisalvaluebyid
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAllAppraisalValueById(int id)
+        public async Task<IActionResult> GetAllAppraisalValueById(int id, int i)
         {
             if (ModelState.IsValid)
             {
@@ -268,6 +257,7 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
                     ViewBag.SuccessMsg = TempData["SuccessResult"];
                 }
                 ViewBag.id = id;
+                ViewBag.i = i;
                 return View(list);
             }
             else

@@ -33,14 +33,16 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
 
         // GET customer/getall
         [HttpGet]
-        public async Task<IActionResult> GetAll(int pageIndex = 1)
+        public async Task<IActionResult> GetAll(string keyWord, string subjects, int pageIndex = 1)
         {
             string token = HttpContext.Session.GetString("token_access");
-            var paginationVM = new PaginationVM()
+            var paginationSearchVM = new PaginationSearchVM()
             {
-                PageIndex = pageIndex
+                PageIndex = pageIndex,
+                keyWord = keyWord,
+                subjects = subjects
             };
-            var list = await _customerServiceApiClient.GetAllPaging(token, paginationVM);
+            var list = await _customerServiceApiClient.GetAllPaging(token, paginationSearchVM);
             if (TempData["ErrorResult"] != null)
             {
                 ViewBag.ErrorMsg = TempData["ErrorResult"];
@@ -50,19 +52,6 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
                 ViewBag.SuccessMsg = TempData["SuccessResult"];
             }
             return View(list);
-        }
-
-        // GET customer/getbyid
-        [HttpGet]
-        public async Task<IActionResult> GetById(int id)
-        {
-            if (ModelState.IsValid)
-            {
-                string token = HttpContext.Session.GetString("token_access");
-                var list = await _customerServiceApiClient.GetById(id, token);
-                return View(list);
-            }
-            return BadRequest("Error 400");
         }
 
         // GET customer/deleteaction
@@ -127,20 +116,6 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             }
             else
                 return View("Update", CustomerVM);
-        }
-
-        // GET customer/searchaction
-        [HttpGet]
-        public async Task<IActionResult> SearchAction(string name, string phone, string email, string address, string city, string country)
-        {
-            if (ModelState.IsValid)
-            {
-                string token = HttpContext.Session.GetString("token_access");
-                var list = await _customerServiceApiClient.Search(token, name, phone, email, address, city, country);
-                return View("GetAll", list);
-            }
-            else
-                return BadRequest("Error 400");
         }
     }
 }

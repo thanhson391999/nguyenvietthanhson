@@ -37,7 +37,7 @@
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="/home/index">Home</a></li>
                                 <li class="breadcrumb-item active"><a href="/vehicle/getall">Vehicle</a></li>
-                                <li class="breadcrumb-item active">@ViewBag.id</li>
+                                <li class="breadcrumb-item active">@ViewBag.i</li>
                                 <li class="breadcrumb-item active">Condition</li>
                             </ol>
                         </div>
@@ -80,7 +80,7 @@
                                         <table class="table table-bordered table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>ID</th>
+                                                    <th>No.</th>
                                                     <th>Date</th>
                                                     <th>Type</th>
                                                     <th>Image</th>
@@ -91,13 +91,17 @@
                                             <tbody>
                                                 @if (Model.Items != null)
                                                 {
+                                                    var i = 0;
                                                     foreach (var item in Model.Items)
                                                     {
                                                         if (item.Id != 0)
                                                         {
                                                             <tr>
                                                                 <td>
-                                                                    @Html.DisplayFor(Model => item.Id)
+                                                                    @{
+                                                                        i += 1;
+                                                                    }
+                                                                    @i
                                                                 </td>
                                                                 <td>
                                                                     @item.CreateAt.ToString("dd/MM/yyyy")

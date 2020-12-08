@@ -58,16 +58,60 @@ namespace Vehicle_Appraisal_WebApi.Service
             return listcustomerVM;
         }
 
-        public async Task<PageResultVM<CustomerVM>> GetAllPaging(PaginationVM paginationVM)
+        public async Task<PageResultVM<CustomerVM>> GetAllPaging(PaginationSearchVM paginationSearchVM)
         {
-            var listCustomerVM = await GetAll();
-            var listCustomerVMPaging = listCustomerVM.Skip((paginationVM.PageIndex - 1) * paginationVM.PageSize).Take(paginationVM.PageSize).ToList();
-            return new PageResultVM<CustomerVM>
+            if (paginationSearchVM.keyWord == null || paginationSearchVM.subjects == null)
             {
-                Items = listCustomerVMPaging,
-                PageIndex = paginationVM.PageIndex,
-                TotalRecord = listCustomerVM.Count()
-            };
+                var listCustomerVM = await GetAll();
+                var listCustomerVMPaging = listCustomerVM.Skip((paginationSearchVM.PageIndex - 1) * paginationSearchVM.PageSize).Take(paginationSearchVM.PageSize).ToList();
+                return new PageResultVM<CustomerVM>
+                {
+                    Items = listCustomerVMPaging,
+                    PageIndex = paginationSearchVM.PageIndex,
+                    TotalRecord = listCustomerVM.Count()
+                };
+            }
+            else
+            {
+                var listCustomerVM = new List<CustomerVM>();
+                if (paginationSearchVM.subjects == "Name")
+                {
+                    var listCustomerDTO = await dbset.Where(x => (x.FirstName + " " + x.LastName).Contains(paginationSearchVM.keyWord)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
+                    listCustomerVM = _mapper.Map<List<CustomerVM>>(listCustomerDTO);
+                }
+                if (paginationSearchVM.subjects == "Phone")
+                {
+                    var listCustomerDTO = await dbset.Where(x => (x.Phone).Contains(paginationSearchVM.keyWord)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
+                    listCustomerVM = _mapper.Map<List<CustomerVM>>(listCustomerDTO);
+                }
+                if (paginationSearchVM.subjects == "Email")
+                {
+                    var listCustomerDTO = await dbset.Where(x => (x.Email).Contains(paginationSearchVM.keyWord)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
+                    listCustomerVM = _mapper.Map<List<CustomerVM>>(listCustomerDTO);
+                }
+                if (paginationSearchVM.subjects == "Address")
+                {
+                    var listCustomerDTO = await dbset.Where(x => (x.Address1.Contains(paginationSearchVM.keyWord) || x.Address2.Contains(paginationSearchVM.keyWord))).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
+                    listCustomerVM = _mapper.Map<List<CustomerVM>>(listCustomerDTO);
+                }
+                if (paginationSearchVM.subjects == "City")
+                {
+                    var listCustomerDTO = await dbset.Where(x => (x.City).Contains(paginationSearchVM.keyWord)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
+                    listCustomerVM = _mapper.Map<List<CustomerVM>>(listCustomerDTO);
+                }
+                if (paginationSearchVM.subjects == "Country")
+                {
+                    var listCustomerDTO = await dbset.Where(x => (x.Country).Contains(paginationSearchVM.keyWord)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
+                    listCustomerVM = _mapper.Map<List<CustomerVM>>(listCustomerDTO);
+                }
+                var listCustomerVMPaging = listCustomerVM.Skip((paginationSearchVM.PageIndex - 1) * paginationSearchVM.PageSize).Take(paginationSearchVM.PageSize).ToList();
+                return new PageResultVM<CustomerVM>
+                {
+                    Items = listCustomerVMPaging,
+                    PageIndex = paginationSearchVM.PageIndex,
+                    TotalRecord = listCustomerVM.Count()
+                };
+            }
         }
 
         public async Task<CustomerVM> GetById(int id)
@@ -95,46 +139,6 @@ namespace Vehicle_Appraisal_WebApi.Service
             await dbset.AddAsync(customerDTO);
             await _dbContextDTO.SaveChangesAsync();
             return new ApiSuccessResultVM<string>("Insert Success");
-        }
-
-        public async Task<List<CustomerVM>> Search(string name, string phone, string email, string address, string city, string country)
-        {
-            if (name != null)
-            {
-                var customerDTO = await dbset.Where(x => (x.FirstName + " " + x.LastName).Contains(name)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
-                var customerVM = _mapper.Map<List<CustomerVM>>(customerDTO);
-                return customerVM;
-            }
-            if (phone != null)
-            {
-                var customerDTO = await dbset.Where(x => (x.Phone).Contains(phone)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
-                var customerVM = _mapper.Map<List<CustomerVM>>(customerDTO);
-                return customerVM;
-            }
-            if (email != null)
-            {
-                var customerDTO = await dbset.Where(x => (x.Email).Contains(email)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
-                var customerVM = _mapper.Map<List<CustomerVM>>(customerDTO);
-                return customerVM;
-            }
-            if (address != null)
-            {
-                var customerDTO = await dbset.Where(x => (x.Address1.Contains(address) || x.Address2.Contains(address))).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
-                var customerVM = _mapper.Map<List<CustomerVM>>(customerDTO);
-                return customerVM;
-            }
-            if (city != null)
-            {
-                var customerDTO = await dbset.Where(x => (x.City).Contains(city)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
-                var customerVM = _mapper.Map<List<CustomerVM>>(customerDTO);
-                return customerVM;
-            }
-            else
-            {
-                var customerDTO = await dbset.Where(x => (x.Country).Contains(country)).Where(x => x.isDelete == false).AsNoTracking().ToListAsync();
-                var customerVM = _mapper.Map<List<CustomerVM>>(customerDTO);
-                return customerVM;
-            }
         }
 
         public async Task<ApiResultVM<string>> Update(CustomerVM customerVM, int id)

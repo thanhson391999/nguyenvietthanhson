@@ -77,7 +77,7 @@ namespace Vehicle_Appraisal_WebApi.Service
         public async Task<List<VehicleVM>> GetAll()
         {
             var listvehicleDTO = await dbset.Where(x => x.isBought == false).ToListAsync();
-            var listvehicleVM = _mapper.Map<List<VehicleVM>>(listvehicleDTO).OrderByDescending(x=>x.CreateAt.Date).ToList();
+            var listvehicleVM = _mapper.Map<List<VehicleVM>>(listvehicleDTO).OrderByDescending(x => x.CreateAt.Date).ToList();
             return listvehicleVM;
         }
 
@@ -91,7 +91,7 @@ namespace Vehicle_Appraisal_WebApi.Service
         public async Task<PageResultVM<ConditionVM>> GetAllConditionByIdPaging(int id, PaginationVM paginationVM)
         {
             var listConditionDTO = await _dbContextDTO.Set<ConditionDTO>().Where(x => x.VehicleId.Equals(id)).AsNoTracking().ToListAsync();
-            var listConditionVM = _mapper.Map<List<ConditionVM>>(listConditionDTO).OrderByDescending(x=>x.CreateAt.Date);
+            var listConditionVM = _mapper.Map<List<ConditionVM>>(listConditionDTO).OrderByDescending(x => x.CreateAt.Date);
             var listConditionVMPagination = listConditionVM.Skip((paginationVM.PageIndex - 1) * paginationVM.PageSize).Take(paginationVM.PageSize).ToList();
             return new PageResultVM<ConditionVM>
             {
@@ -108,16 +108,76 @@ namespace Vehicle_Appraisal_WebApi.Service
             return listvehicleVM;
         }
 
-        public async Task<PageResultVM<VehicleVM>> GetAllPaging(PaginationVM paginationVM)
+        public async Task<PageResultVM<VehicleVM>> GetAllPaging(PaginationSearchVM paginationSearchVM)
         {
-            var listVehicleVM = await GetAll();
-            var listVehicleVMPagination = listVehicleVM.Skip((paginationVM.PageIndex - 1) * paginationVM.PageSize).Take(paginationVM.PageSize).ToList();
-            return new PageResultVM<VehicleVM>
+            var listVehicleDTO = await dbset.Where(x => x.isBought == false).ToListAsync();
+            var listMakeDTO = await _dbContextDTO.makeDTOs.ToListAsync();
+            var listModelDTO = await _dbContextDTO.modelDTOs.ToListAsync();
+            var listCustomerDTO = await _dbContextDTO.customerDTOs.ToListAsync();
+            var listUserDTO = await _dbContextDTO.appUserDTOs.ToListAsync();
+            var listVehicleVM = (from vehicle in listVehicleDTO
+                         join make in listMakeDTO on vehicle.MakeId equals make.Id
+                         join model in listModelDTO on vehicle.ModelId equals model.Id
+                         join customer in listCustomerDTO on vehicle.CustomerId equals customer.Id
+                         join user in listUserDTO on vehicle.AppUserId equals user.Id
+                         select new VehicleVM
+                         {
+                             Id = vehicle.Id,
+                             CreateAt = vehicle.CreateAt,
+                             MakeVM = _mapper.Map<MakeVM>(make),
+                             ModelVM = _mapper.Map<ModelVM>(model),
+                             CustomerVM = _mapper.Map<CustomerVM>(customer),
+                             AppUserVM = _mapper.Map<AppUserVM>(user),
+                             Engine = vehicle.Engine,
+                             Odometer = vehicle.Odometer,
+                             VIN = vehicle.VIN
+                         }).ToList();
+            if (paginationSearchVM.keyWord == null || paginationSearchVM.subjects == null)
             {
-                Items = listVehicleVMPagination,
-                PageIndex = paginationVM.PageIndex,
-                TotalRecord = listVehicleVM.Count()
-            };
+                var listVehicleVMPagination = listVehicleVM.Skip((paginationSearchVM.PageIndex - 1) * paginationSearchVM.PageSize).Take(paginationSearchVM.PageSize).ToList();
+                return new PageResultVM<VehicleVM>
+                {
+                    Items = listVehicleVMPagination,
+                    PageIndex = paginationSearchVM.PageIndex,
+                    TotalRecord = listVehicleVM.Count()
+                };
+            }
+            else
+            {
+                var listVehicleVMSearch = new List<VehicleVM>();
+                if (paginationSearchVM.subjects == "Customer")
+                {
+                    listVehicleVMSearch = listVehicleVM.Where(x => (x.CustomerVM.FirstName + " " + x.CustomerVM.LastName).Contains(paginationSearchVM.keyWord)).ToList();
+                }
+                if (paginationSearchVM.subjects == "Make")
+                {
+                    listVehicleVMSearch = listVehicleVM.Where(x => x.MakeVM.Name.Contains(paginationSearchVM.keyWord)).ToList();
+                }
+                if (paginationSearchVM.subjects == "Model")
+                {
+                    listVehicleVMSearch = listVehicleVM.Where(x => x.ModelVM.Name.Contains(paginationSearchVM.keyWord)).ToList();
+                }
+                if (paginationSearchVM.subjects == "Odometer")
+                {
+                    listVehicleVMSearch = listVehicleVM.Where(x => x.Odometer.Contains(paginationSearchVM.keyWord)).ToList();
+                }
+                if (paginationSearchVM.subjects == "VIN")
+                {
+                    listVehicleVMSearch = listVehicleVM.Where(x => x.VIN.Contains(paginationSearchVM.keyWord)).ToList();
+                }
+                if (paginationSearchVM.subjects == "Engine")
+                {
+                    listVehicleVMSearch = listVehicleVM.Where(x => x.Engine.Contains(paginationSearchVM.keyWord)).ToList();
+                }
+                
+                var listVehicleVMPagination = listVehicleVMSearch.Skip((paginationSearchVM.PageIndex - 1) * paginationSearchVM.PageSize).Take(paginationSearchVM.PageSize).ToList();
+                return new PageResultVM<VehicleVM>
+                {
+                    Items = listVehicleVMPagination,
+                    PageIndex = paginationSearchVM.PageIndex,
+                    TotalRecord = listVehicleVMSearch.Count()
+                };
+            }
         }
 
         public async Task<PageResultVM<VehicleVM>> GetAllVehicleBoughtPaging(DateTime fromDate, DateTime toDate, PaginationVM paginationVM)

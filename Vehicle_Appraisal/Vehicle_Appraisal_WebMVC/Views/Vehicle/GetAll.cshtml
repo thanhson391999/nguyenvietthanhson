@@ -1,5 +1,5 @@
 ﻿@using Vehicle_Appraisal_WebApi.ViewModels
-@model PageResultVM<VehicleModelMVC>
+@model PageResultVM<VehicleVM>
 @{
     Layout = Layout;
 }
@@ -45,46 +45,19 @@
                 Create
             </a>
         </div>
-        <form asp-action="GetById" method="get">
-            <div class="input-group mb-3" style="width:300px; margin-left:1.2rem">
-                <input type="text" name="Id" class="form-control" placeholder="Input ID" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
-                <div class="input-group-append">
-                    <button type="submit" class="input-group-text btn-primary" id="basic-addon2">Get Vehicle</button>
-                </div>
+        <form class="input-group" asp-action="GetAll" method="get">
+            <select class="btn btn-primary" name="subjects" style="margin-left:1rem">
+                <option>Customer</option>
+                <option>Make</option>
+                <option>Model</option>
+                <option>Odometer</option>
+                <option>VIN</option>
+                <option>Engine</option>
+            </select>
+            <div class="col-3">
+                <input type="text" name="keyWord" class="form-control" placeholder="Search for..." aria-label="Recipient's username" aria-describedby="basic-addon2">
             </div>
-        </form>
-        <form asp-action="SearchAction" method="get">
-            <div class="row">
-                <div class="col" style="margin-left:1.2rem">
-                    <input type="text" name="customer" class="form-control" placeholder="customer" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                </div>
-                <div class="col">
-                    <input type="text" name="make" class="form-control" placeholder="make" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                </div>
-                <div class="col">
-                    <input type="text" name="model" class="form-control" placeholder="model" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col" style="margin-left:1.2rem">
-                    <input type="text" name="odometer" class="form-control" placeholder="odometer" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                </div>
-                <div class="col">
-                    <input type="text" name="VIN" class="form-control" placeholder="VIN" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                </div>
-                <div class="col">
-                    <input type="text" name="engine" class="form-control" placeholder="engine" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-4" style="margin-left:1.2rem">
-                    <input type="text" name="appuser" class="form-control" placeholder="Users" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                </div>
-            </div>
-            <div class="input-group mb-3" style="width:300px; margin-left:1.2rem">
-                <button type="submit" class="input-group-text btn-primary" id="basic-addon2">Get Vehicle</button>
-            </div>
-        </form>
+        </form><br>
     }
     <!-- Main content -->
     <section class="content">
@@ -97,7 +70,7 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>No.</th>
                                             <th>Date</th>
                                             <th>Customer</th>
                                             <th>Make</th>
@@ -114,91 +87,99 @@
                                         {
                                             if (User.Claims.Where(c => c.Type.Equals("Role")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim() != "Admin")
                                             {
-                                                foreach (var item in Model.Items.Where(x => x.appUserVM.FullName.Equals(User.Claims.Where(c => c.Type.Equals("FullName")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim())))
+                                                var i = 0;
+                                                foreach (var item in Model.Items.Where(x => x.AppUserVM.FullName.Equals(User.Claims.Where(c => c.Type.Equals("FullName")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim())))
                                                 {
                                                     <tr>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.vehicleVM.Id)
+                                                            @{
+                                                                i += 1;
+                                                            }
+                                                            @i
                                                         </td>
                                                         <td>
-                                                            @item.vehicleVM.CreateAt.ToString("dd/MM/yyyy")
+                                                            @item.CreateAt.ToString("dd/MM/yyyy")
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.customerVM.FirstName) @Html.DisplayFor(Model => item.customerVM.LastName)
+                                                            @Html.DisplayFor(Model => item.CustomerVM.FirstName) @Html.DisplayFor(Model => item.CustomerVM.LastName)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.makeVM.Name)
+                                                            @Html.DisplayFor(Model => item.MakeVM.Name)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.modelVM.Name)
+                                                            @Html.DisplayFor(Model => item.ModelVM.Name)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.vehicleVM.VIN)
+                                                            @Html.DisplayFor(Model => item.VIN)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.vehicleVM.Odometer)
+                                                            @Html.DisplayFor(Model => item.Odometer)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.vehicleVM.Engine)
+                                                            @Html.DisplayFor(Model => item.Engine)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.appUserVM.FullName)
+                                                            @Html.DisplayFor(Model => item.AppUserVM.FullName)
                                                         </td>
                                                         <td>
-                                                            @Html.ActionLink("Condition", "GetAllConditionById", new { item.vehicleVM.Id })
+                                                            @Html.ActionLink("Condition", "GetAllConditionById", new { item.Id, i })
                                                         </td>
                                                     </tr>
                                                 }
                                             }
                                             else
                                             {
+                                                var i = 0;
                                                 foreach (var item in Model.Items)
                                                 {
                                                     <tr>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.vehicleVM.Id)
+                                                            @{
+                                                                i += 1;
+                                                            }
+                                                            @i
                                                         </td>
                                                         <td>
-                                                            @item.vehicleVM.CreateAt.ToString("dd/MM/yyyy")
+                                                            @item.CreateAt.ToString("dd/MM/yyyy")
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.customerVM.FirstName) @Html.DisplayFor(Model => item.customerVM.LastName)
+                                                            @Html.DisplayFor(Model => item.CustomerVM.FirstName) @Html.DisplayFor(Model => item.CustomerVM.LastName)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.makeVM.Name)
+                                                            @Html.DisplayFor(Model => item.MakeVM.Name)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.modelVM.Name)
+                                                            @Html.DisplayFor(Model => item.ModelVM.Name)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.vehicleVM.VIN)
+                                                            @Html.DisplayFor(Model => item.VIN)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.vehicleVM.Odometer)
+                                                            @Html.DisplayFor(Model => item.Odometer)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.vehicleVM.Engine)
+                                                            @Html.DisplayFor(Model => item.Engine)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(Model => item.appUserVM.FullName)
+                                                            @Html.DisplayFor(Model => item.AppUserVM.FullName)
                                                         </td>
                                                         <td>
                                                             @Html.ActionLink("Edit", "update", "vehicle", new
-                                                       {
-                                                           item.vehicleVM.Id,
-                                                           item.vehicleVM.CreateAt,
-                                                           item.vehicleVM.Odometer,
-                                                           item.vehicleVM.VIN,
-                                                           item.vehicleVM.Engine,
-                                                           MakeName = item.makeVM.Name,
-                                                           item.appUserVM.FullName,
-                                                           ModelName = item.modelVM.Name,
-                                                           item.customerVM.FirstName,
-                                                           item.customerVM.LastName,
-                                                       }) |
-                                                            @Html.ActionLink("Condition", "GetAllConditionById", new { item.vehicleVM.Id }) |
-                                                            @Html.ActionLink("AppraisalValue", "GetAllAppraisalValueById", new { item.vehicleVM.Id }) |
-                                                            <a href="@Url.Action("DeleteAction", "vehicle", new { item.vehicleVM.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete vehicle with ID = @item.vehicleVM.Id')">
+                                                            {
+                                                                item.Id,
+                                                                item.CreateAt,
+                                                                item.Odometer,
+                                                                item.VIN,
+                                                                item.Engine,
+                                                                MakeName = item.MakeVM.Name,
+                                                                item.AppUserVM.FullName,
+                                                                ModelName = item.ModelVM.Name,
+                                                                item.CustomerVM.FirstName,
+                                                                item.CustomerVM.LastName,
+                                                            }) |
+                                                            @Html.ActionLink("Condition", "GetAllConditionById", new { item.Id, i }) |
+                                                            @Html.ActionLink("AppraisalValue", "GetAllAppraisalValueById", new { item.Id, i }) |
+                                                            <a href="@Url.Action("DeleteAction", "vehicle", new { item.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete Vehicle: @item.MakeVM.Name @item.ModelVM.Name of Customer: @item.CustomerVM.FirstName @item.CustomerVM.LastName')">
                                                                 Delete
                                                             </a>
                                                         </td>

@@ -38,9 +38,9 @@ namespace Vehicle_Appraisal_WebApi.Application
         // GET api/vehicles/paging
         [HttpGet("paging")]
         [Authorize(Roles = "Admin,Users")]
-        public async Task<PageResultVM<VehicleVM>> GetAllPaging([FromQuery] PaginationVM paginationVM)
+        public async Task<PageResultVM<VehicleVM>> GetAllPaging([FromQuery] PaginationSearchVM paginationSearchVM)
         {
-            return await _VehicleService.GetAllPaging(paginationVM);
+            return await _VehicleService.GetAllPaging(paginationSearchVM);
         }
 
         // GET api/vehicles/Vehicle-bought/paging

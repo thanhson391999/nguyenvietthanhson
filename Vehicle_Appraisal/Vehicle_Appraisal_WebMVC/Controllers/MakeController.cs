@@ -42,19 +42,6 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             return BadRequest("Error 400 !");
         }
 
-        // GET make/getbyid
-        [HttpGet]
-        public async Task<IActionResult> GetById(int Id)
-        {
-            if (ModelState.IsValid)
-            {
-                string token = HttpContext.Session.GetString("token_access");
-                var list = await _makeServiceApiClient.GetById(Id, token);
-                return View(list);
-            }
-            return BadRequest("Error 400 !");
-        }
-
         // GET make/insert
         [HttpGet]
         public IActionResult Insert()

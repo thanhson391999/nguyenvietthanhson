@@ -32,9 +32,9 @@ namespace Vehicle_Appraisal_WebApi.Application
         // GET api/customers/paging
         [HttpGet("paging")]
         [Authorize(Roles = "Admin")]
-        public async Task<PageResultVM<CustomerVM>> GetAllPaging([FromQuery] PaginationVM paginationVM)
+        public async Task<PageResultVM<CustomerVM>> GetAllPaging([FromQuery] PaginationSearchVM paginationSearchVM)
         {
-            return await _CustomerService.GetAllPaging(paginationVM);
+            return await _CustomerService.GetAllPaging(paginationSearchVM);
         }
 
         // GET api/customers/not-delete
@@ -79,14 +79,5 @@ namespace Vehicle_Appraisal_WebApi.Application
             var result = await _CustomerService.Update(CustomerVM, id);
             return Ok(result);
         }
-
-        // GET api/customers/info
-        [HttpGet("info")]
-        [Authorize(Roles = "Admin")]
-        public async Task<List<CustomerVM>> Search(string name, string phone, string email, string address, string city, string country)
-        {
-            return await _CustomerService.Search(name, phone, email, address, city, country);
-        }
-
     }
 }

@@ -14,5 +14,9 @@ namespace Vehicle_Appraisal_WebApi.ViewModels
         public bool isBought { get; set; }
         public DateTime UpdateAt { get; set; }
 
+        public virtual AppUserVM AppUserVM { get; set; }
+        public virtual CustomerVM CustomerVM { get; set; }
+        public virtual MakeVM MakeVM { get; set; }
+        public virtual ModelVM ModelVM { get; set; }
     }
 }

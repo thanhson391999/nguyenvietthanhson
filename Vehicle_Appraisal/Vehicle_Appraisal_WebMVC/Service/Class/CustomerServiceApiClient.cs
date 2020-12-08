@@ -54,12 +54,12 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             return list;
         }
 
-        public async Task<PageResultVM<CustomerVM>> GetAllPaging(string token, PaginationVM paginationVM)
+        public async Task<PageResultVM<CustomerVM>> GetAllPaging(string token, PaginationSearchVM paginationSearchVM)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var response = await client.GetAsync("/api/customers/paging/?pageIndex=" + paginationVM.PageIndex);
+            var response = await client.GetAsync("/api/customers/paging/?pageIndex=" + paginationSearchVM.PageIndex +"&keyWord="+ paginationSearchVM.keyWord +"&subjects="+ paginationSearchVM.subjects);
             var body = await response.Content.ReadAsStringAsync();
             var pageResult = JsonConvert.DeserializeObject<PageResultVM<CustomerVM>>(body);
             return pageResult;
@@ -84,17 +84,6 @@ namespace Vehicle_Appraisal_WebMVC.Service.Class
             var response = await client.PostAsJsonAsync("/api/customers", customerVM);
             var body = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<ApiResultVM<string>>(body);
-        }
-
-        public async Task<List<CustomerVM>> Search(string token, string name, string phone, string email, string address, string city, string country)
-        {
-            var client = _httpClientFactory.CreateClient();
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-            client.BaseAddress = new Uri(_configuration["UrlApi"]);
-            var response = await client.GetAsync("/api/customers/info?name="+name+"&phone="+phone+"&email="+email+"&address="+address+"&city="+city+"&country="+country);
-            var body = await response.Content.ReadAsStringAsync();
-            var list = JsonConvert.DeserializeObject<List<CustomerVM>>(body);
-            return list;
         }
 
         public async Task<ApiResultVM<string>> Update(CustomerVM customerVM, string token)

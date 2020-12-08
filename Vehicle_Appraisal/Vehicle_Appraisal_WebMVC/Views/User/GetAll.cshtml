@@ -37,17 +37,11 @@
             }
         </div>
     </div>
-    <form asp-action="GetById" method="get">
-        <div class="input-group mb-3" style="width:300px; margin-left:1.2rem">
-            <input type="text" name="Id" class="form-control" placeholder="Input ID" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
-            <div class="input-group-append">
-                <button type="submit" class="input-group-text btn-primary" id="basic-addon2">Get Users</button>
-            </div>
-            <div class="form-group" style="width:300px">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-                    <input type="text" id="Search" placeholder="Search" class="form-control" />
-                </div>
+    <form>
+        <div class="form-group" style="width:300px; margin-left:1rem">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                <input type="text" id="Search" placeholder="Search for..." class="form-control" />
             </div>
         </div>
     </form>
@@ -62,7 +56,7 @@
                                 <table class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>No.</th>
                                             <th>Date</th>
                                             <th>UserName</th>
                                             <th>Email</th>
@@ -75,11 +69,15 @@
                                     <tbody>
                                         @if (Model.Items != null)
                                         {
+                                            var i = 0;
                                             foreach (var item in Model.Items.Where(x => x.appUserVM.AppUserRolesId == 2))
                                             {
                                                 <tr class="Search">
                                                     <td>
-                                                        @Html.DisplayFor(Model => item.appUserVM.Id)
+                                                        @{
+                                                            i += 1;
+                                                        }
+                                                        @i
                                                     </td>
                                                     <td>
                                                         @item.appUserVM.CreateAt.ToString("dd/MM/yyyy")
@@ -109,11 +107,12 @@
                                                        item.appUserVM.FullName,
                                                        item.appUserRoleVM.Name
                                                         }) |
-                                                        @Html.ActionLink("Details", "Details", new { }) |
-                                                        <a href="@Url.Action("DeleteAction","user",new { item.appUserVM.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete User with ID = @item.appUserVM.Id')">
+                                                        <a href="@Url.Action("DeleteAction","user",new { item.appUserVM.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete User: @item.appUserVM.UserName')">
                                                             Delete
                                                         </a>
+
                                                     </td>
+
                                                 </tr>
                                             }
                                         }

@@ -6,9 +6,9 @@ using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService
 {
-    public interface ICustomerService : IService<CustomerVM>, IPaginationService<CustomerVM>
+    public interface ICustomerService : IService<CustomerVM>
     {
         Task<List<CustomerVM>> GetAllNotDelete();
-        Task<List<CustomerVM>> Search(string name, string phone, string email, string address, string city, string country);
+        Task<PageResultVM<CustomerVM>> GetAllPaging(PaginationSearchVM paginationSearchVM);
     }
 }
