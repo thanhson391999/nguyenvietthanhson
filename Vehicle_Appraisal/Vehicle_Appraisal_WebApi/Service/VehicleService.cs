@@ -101,40 +101,48 @@ namespace Vehicle_Appraisal_WebApi.Service
             };
         }
 
+        private async Task<List<VehicleVM>> VehicleJoinQuery(List<VehicleDTO> listVehicleDTO)
+        {
+            var listMakeDTO = await _dbContextDTO.makeDTOs.ToListAsync();
+            var listModelDTO = await _dbContextDTO.modelDTOs.ToListAsync();
+            var listCustomerDTO = await _dbContextDTO.customerDTOs.ToListAsync();
+            var listUserDTO = await _dbContextDTO.appUserDTOs.ToListAsync();
+            var listVehicleVM = (from vehicle in listVehicleDTO
+                                 join make in listMakeDTO on vehicle.MakeId equals make.Id
+                                 join model in listModelDTO on vehicle.ModelId equals model.Id
+                                 join customer in listCustomerDTO on vehicle.CustomerId equals customer.Id
+                                 join user in listUserDTO on vehicle.AppUserId equals user.Id
+                                 select new VehicleVM
+                                 {
+                                     Id = vehicle.Id,
+                                     CreateAt = vehicle.CreateAt,
+                                     UpdateAt = vehicle.UpdateAt,
+                                     MakeVM = _mapper.Map<MakeVM>(make),
+                                     ModelVM = _mapper.Map<ModelVM>(model),
+                                     CustomerVM = _mapper.Map<CustomerVM>(customer),
+                                     AppUserVM = _mapper.Map<AppUserVM>(user),
+                                     Engine = vehicle.Engine,
+                                     Odometer = vehicle.Odometer,
+                                     VIN = vehicle.VIN,
+                                     isBought = vehicle.isBought
+                                 }).ToList();
+            return listVehicleVM;
+        }
+
         public async Task<List<VehicleVM>> GetAllVehicleBought()
         {
             var listvehicleDTO = await dbset.Where(x => x.isBought == true).ToListAsync();
-            var listvehicleVM = _mapper.Map<List<VehicleVM>>(listvehicleDTO).OrderByDescending(x => x.UpdateAt.Date).ToList();
+            var listvehicleVM = _mapper.Map<List<VehicleVM>>(listvehicleDTO).ToList();
             return listvehicleVM;
         }
 
         public async Task<PageResultVM<VehicleVM>> GetAllPaging(PaginationSearchVM paginationSearchVM)
         {
             var listVehicleDTO = await dbset.Where(x => x.isBought == false).ToListAsync();
-            var listMakeDTO = await _dbContextDTO.makeDTOs.ToListAsync();
-            var listModelDTO = await _dbContextDTO.modelDTOs.ToListAsync();
-            var listCustomerDTO = await _dbContextDTO.customerDTOs.ToListAsync();
-            var listUserDTO = await _dbContextDTO.appUserDTOs.ToListAsync();
-            var listVehicleVM = (from vehicle in listVehicleDTO
-                         join make in listMakeDTO on vehicle.MakeId equals make.Id
-                         join model in listModelDTO on vehicle.ModelId equals model.Id
-                         join customer in listCustomerDTO on vehicle.CustomerId equals customer.Id
-                         join user in listUserDTO on vehicle.AppUserId equals user.Id
-                         select new VehicleVM
-                         {
-                             Id = vehicle.Id,
-                             CreateAt = vehicle.CreateAt,
-                             MakeVM = _mapper.Map<MakeVM>(make),
-                             ModelVM = _mapper.Map<ModelVM>(model),
-                             CustomerVM = _mapper.Map<CustomerVM>(customer),
-                             AppUserVM = _mapper.Map<AppUserVM>(user),
-                             Engine = vehicle.Engine,
-                             Odometer = vehicle.Odometer,
-                             VIN = vehicle.VIN
-                         }).ToList();
+            var listVehicleVM = await VehicleJoinQuery(listVehicleDTO);            
             if (paginationSearchVM.keyWord == null || paginationSearchVM.subjects == null)
             {
-                var listVehicleVMPagination = listVehicleVM.Skip((paginationSearchVM.PageIndex - 1) * paginationSearchVM.PageSize).Take(paginationSearchVM.PageSize).ToList();
+                var listVehicleVMPagination = listVehicleVM.Skip((paginationSearchVM.PageIndex - 1) * paginationSearchVM.PageSize).Take(paginationSearchVM.PageSize).OrderByDescending(x=>x.CreateAt).ToList();
                 return new PageResultVM<VehicleVM>
                 {
                     Items = listVehicleVMPagination,
@@ -185,8 +193,8 @@ namespace Vehicle_Appraisal_WebApi.Service
             if (fromDate.Year != 0001 || toDate.Year != 0001)
             {
                 var listVehicleDTO = await dbset.Where(x => x.isBought == true).Where(x => x.UpdateAt.Date >= fromDate.Date).Where(x => x.UpdateAt.Date <= toDate).ToListAsync();
-                var listVehicleVM = _mapper.Map<List<VehicleVM>>(listVehicleDTO).OrderByDescending(x=>x.UpdateAt.Date);
-                var listVehicleVMPagination = listVehicleVM.Skip((paginationVM.PageIndex - 1) * paginationVM.PageSize).Take(paginationVM.PageSize).ToList();
+                var listVehicleVM = await VehicleJoinQuery(listVehicleDTO);
+                var listVehicleVMPagination = listVehicleVM.Skip((paginationVM.PageIndex - 1) * paginationVM.PageSize).Take(paginationVM.PageSize).OrderByDescending(x=>x.UpdateAt).ToList();
                 return new PageResultVM<VehicleVM>
                 {
                     Items = listVehicleVMPagination,
@@ -196,8 +204,9 @@ namespace Vehicle_Appraisal_WebApi.Service
             }
             else
             {
-                var listVehicleVM = await GetAllVehicleBought();
-                var listVehicleVMPagination = listVehicleVM.Skip((paginationVM.PageIndex - 1) * paginationVM.PageSize).Take(paginationVM.PageSize).ToList();
+                var listVehicleDTO = await dbset.Where(x => x.isBought == true).ToListAsync();
+                var listVehicleVM = await VehicleJoinQuery(listVehicleDTO);
+                var listVehicleVMPagination = listVehicleVM.Skip((paginationVM.PageIndex - 1) * paginationVM.PageSize).Take(paginationVM.PageSize).OrderByDescending(x=>x.UpdateAt).ToList();
                 return new PageResultVM<VehicleVM>
                 {
                     Items = listVehicleVMPagination,
@@ -217,30 +226,34 @@ namespace Vehicle_Appraisal_WebApi.Service
 
         public async Task<ApiResultVM<string>> Insert(VehicleVM vehicleVM)
         {
-            var customerId = await _customerService.GetById(vehicleVM.CustomerId);
-            var makeId = await _makeService.GetById(vehicleVM.MakeId);
-            var modelId = await _modelService.GetById(vehicleVM.ModelId);
-            var userId = await _userService.GetById(vehicleVM.AppUserId);
-            if (customerId == null)
+            var customerDTO = await _dbContextDTO.customerDTOs.Where(x => (x.FirstName + x.LastName).Equals(vehicleVM.CustomerVM.FirstName + vehicleVM.CustomerVM.LastName)).AsNoTracking().SingleOrDefaultAsync();
+            var makeDTO = await _dbContextDTO.makeDTOs.Where(x => x.Name.Equals(vehicleVM.MakeVM.Name)).AsNoTracking().SingleOrDefaultAsync();
+            var modelDTO = await _dbContextDTO.modelDTOs.Where(x => x.Name.Equals(vehicleVM.ModelVM.Name)).AsNoTracking().SingleOrDefaultAsync();
+            var userDTO = await _dbContextDTO.appUserDTOs.Where(x => x.FullName.Equals(vehicleVM.AppUserVM.FullName)).AsNoTracking().SingleOrDefaultAsync();
+            if (customerDTO == null)
             {
                 _dbContextDTO.Dispose();
                 return new ApiErrorResultVM<string>("Customer doesn't exist");
             }
-            if (makeId == null)
+            if (makeDTO == null)
             {
                 _dbContextDTO.Dispose();
                 return new ApiErrorResultVM<string>("Make doesn't exist");
             }
-            if (modelId == null)
+            if (modelDTO == null)
             {
                 _dbContextDTO.Dispose();
                 return new ApiErrorResultVM<string>("Model doesn't exist");
             }
-            if (userId == null)
+            if (userDTO == null)
             {
                 _dbContextDTO.Dispose();
                 return new ApiErrorResultVM<string>("Users doesn't exist");
             }
+            vehicleVM.CustomerId = customerDTO.Id;
+            vehicleVM.MakeId = makeDTO.Id;
+            vehicleVM.ModelId = modelDTO.Id;
+            vehicleVM.AppUserId = userDTO.Id;
             var vehicleDTO = _mapper.Map<VehicleDTO>(vehicleVM);
             vehicleDTO.CreateAt = DateTime.Now;
             vehicleDTO.UpdateAt = DateTime.Now;
@@ -249,84 +262,42 @@ namespace Vehicle_Appraisal_WebApi.Service
             return new ApiSuccessResultVM<string>("Insert Success");
         }
 
-        public async Task<List<VehicleVM>> Search(string customerId, string makeId, string modelId, string odometer, string VIN, string engine, string appuserId)
-        {
-            if (customerId != null)
-            {
-                var vehicleDTO = await dbset.Where(x => x.CustomerId.ToString().Equals(customerId)).Where(x => x.isBought == false).AsNoTracking().ToListAsync();
-                var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
-                return vehicleVM;
-            }
-            if (makeId != null)
-            {
-                var vehicleDTO = await dbset.Where(x => x.MakeId.ToString().Equals(makeId)).Where(x => x.isBought == false).AsNoTracking().ToListAsync();
-                var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
-                return vehicleVM;
-            }
-            if (modelId != null)
-            {
-                var vehicleDTO = await dbset.Where(x => x.ModelId.ToString().Equals(modelId)).Where(x => x.isBought == false).AsNoTracking().ToListAsync();
-                var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
-                return vehicleVM;
-            }
-            if (odometer != null)
-            {
-                var vehicleDTO = await dbset.Where(x => x.Odometer.Contains(odometer)).Where(x => x.isBought == false).AsNoTracking().ToListAsync();
-                var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
-                return vehicleVM;
-            }
-            if (VIN != null)
-            {
-                var vehicleDTO = await dbset.Where(x => x.VIN.Contains(VIN)).Where(x => x.isBought == false).AsNoTracking().ToListAsync();
-                var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
-                return vehicleVM;
-            }
-            if (engine != null)
-            {
-                var vehicleDTO = await dbset.Where(x => x.Engine.Contains(engine)).Where(x => x.isBought == false).AsNoTracking().ToListAsync();
-                var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
-                return vehicleVM;
-            }
-            else
-            {
-                var vehicleDTO = await dbset.Where(x => x.AppUserId.ToString().Equals(appuserId)).Where(x => x.isBought == false).AsNoTracking().ToListAsync();
-                var vehicleVM = _mapper.Map<List<VehicleVM>>(vehicleDTO);
-                return vehicleVM;
-            }
-        }
-
         public async Task<ApiResultVM<string>> Update(VehicleVM vehicleVM, int id)
         {
             var checkValue = await GetById(id);
-            var customerId = await _customerService.GetById(vehicleVM.CustomerId);
-            var makeId = await _makeService.GetById(vehicleVM.MakeId);
-            var modelId = await _modelService.GetById(vehicleVM.ModelId);
-            var userId = await _userService.GetById(vehicleVM.AppUserId);
+            var customerDTO = await _dbContextDTO.customerDTOs.Where(x => (x.FirstName + x.LastName).Equals(vehicleVM.CustomerVM.FirstName + vehicleVM.CustomerVM.LastName)).AsNoTracking().SingleOrDefaultAsync();
+            var makeDTO = await _dbContextDTO.makeDTOs.Where(x => x.Name.Equals(vehicleVM.MakeVM.Name)).AsNoTracking().SingleOrDefaultAsync();
+            var modelDTO = await _dbContextDTO.modelDTOs.Where(x => x.Name.Equals(vehicleVM.ModelVM.Name)).AsNoTracking().SingleOrDefaultAsync();
+            var userDTO = await _dbContextDTO.appUserDTOs.Where(x => x.FullName.Equals(vehicleVM.AppUserVM.FullName)).AsNoTracking().SingleOrDefaultAsync();
             if (checkValue == null)
             {
                 _dbContextDTO.Dispose();
                 return new ApiErrorResultVM<string>("Vehicle doesn't exist");
             }
-            if (customerId == null)
+            if (customerDTO == null)
             {
                 _dbContextDTO.Dispose();
                 return new ApiErrorResultVM<string>("Customer doesn't exist");
             }
-            if (makeId == null)
+            if (makeDTO == null)
             {
                 _dbContextDTO.Dispose();
                 return new ApiErrorResultVM<string>("Make doesn't exist");
             }
-            if (modelId == null)
+            if (modelDTO == null)
             {
                 _dbContextDTO.Dispose();
                 return new ApiErrorResultVM<string>("Model doesn't exist");
             }
-            if (userId == null)
+            if (userDTO == null)
             {
                 _dbContextDTO.Dispose();
                 return new ApiErrorResultVM<string>("Users doesn't exist");
             }
+            vehicleVM.CustomerId = customerDTO.Id;
+            vehicleVM.MakeId = makeDTO.Id;
+            vehicleVM.ModelId = modelDTO.Id;
+            vehicleVM.AppUserId = userDTO.Id;
             var vehicleDTO = _mapper.Map<VehicleDTO>(vehicleVM);
             vehicleDTO.Id = id;
             vehicleDTO.UpdateAt = DateTime.Now;

@@ -13,8 +13,6 @@ namespace Vehicle_Appraisal_WebApi.Infracstructure.InterfaceService
         Task<PageResultVM<VehicleVM>> GetAllPaging(PaginationSearchVM paginationSearchVM);
         Task<List<VehicleVM>> GetAllVehicleBought();
         Task<List<VehicleVM>> GetAllNotBuy();
-        Task<List<VehicleVM>> Search(string customerId, string makeId, string modelId, string odometer, string VIN, string engine, string appuserId);
-
         Task<ApiResultVM<string>> BuyVehicle(int id);
 
     }

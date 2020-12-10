@@ -102,14 +102,6 @@ namespace Vehicle_Appraisal_WebApi.Application
             return Ok(result);
         }
 
-        // GET api/vehicles/info
-        [HttpGet("info")]
-        [Authorize(Roles = "Admin")]
-        public async Task<List<VehicleVM>> Search(string customerId, string makeId, string modelId, string odometer, string VIN, string engine, string appuserId)
-        {
-            return await _VehicleService.Search(customerId, makeId, modelId, odometer, VIN, engine, appuserId);
-        }
-
         // GET api/vehicles/{id}/appraisal-values
         [HttpGet("{id}/appraisal-values")]
         [Authorize(Roles = "Admin")]

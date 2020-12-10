@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.ViewModels;
@@ -27,16 +28,16 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             _vehicleServiceApiClient = vehicleServiceApiClient;
         }
 
-        private async Task<VehicleModelMVC> listChosen(string token, VehicleModelMVC vehicleModelMVC)
+        private async Task<VehicleVM> listChosen(string token, VehicleModelMVC vehicleModelMVC)
         {
             var customers = await _customerServiceApiClient.GetAll(token);
             var makes = await _makeServiceApiClient.GetAll(token);
             var models = await _modelServiceApiClient.GetAll(token);
             var appusers = await _userServiceApiClient.GetAll(token);
-            vehicleModelMVC.ListCustomerVM = customers;
-            vehicleModelMVC.ListMakeVM = makes;
-            vehicleModelMVC.ListModelVM = models;
-            vehicleModelMVC.ListAppUserVM = appusers.Select(x => x.appUserVM).ToList();
+            vehicleModelMVC.CustomerVMs = customers;
+            vehicleModelMVC.MakeVMs = makes;
+            vehicleModelMVC.ModelVMs = models;
+            vehicleModelMVC.AppUserVMs = appusers.Select(x => x.appUserVM).ToList();
             return vehicleModelMVC;
         }
 
@@ -47,9 +48,8 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var vehicleModelMVC = new VehicleModelMVC();
                 string token = HttpContext.Session.GetString("token_access");
-                return View(await listChosen(token, vehicleModelMVC));
+                return View(await listChosen(token, new VehicleModelMVC()));
             }
             return BadRequest("Error 400");
         }
@@ -57,39 +57,27 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         // GET vehicle/update
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Update(int Id, string Odometer, string VIN, string Engine, string MakeName, string FullName, string ModelName, string FirstName, string LastName)
+        public async Task<IActionResult> Update(VehicleVM vehicleVM, AppUserVM appUserVM, CustomerVM customerVM,string makeName, string modelName)
         {
-            var vehicleVM = new VehicleVM()
+            vehicleVM.MakeVM = new MakeVM
             {
-                Id = Id,
-                Odometer = Odometer,
-                VIN = VIN,
-                Engine = Engine
+                Name = makeName
             };
-            var customerVM = new CustomerVM()
+            vehicleVM.ModelVM = new ModelVM
             {
-                FirstName = FirstName,
-                LastName = LastName
+                Name = modelName
             };
-            var makeVM = new MakeVM()
+            var vehicleModelMVC = new VehicleModelMVC
             {
-                Name = MakeName
-            };
-            var modelVM = new ModelVM()
-            {
-                Name = ModelName
-            };
-            var appUserVM = new AppUserVM()
-            {
-                FullName = FullName
-            };
-            var vehicleModelMVC = new VehicleModelMVC()
-            {
-                customerVM = customerVM,
-                makeVM = makeVM,
-                modelVM = modelVM,
-                vehicleVM = vehicleVM,
-                appUserVM = appUserVM
+                Id = vehicleVM.Id,
+                CreateAt = vehicleVM.CreateAt,
+                CustomerVM = customerVM,
+                MakeVM = vehicleVM.MakeVM,
+                ModelVM = vehicleVM.ModelVM,
+                AppUserVM = appUserVM,
+                Odometer = vehicleVM.Odometer,
+                VIN = vehicleVM.VIN,
+                Engine = vehicleVM.Engine
             };
             string token = HttpContext.Session.GetString("token_access");
             return View(await listChosen(token, vehicleModelMVC));
@@ -98,7 +86,7 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         // GET vehicle/getall
         [HttpGet]
         [Authorize(Roles = "Admin, Users")]
-        public async Task<IActionResult> GetAll(string keyWord, string subjects,int pageIndex = 1)
+        public async Task<IActionResult> GetAll(string keyWord, string subjects, int pageIndex = 1)
         {
             if (ModelState.IsValid)
             {
@@ -194,21 +182,6 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
             }
         }
 
-        // GET vehicle/searchaction
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> SearchAction(string customer, string make, string model, string odometer, string VIN, string engine, string appuser)
-        {
-            if (ModelState.IsValid)
-            {
-                string token = HttpContext.Session.GetString("token_access");
-                var list = await _vehicleServiceApiClient.Search(token, customer, make, model, odometer, VIN, engine, appuser);
-                return View("GetAll", list);
-            }
-            else
-                return BadRequest("Error 400");
-        }
-
         // GET vehicle/getallconditionbyid
         [HttpGet]
         [Authorize(Roles = "Admin,Users")]
@@ -242,7 +215,7 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         // GET vehicle/getallappraisalvaluebyid
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAllAppraisalValueById(int id, int i)
+        public async Task<IActionResult> GetAllAppraisalValueById(int id, int i, bool isBought)
         {
             if (ModelState.IsValid)
             {
@@ -258,6 +231,7 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
                 }
                 ViewBag.id = id;
                 ViewBag.i = i;
+                ViewBag.isBought = isBought;
                 return View(list);
             }
             else

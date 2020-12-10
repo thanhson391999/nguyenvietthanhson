@@ -1,5 +1,5 @@
 ﻿@using Vehicle_Appraisal_WebApi.ViewModels
-@model PageResultVM<VehicleModelMVC>
+@model PageResultVM<VehicleVM>
 @{
     Layout = Layout;
 }
@@ -14,7 +14,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="/home/index">Home</a></li>
-                        <li class="breadcrumb-item active">Vehicle Bought</li>
+                        <li class="breadcrumb-item active">VehicleBought</li>
                     </ol>
                 </div>
             </div>
@@ -56,15 +56,14 @@
                                             <th>Odometer</th>
                                             <th>Engine</th>
                                             <th>Users</th>
-                                            <th>Value</th>
                                             <th>Options</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @if (Model.Items != null)
                                         {
-                                            var i = 0;
-                                            foreach (var item in Model.Items.Where(x => x.vehicleVM.isBought.Equals(true)))
+                                            var i = ((Model.PageIndex - 1) * Model.PageSize);
+                                            foreach (var item in Model.Items)
                                             {
                                                 <tr>
                                                     <td>
@@ -74,34 +73,32 @@
                                                         @i
                                                     </td>
                                                     <td>
-                                                        @item.vehicleVM.UpdateAt.ToString("dd/MM/yyyy")
+                                                        @item.UpdateAt.ToString("dd/MM/yyyy")
                                                     </td>
                                                     <td>
-                                                        @Html.DisplayFor(Model => item.customerVM.FirstName) @Html.DisplayFor(Model => item.customerVM.LastName)
+                                                        @Html.DisplayFor(Model => item.CustomerVM.FirstName) @Html.DisplayFor(Model => item.CustomerVM.LastName)
                                                     </td>
                                                     <td>
-                                                        @Html.DisplayFor(Model => item.makeVM.Name)
+                                                        @Html.DisplayFor(Model => item.MakeVM.Name)
                                                     </td>
                                                     <td>
-                                                        @Html.DisplayFor(Model => item.modelVM.Name)
+                                                        @Html.DisplayFor(Model => item.ModelVM.Name)
                                                     </td>
                                                     <td>
-                                                        @Html.DisplayFor(Model => item.vehicleVM.VIN)
+                                                        @Html.DisplayFor(Model => item.VIN)
                                                     </td>
                                                     <td>
-                                                        @Html.DisplayFor(Model => item.vehicleVM.Odometer)
+                                                        @Html.DisplayFor(Model => item.Odometer)
                                                     </td>
                                                     <td>
-                                                        @Html.DisplayFor(Model => item.vehicleVM.Engine)
+                                                        @Html.DisplayFor(Model => item.Engine)
                                                     </td>
                                                     <td>
-                                                        @Html.DisplayFor(Model => item.appUserVM.FullName)
+                                                        @Html.DisplayFor(Model => item.AppUserVM.FullName)
                                                     </td>
                                                     <td>
-                                                        @Html.DisplayFor(Model => item.vehicleAppraisalVM.AppraisalValue)
-                                                    </td>
-                                                    <td>
-                                                        @Html.ActionLink("Condition", "GetAllConditionById", new { item.vehicleVM.Id, item.vehicleVM.isBought })
+                                                        @Html.ActionLink("Condition", "GetAllConditionById", new { item.Id, item.isBought, i }) |
+                                                        @Html.ActionLink("AppraisalValue", "GetAllAppraisalValueById", new { item.Id, item.isBought, i })
                                                     </td>
                                                 </tr>
                                             }

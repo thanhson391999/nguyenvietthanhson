@@ -3,17 +3,11 @@ using Vehicle_Appraisal_WebApi.ViewModels;
 
 namespace Vehicle_Appraisal_WebMVC.Models
 {
-    public class VehicleModelMVC
+    public class VehicleModelMVC : VehicleVM
     {
-        public VehicleVM vehicleVM { get; set; }
-        public CustomerVM customerVM { get; set; }
-        public MakeVM makeVM { get; set; }
-        public ModelVM modelVM { get; set; }
-        public AppUserVM appUserVM { get; set; }
-        public VehicleAppraisalVM vehicleAppraisalVM { get; set; }
-        public List<CustomerVM> ListCustomerVM { get; set; }
-        public List<MakeVM> ListMakeVM { get; set; }
-        public List<ModelVM> ListModelVM { get; set; }
-        public List<AppUserVM> ListAppUserVM { get; set; }
+        public List<CustomerVM> CustomerVMs { get; set; }
+        public List<MakeVM> MakeVMs { get; set; }
+        public List<ModelVM> ModelVMs { get; set; }
+        public List<AppUserVM> AppUserVMs { get; set; }
     }
 }

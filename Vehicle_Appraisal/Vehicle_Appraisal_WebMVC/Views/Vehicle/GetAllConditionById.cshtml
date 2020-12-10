@@ -36,7 +36,14 @@
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="/home/index">Home</a></li>
-                                <li class="breadcrumb-item active"><a href="/vehicle/getall">Vehicle</a></li>
+                                @if (ViewBag.isBought == false)
+                                {
+                                    <li class="breadcrumb-item active"><a href="/vehicle/getall">Vehicle</a></li>
+                                }
+                                @if (ViewBag.isBought == true)
+                                {
+                                    <li class="breadcrumb-item active"><a href="/vehicle/getallVehicleBought">VehicleBought</a></li>
+                                }
                                 <li class="breadcrumb-item active">@ViewBag.i</li>
                                 <li class="breadcrumb-item active">Condition</li>
                             </ol>
@@ -85,13 +92,16 @@
                                                     <th>Type</th>
                                                     <th>Image</th>
                                                     <th>Note</th>
-                                                    <th>Options</th>
+                                                    @if (ViewBag.isBought == false)
+                                                    {
+                                                        <th>Options</th>
+                                                    }
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @if (Model.Items != null)
                                                 {
-                                                    var i = 0;
+                                                    var i = ((Model.PageIndex - 1) * Model.PageSize);
                                                     foreach (var item in Model.Items)
                                                     {
                                                         if (item.Id != 0)

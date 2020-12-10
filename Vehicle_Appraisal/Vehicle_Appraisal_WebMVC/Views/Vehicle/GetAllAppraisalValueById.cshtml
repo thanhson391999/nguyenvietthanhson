@@ -36,7 +36,14 @@
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="/home/index">Home</a></li>
-                                <li class="breadcrumb-item active"><a href="/vehicle/getall">Vehicle</a></li>
+                                @if (ViewBag.isBought == false)
+                                {
+                                    <li class="breadcrumb-item active"><a href="/vehicle/getall">Vehicle</a></li>
+                                }
+                                @if (ViewBag.isBought == true)
+                                {
+                                    <li class="breadcrumb-item active"><a href="/vehicle/getallVehicleBought">VehicleBought</a></li>
+                                }
                                 <li class="breadcrumb-item active">@ViewBag.i</li>
                                 <li class="breadcrumb-item active">AppraisalValue</li>
                             </ol>
@@ -60,14 +67,17 @@
                     }
                 </div>
             </div>
-            @if (Model.Count == 0)
+            @if (ViewBag.isBought == false)
             {
-                <div class="card-header">
-                    <a id="btn-create" class="btn btn-primary" href="/vehicleappraisal/insert/@ViewBag.id">
-                        <i class="far fa-plus-square"></i>
-                        Create
-                    </a>
-                </div>
+                if (Model.Count == 0)
+                {
+                    <div class="card-header">
+                        <a id="btn-create" class="btn btn-primary" href="/vehicleappraisal/insert/@ViewBag.id">
+                            <i class="far fa-plus-square"></i>
+                            Create
+                        </a>
+                    </div>
+                }
             }
             <!-- Main content -->
             <section class="content">
@@ -81,7 +91,10 @@
                                             <tr>
                                                 <th>Date</th>
                                                 <th>AppraisalValue</th>
-                                                <th>Options</th>
+                                                @if (ViewBag.isBought == false)
+                                                {
+                                                    <th>Options</th>
+                                                }
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -98,15 +111,18 @@
                                                             <td>
                                                                 @Html.DisplayFor(Model => item.AppraisalValue)
                                                             </td>
-                                                            <td>
-                                                                @Html.ActionLink("Edit", "update", "vehicleappraisal", new { item.Id, item.CreateAt, item.AppraisalValue, item.VehicleId }) |
-                                                                <a href="@Url.Action("DeleteAction","vehicleappraisal",new { item.Id, item.VehicleId })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete appraisal value with ID = @item.Id')">
-                                                                    Delete
-                                                                </a> |
-                                                                <a href="@Url.Action("BuyVehicle","vehicle",new { id = item.VehicleId })" type="text" class="text-primary" onclick="return confirm('Are you sure want to buy this vehicle with value = @item.AppraisalValue')">
-                                                                    Buy
-                                                                </a>
-                                                            </td>
+                                                            @if (ViewBag.isBought == false)
+                                                            {
+                                                                <td>
+                                                                    @Html.ActionLink("Edit", "update", "vehicleappraisal", new { item.Id, item.CreateAt, item.AppraisalValue, item.VehicleId }) |
+                                                                    <a href="@Url.Action("DeleteAction", "vehicleappraisal", new { item.Id, item.VehicleId })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete appraisal value with ID = @item.Id')">
+                                                                        Delete
+                                                                    </a> |
+                                                                    <a href="@Url.Action("BuyVehicle", "vehicle", new { id = item.VehicleId })" type="text" class="text-primary" onclick="return confirm('Are you sure want to buy this vehicle with value = @item.AppraisalValue')">
+                                                                        Buy
+                                                                    </a>
+                                                                </td>
+                                                            }
                                                         </tr>
                                                     }
                                                 }

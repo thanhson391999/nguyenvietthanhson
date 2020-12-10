@@ -87,7 +87,7 @@
                                         {
                                             if (User.Claims.Where(c => c.Type.Equals("Role")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim() != "Admin")
                                             {
-                                                var i = 0;
+                                                var i = ((Model.PageIndex - 1) * Model.PageSize);
                                                 foreach (var item in Model.Items.Where(x => x.AppUserVM.FullName.Equals(User.Claims.Where(c => c.Type.Equals("FullName")).FirstOrDefault().ToString().Split(':').ElementAt(1).Trim())))
                                                 {
                                                     <tr>
@@ -129,7 +129,7 @@
                                             }
                                             else
                                             {
-                                                var i = 0;
+                                                var i = ((Model.PageIndex - 1) * Model.PageSize);
                                                 foreach (var item in Model.Items)
                                                 {
                                                     <tr>
@@ -165,18 +165,18 @@
                                                         </td>
                                                         <td>
                                                             @Html.ActionLink("Edit", "update", "vehicle", new
-                                                            {
-                                                                item.Id,
-                                                                item.CreateAt,
-                                                                item.Odometer,
-                                                                item.VIN,
-                                                                item.Engine,
-                                                                MakeName = item.MakeVM.Name,
-                                                                item.AppUserVM.FullName,
-                                                                ModelName = item.ModelVM.Name,
-                                                                item.CustomerVM.FirstName,
-                                                                item.CustomerVM.LastName,
-                                                            }) |
+                                                       {
+                                                           item.Id,
+                                                           item.CreateAt,
+                                                           item.Odometer,
+                                                           item.VIN,
+                                                           item.Engine,
+                                                           makeName = item.MakeVM.Name,
+                                                           item.AppUserVM.FullName,
+                                                           modelName = item.ModelVM.Name,
+                                                           item.CustomerVM.FirstName,
+                                                           item.CustomerVM.LastName,
+                                                       }) |
                                                             @Html.ActionLink("Condition", "GetAllConditionById", new { item.Id, i }) |
                                                             @Html.ActionLink("AppraisalValue", "GetAllAppraisalValueById", new { item.Id, i }) |
                                                             <a href="@Url.Action("DeleteAction", "vehicle", new { item.Id })" type="text" class="text-primary" onclick="return confirm('Are you sure want delete Vehicle: @item.MakeVM.Name @item.ModelVM.Name of Customer: @item.CustomerVM.FirstName @item.CustomerVM.LastName')">

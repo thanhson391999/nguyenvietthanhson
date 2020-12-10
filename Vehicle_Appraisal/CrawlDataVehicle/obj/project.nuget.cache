@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "g5gPSVEZ7aQKyfjE6t8NxmVQjzNsN4OJhDHzlaxpllhsfaWzvbf9iV0tz3r1lj3JCcHvMZ9cStUuEciAbg0gsg==",
+  "dgSpecHash": "ASQC3xnJ5j/4VaUJ5kwk2oPGMMvlCMzRZ/KBDTHnKqrzd2SWZ8yNqTqJX04KVEYmGDVRCDB37vOLYk0MmdgILg==",
   "success": true,
   "projectFilePath": "E:\\Github\\nguyenvietthanhson\\Vehicle_Appraisal\\CrawlDataVehicle\\CrawlDataVehicle.csproj",
   "expectedPackageFiles": [
@@ -143,7 +143,9 @@
     "C:\\Users\\Thanh Son\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\Thanh Son\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.10\\microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.10\\microsoft.netcore.app.host.win-x64.3.1.10.nupkg.sha512"
   ],
   "logs": [
     {

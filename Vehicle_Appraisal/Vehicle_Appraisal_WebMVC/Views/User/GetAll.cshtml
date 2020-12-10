@@ -69,7 +69,7 @@
                                     <tbody>
                                         @if (Model.Items != null)
                                         {
-                                            var i = 0;
+                                            var i = ((Model.PageIndex - 1) * Model.PageSize);
                                             foreach (var item in Model.Items.Where(x => x.appUserVM.AppUserRolesId == 2))
                                             {
                                                 <tr class="Search">
