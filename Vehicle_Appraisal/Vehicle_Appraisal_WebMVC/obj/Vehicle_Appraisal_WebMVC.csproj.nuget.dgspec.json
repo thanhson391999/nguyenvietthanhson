@@ -48,6 +48,10 @@
               "target": "Package",
               "version": "[3.2.0, )"
             },
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.95.3, )"
+            },
             "DocumentFormat.OpenXml": {
               "target": "Package",
               "version": "[2.11.3, )"
@@ -172,6 +176,14 @@
         "netcoreapp2.2": {
           "targetAlias": "netcoreapp2.2",
           "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.95.3, )"
+            },
+            "EPPlus": {
+              "target": "Package",
+              "version": "[4.0.1.1, )"
+            },
             "Microsoft.AspNetCore": {
               "target": "Package",
               "version": "[2.2.0, )"

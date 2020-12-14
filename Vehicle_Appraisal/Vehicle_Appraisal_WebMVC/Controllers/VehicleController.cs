@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ClosedXML.Excel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Vehicle_Appraisal_WebApi.ViewModels;
 using Vehicle_Appraisal_WebMVC.Models;
@@ -18,9 +23,16 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
         private readonly IMakeServiceApiClient _makeServiceApiClient;
         private readonly IUserServiceApiClient _userServiceApiClient;
         private readonly IModelServiceApiClient _modelServiceApiClient;
+        private readonly IVehicleAppraisalServiceApiClient _vehicleAppraisalServiceApiClient;
 
-        public VehicleController(IVehicleServiceApiClient vehicleServiceApiClient, IUserServiceApiClient userServiceApiClient, IMakeServiceApiClient makeServiceApiClient, ICustomerServiceApiClient customerServiceApiClient, IModelServiceApiClient modelServiceApiClient)
+        public VehicleController(IVehicleServiceApiClient vehicleServiceApiClient,
+                                 IUserServiceApiClient userServiceApiClient,
+                                 IMakeServiceApiClient makeServiceApiClient,
+                                 ICustomerServiceApiClient customerServiceApiClient,
+                                 IModelServiceApiClient modelServiceApiClient,
+                                 IVehicleAppraisalServiceApiClient vehicleAppraisalServiceApiClient)
         {
+            _vehicleAppraisalServiceApiClient = vehicleAppraisalServiceApiClient;
             _userServiceApiClient = userServiceApiClient;
             _makeServiceApiClient = makeServiceApiClient;
             _modelServiceApiClient = modelServiceApiClient;
@@ -270,9 +282,95 @@ namespace Vehicle_Appraisal_WebMVC.Controllers
                     PageIndex = pageIndex,
                 };
                 var list = await _vehicleServiceApiClient.GetAllVehicleBoughtPaging(token, fromDate, toDate, paginationVM);
+                TempData["vehicleVMs"] = JsonConvert.SerializeObject(list.Items);
                 return View(list);
             }
             return BadRequest("Error 400");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> FileExportVehicleBought()
+        {
+            string token = HttpContext.Session.GetString("token_access");
+            if (TempData["vehicleVMs"] == null)
+            {
+                return Redirect("/vehicle/GetAllVehicleBought");
+            }
+            var vehicleVMs = JsonConvert.DeserializeObject<List<VehicleVM>>(TempData["vehicleVMs"].ToString());
+            var vehicleAppraisalVMs = await _vehicleAppraisalServiceApiClient.GetAll(token);
+            var query = (from _vehicleAppraisalVMs in vehicleAppraisalVMs
+                         join _vehicleVMs in vehicleVMs on _vehicleAppraisalVMs.VehicleId equals _vehicleVMs.Id
+                         select new VehicleAppraisalVM
+                         {
+                             VehicleVM = _vehicleVMs,
+                             AppraisalValue = _vehicleAppraisalVMs.AppraisalValue
+                         }).ToList();
+            using (var workBook = new XLWorkbook())
+            {
+                int rowHeader = 2;
+                int columnHeader = 1;
+                int row = 2;
+                int column = 1;
+                workBook.Properties.Author = "Thanh Sơn";
+                workBook.Properties.Title = "Report Vehicles Bought";
+                var workSheet = workBook.Worksheets.Add("Vehicles Bought");
+                workSheet.Cell(rowHeader, columnHeader++).Value = "Date";
+                workSheet.Cell(rowHeader, columnHeader++).Value = "Customer";
+                workSheet.Cell(rowHeader, columnHeader++).Value = "Make";
+                workSheet.Cell(rowHeader, columnHeader++).Value = "Model";
+                workSheet.Cell(rowHeader, columnHeader++).Value = "Odometer";
+                workSheet.Cell(rowHeader, columnHeader++).Value = "VIN";
+                workSheet.Cell(rowHeader, columnHeader++).Value = "Engine";
+                workSheet.Cell(rowHeader, columnHeader++).Value = "Appraisal Value";
+                foreach (var item in query)
+                {
+                    row++;
+                    column = 1;
+                    workSheet.Cell(row, column++).Value = item.VehicleVM.UpdateAt.ToString("dd/MM/yyyy");
+                    workSheet.Cell(row, column++).Value = item.VehicleVM.CustomerVM.FirstName+" "+item.VehicleVM.CustomerVM.LastName;
+                    workSheet.Cell(row, column++).Value = item.VehicleVM.MakeVM.Name;
+                    workSheet.Cell(row, column++).Value = item.VehicleVM.ModelVM.Name;
+                    workSheet.Cell(row, column++).Value = item.VehicleVM.Odometer;
+                    workSheet.Cell(row, column++).Value = item.VehicleVM.VIN;
+                    workSheet.Cell(row, column++).Value = item.VehicleVM.Engine;
+                    workSheet.Cell(row, column).Value = item.AppraisalValue;
+                    workSheet.Cell(row, column).Style.NumberFormat.Format = "#,## " + "\"VND\"";
+                }
+                row +=2;
+                workSheet.Cell(row, column).Value = query.Count();
+                workSheet.Cell(row, column - 1).Value = "Total Vehicles :";
+                workSheet.Cell(row, column - 1).Style.Font.SetBold();
+                row++;
+                workSheet.Cell(row, column).FormulaA1 = "SUM(H3:H" + (query.Count() + 2) + ")";
+                workSheet.Cell(row, column).Style.NumberFormat.Format = "#,## " + "\"VND\"";
+                workSheet.Cell(row, column - 1).Value = "Total Value :";
+                workSheet.Cell(row, column - 1).Style.Font.SetBold();
+
+                var rangeTextTitle = workSheet.Range("A1:H1");
+                rangeTextTitle.Merge();
+                rangeTextTitle.Value = "REPORT OF VEHICLES BOUGHT";
+                rangeTextTitle.Style.Font.SetBold();
+                rangeTextTitle.Style.Font.SetFontSize(16);
+                rangeTextTitle.Style.Fill.BackgroundColor = XLColor.LightGreen;
+                rangeTextTitle.Style.Font.SetFontColor(XLColor.Red);
+
+                var rangeTextHeader = workSheet.Range("A2:H2");
+                rangeTextHeader.Style.Font.SetFontColor(XLColor.Red);
+                rangeTextHeader.Style.Font.SetBold();
+                workSheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                workSheet.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                workSheet.Columns().AdjustToContents();
+                workSheet.Rows().AdjustToContents();
+                using (var stream = new MemoryStream())
+                {
+                    workBook.SaveAs(stream);
+                    var content = stream.ToArray();
+                    var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    var fileName = "VehicleBought.xlsx";
+                    return File(content, contentType, fileName);
+                }
+            }
         }
     }
 }

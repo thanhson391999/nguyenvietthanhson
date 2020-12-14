@@ -5,5 +5,6 @@
         public string AppraisalValue { get; set; }
         public int VehicleId { get; set; }
 
+        public virtual VehicleVM VehicleVM { get; set; }
     }
 }

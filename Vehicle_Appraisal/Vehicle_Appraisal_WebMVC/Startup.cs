@@ -51,8 +51,8 @@ namespace Vehicle_Appraisal_WebMVC
             services.AddTransient<IVehicleCrawlDataServiceApiClient, VehicleCrawlDataServiceApiClient>();
             services.AddTransient<IUserRoleServiceApiClient, UserRoleServiceApiClient>();
 
+            services.AddMemoryCache();
             // add session
-            services.AddDistributedMemoryCache();
             services.AddSession(opt =>
             {
                 opt.IdleTimeout = TimeSpan.FromDays(7);

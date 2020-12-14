@@ -1,12 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "ASQC3xnJ5j/4VaUJ5kwk2oPGMMvlCMzRZ/KBDTHnKqrzd2SWZ8yNqTqJX04KVEYmGDVRCDB37vOLYk0MmdgILg==",
+  "dgSpecHash": "pmZ+/Luu005dxnOD5FATElSwrSggbuvZ0g4peud5bp+/RerIa1JmQVywa9waV+A8wAm5oAlQVh6Vq+xQlRle3Q==",
   "success": true,
   "projectFilePath": "E:\\Github\\nguyenvietthanhson\\Vehicle_Appraisal\\CrawlDataVehicle\\CrawlDataVehicle.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Thanh Son\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\3.2.0\\automapper.extensions.microsoft.dependencyinjection.3.2.0.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\closedxml\\0.95.3\\closedxml.0.95.3.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\documentformat.openxml\\2.11.3\\documentformat.openxml.2.11.3.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\excelnumberformat\\1.0.10\\excelnumberformat.1.0.10.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\fizzler\\1.2.0\\fizzler.1.2.0.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\fizzler.systems.htmlagilitypack\\1.2.1\\fizzler.systems.htmlagilitypack.1.2.1.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\fluentvalidation\\9.3.0\\fluentvalidation.9.3.0.nupkg.sha512",
