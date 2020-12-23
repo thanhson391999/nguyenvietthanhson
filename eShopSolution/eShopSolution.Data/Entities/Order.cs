@@ -18,5 +18,6 @@ namespace eShopSolution.Data.Entities
 
         public List<OrderDetail> OrderDetails { set; get; }
 
+        public AppUser AppUser { get; set; }
     }
 }
