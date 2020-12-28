@@ -10,3 +10,6 @@ E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Data\obj\Debug\netcorea
 E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Data\obj\Debug\netcoreapp3.1\eShopSolution.Data.dll
 E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Data\obj\Debug\netcoreapp3.1\eShopSolution.Data.pdb
 E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Data\obj\Debug\netcoreapp3.1\eShopSolution.Data.genruntimeconfig.cache
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Data\bin\Debug\netcoreapp3.1\eShopSolution.Utilities.dll
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Data\bin\Debug\netcoreapp3.1\eShopSolution.Utilities.pdb
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Data\obj\Debug\netcoreapp3.1\eShopSolution.Data.csproj.CopyComplete

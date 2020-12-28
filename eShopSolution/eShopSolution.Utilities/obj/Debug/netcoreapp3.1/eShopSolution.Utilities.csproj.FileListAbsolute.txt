@@ -1,0 +1,9 @@
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Utilities\bin\Debug\netcoreapp3.1\eShopSolution.Utilities.deps.json
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Utilities\bin\Debug\netcoreapp3.1\eShopSolution.Utilities.dll
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Utilities\bin\Debug\netcoreapp3.1\eShopSolution.Utilities.pdb
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Utilities\obj\Debug\netcoreapp3.1\eShopSolution.Utilities.csprojAssemblyReference.cache
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Utilities\obj\Debug\netcoreapp3.1\eShopSolution.Utilities.AssemblyInfoInputs.cache
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Utilities\obj\Debug\netcoreapp3.1\eShopSolution.Utilities.AssemblyInfo.cs
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Utilities\obj\Debug\netcoreapp3.1\eShopSolution.Utilities.csproj.CoreCompileInputs.cache
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Utilities\obj\Debug\netcoreapp3.1\eShopSolution.Utilities.dll
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.Utilities\obj\Debug\netcoreapp3.1\eShopSolution.Utilities.pdb
