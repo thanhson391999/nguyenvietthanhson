@@ -12,6 +12,7 @@ namespace eShopSolution.Application.Catalog.Products.Interfaces.Manage
         Task<int> Create(ManageProductCreateRequest productCreateRequest);
         Task<int> Update(int id, ManageProductUpdateRequest productEditRequest);
         Task<int> Delete(int productId);
+        Task<ProductViewModel> GetById(int productId, string languageId);
         Task<bool> UpdatePrice(int productId, decimal newPrice);
         Task<bool> UpdateStock(int productId, int addedQuantity);
         Task AddViewcount(int productId);

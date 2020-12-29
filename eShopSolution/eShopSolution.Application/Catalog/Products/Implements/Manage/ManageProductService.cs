@@ -162,6 +162,33 @@ namespace eShopSolution.Application.Catalog.Products.Implements.Manage
             return pageResult;
         }
 
+        public async Task<ProductViewModel> GetById(int productId, string languageId)
+        {
+            var product = await _context.Products.FindAsync(productId);
+            var productTranslation = await _context.ProductTranslations.FirstOrDefaultAsync(x => x.ProductId == productId && x.LanguageId == languageId); ;
+            if (product == null || productTranslation == null)
+            {
+                throw new ArgumentNullException();
+            }
+            var productViewModel = new ProductViewModel()
+            {
+                Id = productId,
+                DateCreated = product.DateCreated,
+                Description = productTranslation.Description,
+                Details = productTranslation.Details,
+                LanguageId = productTranslation.LanguageId,
+                Name = productTranslation.Name,
+                OriginalPrice = product.OriginalPrice,
+                Price = product.Price,
+                SeoAlias = productTranslation.SeoAlias,
+                SeoDescription = productTranslation.SeoDescription,
+                SeoTitle = productTranslation.SeoTitle,
+                Stock = product.Stock,
+                ViewCount = product.ViewCount
+            };
+            return productViewModel;
+        }
+
         public async Task<List<ProductImageViewModel>> GetListImage(int productId)
         {
             var product = await _context.Products.FindAsync(productId);
@@ -195,7 +222,7 @@ namespace eShopSolution.Application.Catalog.Products.Implements.Manage
         public async Task<int> Update(int id, ManageProductUpdateRequest request)
         {
             var product = await _context.Products.FindAsync(id);
-            var productTranslation = await _context.ProductTranslations.FirstOrDefaultAsync(x => x.ProductId.Equals(product.Id) && x.LanguageId.Equals(request.LanguageId));
+            var productTranslation = await _context.ProductTranslations.FirstOrDefaultAsync(x => x.ProductId.Equals(id) && x.LanguageId.Equals(request.LanguageId));
             if (product == null || productTranslation == null)
             {
                 throw new ArgumentNullException();

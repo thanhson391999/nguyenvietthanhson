@@ -1,5 +1,7 @@
 using eShopSolution.Application.Catalog.Products.Implements.Manage;
+using eShopSolution.Application.Catalog.Products.Implements.Public;
 using eShopSolution.Application.Catalog.Products.Interfaces.Manage;
+using eShopSolution.Application.Catalog.Products.Interfaces.Public;
 using eShopSolution.Application.Common;
 using eShopSolution.Data.EF;
 using eShopSolution.Utilities;
@@ -37,8 +39,9 @@ namespace eShopSolution.BackendApi
                 options.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString)));
 
             // Declare DI
-            services.AddTransient<IManageProductService, ManageProductService>();
             services.AddTransient<IFileStorageService, FileStorageService>();
+            services.AddTransient<IManageProductService, ManageProductService>();
+            services.AddTransient<IPublicProductService, PublicProductService>();
 
             services.AddControllers();
 
