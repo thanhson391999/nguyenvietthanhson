@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace eShopSolution.ViewModels.Catalog.Product.Manage
+namespace eShopSolution.ViewModels.Catalog.Products.Manage
 {
     public class ManageGetProductPagingRequest : PagingRequestBase
     {

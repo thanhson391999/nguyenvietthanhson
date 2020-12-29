@@ -19,7 +19,7 @@ namespace eShopSolution.Application.Catalog.Products.Implements.Public
             _context = context;
         }
 
-        public async Task<PagedResult<ProductViewModel>> GetAllByCategoryId(string languageId, PublicGetProductPagingRequest request)
+        public async Task<PagedResult<ProductViewModel>> GetAllPaging(string languageId, PublicGetProductPagingRequest request)
         {
             // Select join
             var query = from p in _context.Products
