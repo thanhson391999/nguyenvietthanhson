@@ -25,6 +25,7 @@ namespace Vehicle_Appraisal_WebApi.Service
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
         private DbSet<AppUserDTO> dbset;
+
         public AccountService(DbContextDTO dbContextDTO, IEmailService emailService, IMapper mapper, IUserRoleService userRoleService, IConfiguration configuration, IUserService userService)
         {
             _emailService = emailService;
