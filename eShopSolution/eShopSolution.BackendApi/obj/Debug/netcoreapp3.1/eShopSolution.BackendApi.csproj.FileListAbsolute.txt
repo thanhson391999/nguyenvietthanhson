@@ -86,3 +86,4 @@ E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.BackendApi\bin\Debug\ne
 E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.BackendApi\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerGen.dll
 E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.BackendApi\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerUI.dll
 E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.BackendApi\obj\Debug\netcoreapp3.1\eShopSolution.BackendApi.MvcApplicationPartsAssemblyInfo.cs
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.BackendApi\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
