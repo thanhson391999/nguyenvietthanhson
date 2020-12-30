@@ -1,10 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "kufvwf+v5kOJzUzOye4B+VnxAIA/FerQKlz5MAklqcWSJeLHGHSWDdezl5uiYLAmHGaF+llk5/pEbyyzY+PixQ==",
+  "dgSpecHash": "/kGLD6MFfqZKUpwVULNoVlPnhDdXRSmrRXi2kjglLtHD/DnQn5FtjVeK6rEb3kZxu9QX3JuEmilPjjKtjiLrzA==",
   "success": true,
   "projectFilePath": "E:\\Github\\nguyenvietthanhson\\eShopSolution\\eShopSolution.ViewModels\\eShopSolution.ViewModels.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\fluentvalidation\\9.3.0\\fluentvalidation.9.3.0.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\fluentvalidation.aspnetcore\\9.3.0\\fluentvalidation.aspnetcore.9.3.0.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\9.3.0\\fluentvalidation.dependencyinjectionextensions.9.3.0.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.1\\microsoft.aspnetcore.http.features.5.0.1.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\2.1.0\\microsoft.extensions.dependencyinjection.abstractions.2.1.0.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.0\\microsoft.extensions.primitives.5.0.0.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\system.io.pipelines\\5.0.1\\system.io.pipelines.5.0.1.nupkg.sha512"
   ],
