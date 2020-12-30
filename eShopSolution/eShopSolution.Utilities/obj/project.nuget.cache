@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "UKNoDK11gZZbuU7e65RqYyimsIRxxFvfBJrLggxJEMCjpqyZze9dqRQbQy8LbZEJoojRRTpw/YtiqobnOTZX8A==",
+  "dgSpecHash": "JO8SLUjg8I5+U71tyZcjBF3wTSeYE1sNTHxyiZ9IwgNTcl0T/VEE2GEVcgbK1v+n3JzGEvk2bA+HkrOCSUoqHA==",
   "success": true,
   "projectFilePath": "E:\\Github\\nguyenvietthanhson\\eShopSolution\\eShopSolution.Utilities\\eShopSolution.Utilities.csproj",
   "expectedPackageFiles": [
@@ -13,7 +13,10 @@
     "C:\\Users\\Thanh Son\\.nuget\\packages\\microsoft.identitymodel.tokens\\5.5.0\\microsoft.identitymodel.tokens.5.5.0.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\newtonsoft.json\\10.0.1\\newtonsoft.json.10.0.1.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\5.6.3\\swashbuckle.aspnetcore.swagger.5.6.3.nupkg.sha512",
+    "C:\\Users\\Thanh Son\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\5.6.3\\swashbuckle.aspnetcore.swaggergen.5.6.3.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\system.collections.nongeneric\\4.3.0\\system.collections.nongeneric.4.3.0.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\system.collections.specialized\\4.3.0\\system.collections.specialized.4.3.0.nupkg.sha512",
