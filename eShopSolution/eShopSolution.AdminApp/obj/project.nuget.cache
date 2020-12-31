@@ -1,10 +1,6 @@
 {
   "version": 2,
-<<<<<<< HEAD
-  "dgSpecHash": "znSyoAJTsQg8xqEyrLZMIgPjF2+2dHkqmi7zWAnKYI16hrdowHl1eVkYRSr6plGgBMxRPpm0RXWNJj21GbrUwg==",
-=======
   "dgSpecHash": "swt4vaGrcY53P+7WjxUkW8nlmuY4yhy+xUW0PcJwRKCi2Kcbr1bZrlefbcOshl5Z14EWLE1X/vkas+jxDbGEzQ==",
->>>>>>> d4224969452666d9ca8cbf9c452b19c6abb32b65
   "success": true,
   "projectFilePath": "E:\\Github\\nguyenvietthanhson\\eShopSolution\\eShopSolution.AdminApp\\eShopSolution.AdminApp.csproj",
   "expectedPackageFiles": [
@@ -192,5 +188,12 @@
     "C:\\Users\\Thanh Son\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
     "C:\\Users\\Thanh Son\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file E:\\Github\\nguyenvietthanhson\\eShopSolution\\eShopSolution.AdminApp\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }
