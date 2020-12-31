@@ -2,6 +2,7 @@ using eShopSolution.AdminApp.Service;
 using eShopSolution.Utilities;
 using eShopSolution.ViewModels.Validator.Users;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +30,13 @@ namespace eShopSolution.AdminApp
         {
             services.AddHttpClient();
 
+            // Add authentication
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(opt =>
+                {
+                    opt.LoginPath = "/User/Login";
+                });
+
             // Declare DI
             services.AddTransient<IUserApiClient, UserApiClient>();
 
@@ -55,6 +63,7 @@ namespace eShopSolution.AdminApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseAuthentication();
             app.UseRouting();
 
             app.UseAuthorization();
