@@ -24,7 +24,7 @@ namespace eShopSolution.BackendApi.Controllers
         // POST: api/users/login
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromForm] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             if (!ModelState.IsValid)
             {

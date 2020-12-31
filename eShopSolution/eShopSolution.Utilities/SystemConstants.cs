@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
@@ -78,6 +79,18 @@ namespace eShopSolution.Utilities
                       }
                 });
             });
+        }
+
+        public static void ConfigureRazorRuntimeCompilation(this IServiceCollection services)
+        {
+            IMvcBuilder builder = services.AddRazorPages();
+            var enviroment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+#if DEBUG
+            if (enviroment == Environments.Development)
+            {
+                builder.AddRazorRuntimeCompilation();
+            }
+#endif
         }
     }
 }
