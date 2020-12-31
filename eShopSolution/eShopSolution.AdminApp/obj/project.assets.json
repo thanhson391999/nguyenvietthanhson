@@ -3007,6 +3007,10 @@
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
           "Microsoft.AspNetCore.Authentication.JwtBearer": "3.1.10",
+<<<<<<< HEAD
+=======
+          "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "3.1.10",
+>>>>>>> d4224969452666d9ca8cbf9c452b19c6abb32b65
           "Swashbuckle.AspNetCore.SwaggerGen": "5.6.3"
         },
         "compile": {
