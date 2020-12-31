@@ -82,9 +82,8 @@ namespace eShopSolution.Application.System.Users
             var claims = new[]
             {
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.GivenName, user.FirstName+" "+user.LastName),
-                new Claim(ClaimTypes.Role, string.Join(";",roles)),
-                new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.GivenName, user.FirstName),
+                new Claim(ClaimTypes.Role, string.Join(";",roles))
             };
             var token = new JwtSecurityToken(
                 issuer,
