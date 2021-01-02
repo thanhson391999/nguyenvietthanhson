@@ -1,12 +1,15 @@
 ﻿using eShopSolution.Data.EF;
 using eShopSolution.Data.Entities;
+using eShopSolution.ViewModels.Common;
 using eShopSolution.ViewModels.System.Users;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +32,37 @@ namespace eShopSolution.Application.System.Users
             _configuration = configuration;
             _userManager = userManager;
             _signInManager = signInManager;
+        }
+
+        public async Task<PagedResult<UserViewModel>> GetUsersPaging(GetUserPagingRequest request)
+        {
+            // Select
+            var users = _userManager.Users;
+            // Filter
+            if (!string.IsNullOrEmpty(request.Keyword))
+            {
+                users = users.Where(x => x.UserName.Contains(request.Keyword) || x.PhoneNumber.Contains(request.Keyword));
+            }
+            // Paging
+            var totalRecord = await users.CountAsync();
+            var data = await users.Skip((request.PageIndex - 1) * request.PageSize)
+                            .Take(request.PageSize)
+                            .Select(x => new UserViewModel()
+                            {
+                                FirstName = x.FirstName,
+                                Email = x.Email,
+                                Id = x.Id,
+                                LastName = x.LastName,
+                                PhoneNumber = x.PhoneNumber,
+                                UserName = x.UserName
+                            }).ToListAsync();
+            // Select and projection
+            var pageResult = new PagedResult<UserViewModel>()
+            {
+                Items = data,
+                TotalRecord = totalRecord
+            };
+            return pageResult;
         }
 
         public async Task<string> Login(LoginRequest request)

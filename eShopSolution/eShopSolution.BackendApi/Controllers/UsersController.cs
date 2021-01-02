@@ -1,4 +1,6 @@
 ﻿using eShopSolution.Application.System.Users;
+using eShopSolution.ViewModels.Catalog.Products;
+using eShopSolution.ViewModels.Common;
 using eShopSolution.ViewModels.System.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,6 +14,7 @@ namespace eShopSolution.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -38,9 +41,10 @@ namespace eShopSolution.BackendApi.Controllers
             return Ok(token);
         }
 
-        // POST: api/users/register
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromForm] RegisterRequest request)
+        // POST: api/users
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             var result = await _userService.Register(request);
             if (result == false)
@@ -48,6 +52,14 @@ namespace eShopSolution.BackendApi.Controllers
                 return BadRequest();
             }
             return Ok();
+        }
+
+        // GET: api/users/paging?PageIndex=1&PageSize=10&Keyword=
+        [HttpGet("paging")]
+        public async Task<PagedResult<UserViewModel>> GetUsersPaging([FromQuery] GetUserPagingRequest request)
+        {
+            var pagedResult = await _userService.GetUsersPaging(request);
+            return pagedResult;
         }
     }
 }

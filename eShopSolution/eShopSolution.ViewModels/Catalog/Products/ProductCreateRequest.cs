@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace eShopSolution.ViewModels.Catalog.Products.Manage
+namespace eShopSolution.ViewModels.Catalog.Products
 {
-    public class ManageProductCreateRequest
+    public class ProductCreateRequest
     {
         public decimal Price { set; get; }
         public decimal OriginalPrice { set; get; }
