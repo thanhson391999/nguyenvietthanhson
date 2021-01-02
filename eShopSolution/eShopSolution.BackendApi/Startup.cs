@@ -1,7 +1,5 @@
-using eShopSolution.Application.Catalog.Products.Implements.Manage;
-using eShopSolution.Application.Catalog.Products.Implements.Public;
-using eShopSolution.Application.Catalog.Products.Interfaces.Manage;
-using eShopSolution.Application.Catalog.Products.Interfaces.Public;
+using eShopSolution.Application.Catalog.Products.Implements;
+using eShopSolution.Application.Catalog.Products.Interfaces;
 using eShopSolution.Application.Common;
 using eShopSolution.Application.System.Users;
 using eShopSolution.Data.EF;
@@ -11,19 +9,11 @@ using eShopSolution.ViewModels.Validator.Users;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace eShopSolution.BackendApi
 {
@@ -50,9 +40,8 @@ namespace eShopSolution.BackendApi
 
             // Declare DI
             services.AddTransient<IFileStorageService, FileStorageService>();
-            services.AddTransient<IManageProductService, ManageProductService>();
+            services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IPublicProductService, PublicProductService>();
             services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();

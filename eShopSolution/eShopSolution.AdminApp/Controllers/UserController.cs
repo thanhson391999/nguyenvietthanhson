@@ -2,80 +2,66 @@
 using eShopSolution.ViewModels.System.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace eShopSolution.AdminApp.Controllers
 {
-    public class UserController : Controller
+    [Authorize]
+    public class UserController : BaseController
     {
         private readonly IUserApiClient _userApiClient;
-        private readonly IConfiguration _configuration;
 
-        public UserController(IUserApiClient userApiClient, IConfiguration configuration)
+        public UserController(IUserApiClient userApiClient)
         {
-            _configuration = configuration;
             _userApiClient = userApiClient;
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public async Task<IActionResult> Index(string Keyword, int PageIndex = 1, int PageSize = 2)
         {
-            if (User.Identity.IsAuthenticated)
+            var token = HttpContext.Session.GetString("Token");
+            var request = new GetUserPagingRequest()
             {
-                return RedirectToAction("Index", "Home");
-            }
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> LoginAction(LoginRequest request)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var token = await _userApiClient.Login(request);
-            var userPrincipal = this.ValidateToken(token);
-            var authProperties = new AuthenticationProperties
-            {
-                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7),
-                // Lưu phiên đăng nhập
-                IsPersistent = false
+                Token = token,
+                Keyword = Keyword,
+                PageIndex = PageIndex,
+                PageSize = PageSize
             };
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, authProperties);
-            return RedirectToAction("Index", "Home");
+            var pagedResult = await _userApiClient.GetUsersPaging(request);
+            return View(pagedResult);
         }
 
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "User");
+            HttpContext.Session.Remove("Token");
+            return RedirectToAction("Index", "Login");
         }
 
-        private ClaimsPrincipal ValidateToken(string jwtToken)
+        [HttpGet]
+        public IActionResult Create()
         {
-            IdentityModelEventSource.ShowPII = true;
+            return View();
+        }
 
-            SecurityToken validateToken;
-            TokenValidationParameters tokenValidationParameters = new TokenValidationParameters();
-
-            tokenValidationParameters.ValidateLifetime = true;
-            tokenValidationParameters.ValidAudience = _configuration["JWT:Audience"];
-            tokenValidationParameters.ValidIssuer = _configuration["JWT:Issuer"];
-            tokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
-            ClaimsPrincipal principal = new JwtSecurityTokenHandler().ValidateToken(jwtToken, tokenValidationParameters, out validateToken);
-            return principal;
+        [HttpPost]
+        public async Task<IActionResult> CreateAction(RegisterRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Create");
+            }
+            var result = await _userApiClient.Register(request);
+            if (result == true)
+            {
+                return RedirectToAction("Index");
+            }
+            return BadRequest();
         }
     }
 }

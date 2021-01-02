@@ -1,18 +1,18 @@
 ﻿using eShopSolution.ViewModels.Catalog;
 using eShopSolution.ViewModels.Catalog.ProductImages;
-using eShopSolution.ViewModels.Catalog.Products.Manage;
+using eShopSolution.ViewModels.Catalog.Products;
 using eShopSolution.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace eShopSolution.Application.Catalog.Products.Interfaces.Manage
+namespace eShopSolution.Application.Catalog.Products.Interfaces
 {
-    public interface IManageProductService
+    public interface IProductService
     {
-        Task<int> Create(ManageProductCreateRequest productCreateRequest);
+        Task<int> Create(ProductCreateRequest productCreateRequest);
 
-        Task<int> Update(int id, ManageProductUpdateRequest productEditRequest);
+        Task<int> Update(int id, ProductUpdateRequest productEditRequest);
 
         Task<int> Delete(int productId);
 
@@ -24,7 +24,7 @@ namespace eShopSolution.Application.Catalog.Products.Interfaces.Manage
 
         Task AddViewcount(int productId);
 
-        Task<PagedResult<ProductViewModel>> GetAllPaging(ManageGetProductPagingRequest request);
+        Task<PagedResult<ProductViewModel>> GetAllPaging(GetManageProductPagingRequest request);
 
         Task<int> AddImage(int productId, ProductImageCreateRequest productImageCreateRequest);
 
@@ -35,5 +35,7 @@ namespace eShopSolution.Application.Catalog.Products.Interfaces.Manage
         Task<List<ProductImageViewModel>> GetAllImage(int productId);
 
         Task<ProductImageViewModel> GetByIdImage(int imageId);
+
+        Task<PagedResult<ProductViewModel>> GetAllPagingByCategoryId(string languageId, GetPublicProductPagingRequest request);
     }
 }

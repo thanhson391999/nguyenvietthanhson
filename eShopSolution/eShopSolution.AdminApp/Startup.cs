@@ -34,7 +34,7 @@ namespace eShopSolution.AdminApp
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(opt =>
                 {
-                    opt.LoginPath = "/User/Login";
+                    opt.LoginPath = "/Login/Index";
                 });
 
             // Declare DI
@@ -42,6 +42,12 @@ namespace eShopSolution.AdminApp
 
             services.AddControllersWithViews()
                     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
+
+            // Add Session
+            services.AddSession(opt =>
+            {
+                opt.IdleTimeout = TimeSpan.FromMinutes(10);
+            });
 
             // Configure razor runtime compilation
             services.ConfigureRazorRuntimeCompilation();
@@ -67,7 +73,7 @@ namespace eShopSolution.AdminApp
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
