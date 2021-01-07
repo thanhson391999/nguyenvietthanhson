@@ -29,6 +29,7 @@ namespace eShopSolution.BackendApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             // Connection Db
             services.AddDbContext<EShopDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString)));
@@ -64,6 +65,12 @@ namespace eShopSolution.BackendApi
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(opt =>
+            {
+                opt.AllowAnyHeader();
+                opt.AllowAnyMethod();
+                opt.AllowAnyOrigin();
+            });
             app.UseHttpsRedirection();
 
             app.UseAuthentication();

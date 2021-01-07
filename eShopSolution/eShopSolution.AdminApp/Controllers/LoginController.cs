@@ -40,18 +40,19 @@ namespace eShopSolution.AdminApp.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> IndexAction(LoginRequest request)
+        public async Task<IActionResult> LoginAction(/*LoginRequest request*/)
         {
-            if (!ModelState.IsValid)
-            {
-                return View("Login");
-            }
-            var token = await _userApiClient.Login(request);
-            if (string.IsNullOrEmpty(token))
-            {
-                return BadRequest();
-            }
-            HttpContext.Session.SetString("Token", token);
+            //if (!ModelState.IsValid)
+            //{
+            //    return View("Index");
+            //}
+            //var token = await _userApiClient.Login(request);
+            //if (string.IsNullOrEmpty(token))
+            //{
+            //    return BadRequest();
+            //}
+            //HttpContext.Session.SetString("Token", token);
+            var token = HttpContext.Request.Headers["Authorization"];
             var userPrincipal = this.ValidateToken(token);
             var authProperties = new AuthenticationProperties
             {
@@ -60,7 +61,7 @@ namespace eShopSolution.AdminApp.Controllers
                 IsPersistent = false
             };
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, authProperties);
-            return RedirectToAction("Index", "Home");
+            return Ok();
         }
 
         private ClaimsPrincipal ValidateToken(string jwtToken)

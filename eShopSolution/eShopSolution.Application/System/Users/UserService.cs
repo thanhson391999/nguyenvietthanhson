@@ -65,29 +65,33 @@ namespace eShopSolution.Application.System.Users
             return pageResult;
         }
 
-        public async Task<string> Login(LoginRequest request)
+        public async Task<ApiResult<string>> Login(LoginRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
             if (user == null)
             {
-                return null;
+                return new ApiErrorResult<string>("Tên đăng nhập không tồn tại");
             }
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
             if (!result.Succeeded)
             {
-                return null;
+                return new ApiErrorResult<string>("Mật khẩu không đúng");
             }
             var token = GenarateToken(user);
-            return token;
+            return new ApiSuccessResult<string>(token);
         }
 
-        public async Task<bool> Register(RegisterRequest request)
+        public async Task<ApiResult<string>> Register(RegisterRequest request)
         {
             var userName = await _userManager.FindByNameAsync(request.UserName);
-            var email = await _userManager.FindByEmailAsync(request.Email);
-            if (userName != null || email != null)
+            if (userName != null)
             {
-                return false;
+                return new ApiErrorResult<string>("Tên đăng nhập đã tồn tại");
+            }
+            var email = await _userManager.FindByEmailAsync(request.Email);
+            if (email != null)
+            {
+                return new ApiErrorResult<string>("Email đã tồn tại");
             }
             var user = new AppUser()
             {
@@ -101,9 +105,9 @@ namespace eShopSolution.Application.System.Users
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
             {
-                return false;
+                return new ApiErrorResult<string>("Đăng ký không thành công");
             }
-            return true;
+            return new ApiSuccessResult<string>("Đăng ký thành công");
         }
 
         private string GenarateToken(AppUser user)
