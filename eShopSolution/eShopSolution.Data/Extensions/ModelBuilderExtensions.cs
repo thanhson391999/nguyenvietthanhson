@@ -176,12 +176,12 @@ namespace eShopSolution.Data.Extensions
             modelBuilder.Entity<AppUser>().HasData(new AppUser
             {
                 Id = ADMIN_ID,
-                UserName = "admin",
-                NormalizedUserName = "admin",
+                UserName = "admin@1234",
+                NormalizedUserName = "admin@1234",
                 Email = "thanhson3121999@gmail.com",
                 NormalizedEmail = "thanhson3121999@gmail.com",
                 EmailConfirmed = true,
-                PasswordHash = hasher.HashPassword(null, "1234"),
+                PasswordHash = hasher.HashPassword(null, "Admin@1234"),
                 SecurityStamp = string.Empty,
                 FirstName = "Thanh",
                 LastName = "Son",

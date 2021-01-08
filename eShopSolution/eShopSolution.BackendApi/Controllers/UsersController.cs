@@ -27,31 +27,33 @@ namespace eShopSolution.BackendApi.Controllers
         // POST: api/users/login
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var token = await _userService.Login(request);
-            if (string.IsNullOrEmpty(token))
+            var apiResult = await _userService.Login(request);
+            if (apiResult.IsSuccessed == true)
             {
-                return BadRequest();
+                return Ok(apiResult);
             }
-            return Ok(token);
+            else
+                return BadRequest(apiResult);
         }
 
         // POST: api/users
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        public async Task<IActionResult> Register(RegisterRequest request)
         {
-            var result = await _userService.Register(request);
-            if (result == false)
+            var apiResult = await _userService.Register(request);
+            if (apiResult.IsSuccessed == true)
             {
-                return BadRequest();
+                return Ok(apiResult);
             }
-            return Ok();
+            else
+                return BadRequest(apiResult);
         }
 
         // GET: api/users/paging?PageIndex=1&PageSize=10&Keyword=

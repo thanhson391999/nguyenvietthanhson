@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace eShopSolution.AdminApp.Controllers
 {
     [Authorize]
-    public class UserController : BaseController
+    public class UserController : Controller
     {
         private readonly IUserApiClient _userApiClient;
 
@@ -39,8 +39,8 @@ namespace eShopSolution.AdminApp.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            HttpContext.Session.Remove("Token");
-            return RedirectToAction("Index", "Login");
+            //HttpContext.Session.Remove("Token");
+            return Ok();
         }
 
         [HttpGet]
