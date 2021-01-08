@@ -1,6 +1,7 @@
-﻿// Load data
-$(document).ready(function () {
+﻿$(document).ready(function () {
+    // Load data
     getUser();
+    // Add User
     $('#btnSaveAdd').click(function () {
         addUserValidate();
         if ($('#frmAddUser').valid())
@@ -9,13 +10,27 @@ $(document).ready(function () {
 });
 
 // home config
-var homeConfig = {
-    PageSize: 5,
+var userConfig = {
+    PageSize: 1,
     PageIndex: 1
 };
 
 // validate
 var addUserValidate = function () {
+    $.validator.addMethod("notover100years", function (datePicker) {
+        var dateNow = new Date().toLocaleDateString().split('/');
+        datePicker = datePicker.split('-');
+        if (parseInt(datePicker[0]) >= parseInt(dateNow[2]) - 100)
+            return true;
+        return false;
+    });
+    $.validator.addMethod("notoverdatenow", function (datePicker) {
+        var dateNow = new Date().toLocaleDateString().split('/');
+        datePicker = datePicker.split('-');
+        if (parseInt(datePicker[0]) <= parseInt(dateNow[2]))
+            return true;
+        return false;
+    });
     $('#frmAddUser').validate({
         rules: {
             txtFirstName: {
@@ -27,7 +42,9 @@ var addUserValidate = function () {
                 maxlength: 200
             },
             txtDob: {
-                required: true
+                required: true,
+                notover100years: $('#txtDob').val(),
+                notoverdatenow: $('#txtDob').val()
             },
             txtEmail: {
                 required: true,
@@ -62,11 +79,13 @@ var addUserValidate = function () {
                 maxlength: "Họ không quá 200 ký tự"
             },
             txtDob: {
-                required: "Ngày sinh trống"
+                required: "Ngày sinh trống",
+                notover100years: "Ngày sinh không vượt quá 100 năm",
+                notoverdatenow: "Ngày sinh không vượt quá năm hiện tại",
             },
             txtEmail: {
                 required: "Email trống",
-                email: "Định dạng Email không đúng"
+                email: "Email không hợp lệ"
             },
             txtPhoneNumber: {
                 required: "Số điện thoại trống",
@@ -90,14 +109,31 @@ var addUserValidate = function () {
     });
 };
 
+// Pagination
+var paging = function (totalRow, callBack) {
+    var totalPages = Math.ceil(totalRow / userConfig.PageSize);
+    $('#pagination').twbsPagination({
+        totalPages: totalPages,
+        visiblePages: 5,
+        first: "Đầu",
+        prev: "Trước",
+        next: "Tiếp",
+        last: "Cuối",
+        onPageClick: function (event, pageIndex) {
+            userConfig.PageIndex = pageIndex
+            setTimeout(callBack, 200);
+        }
+    });
+};
+
 // Get User
 var getUser = function () {
     $.ajax({
         url: atob(window.sessionStorage.getItem("urlApi")) + "/api/users/paging",//?PageIndex=1 & PageSize=10& Keyword=
         type: "GET",
         data: {
-            PageIndex: homeConfig.PageIndex,
-            PageSize: homeConfig.PageSize,
+            PageIndex: userConfig.PageIndex,
+            PageSize: userConfig.PageSize,
             Keyword: null
         },
         dataType: "json",
@@ -118,6 +154,9 @@ var getUser = function () {
                 });
             });
             $('#tblData').html(html);
+            paging(response.totalRecord, function () {
+                getUser();
+            });
         },
         error: function () {
             Swal.fire({
@@ -155,6 +194,8 @@ var addUser = function () {
                 timer: 2000
             })
             $('.modal.fade').modal('hide');
+            $('#frmAddUser').validate().destroy();
+            $('#frmAddUser')[0].reset();
         },
         error: function (response) {
             Swal.fire({
