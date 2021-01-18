@@ -34,6 +34,40 @@ namespace eShopSolution.Application.System.Users
             _signInManager = signInManager;
         }
 
+        public async Task<ApiResult<string>> Delete(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return new ApiErrorResult<string>("Người dùng không tồn tại");
+            }
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+                return new ApiSuccessResult<string>("Xóa thành công");
+            else
+                return new ApiErrorResult<string>("Xóa thất bại");
+        }
+
+        public async Task<ApiResult<UserViewModel>> GetById(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return new ApiErrorResult<UserViewModel>("Người dùng không tồn tại");
+            }
+            var userVM = new UserViewModel()
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PhoneNumber = user.PhoneNumber,
+                UserName = user.UserName,
+                Dob = user.Dob
+            };
+            return new ApiSuccessResult<UserViewModel>(userVM);
+        }
+
         public async Task<PagedResult<UserViewModel>> GetUsersPaging(GetUserPagingRequest request)
         {
             // Select
@@ -105,9 +139,33 @@ namespace eShopSolution.Application.System.Users
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
             {
-                return new ApiErrorResult<string>("Đăng ký không thành công");
+                return new ApiErrorResult<string>("Đăng ký thất bại");
             }
             return new ApiSuccessResult<string>("Đăng ký thành công");
+        }
+
+        public async Task<ApiResult<string>> Update(Guid id, UserUpdateRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return new ApiErrorResult<string>("Người dùng không tồn tại");
+            }
+            var emailInvalid = await _userManager.Users.AnyAsync(x => x.Email == request.Email && x.Id != id);
+            if (emailInvalid)
+            {
+                return new ApiErrorResult<string>("Email đã tồn tại");
+            }
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Dob = request.Dob;
+            user.Email = request.Email;
+            user.PhoneNumber = request.PhoneNumber;
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+                return new ApiSuccessResult<string>("Cập nhật thành công");
+            else
+                return new ApiErrorResult<string>("Cập nhật thất bại");
         }
 
         private string GenarateToken(AppUser user)

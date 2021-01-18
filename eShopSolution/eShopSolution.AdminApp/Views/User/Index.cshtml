@@ -6,6 +6,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @section scripts{
+    <script src="~/plugins/Mustache/mustache.min.js"></script>
+    <link href="~/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css" rel="stylesheet" />
+    <script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/plugins/moment/moment.min.js"></script>
     <script src="~/Controller/UserController.js"></script>
 }
 <div class="container-fluid">
@@ -28,6 +32,7 @@
                             <th>Số điện thoại</th>
                             <th>Tài khoản</th>
                             <th>Email</th>
+                            <th>Options</th>
                         </tr>
                     </thead>
                     <tbody id="tblData"></tbody>
@@ -35,15 +40,6 @@
             </div>
             <div id="pagination" class="pagination"></div>
         </div>
-        <script id="data-template" type="x-tmpl-mustache">
-        <tr>
-            <td>{{ FirstName }}</td>
-            <td>{{ LastName }}</td>
-            <td>{{ PhoneNumber }}</td>
-            <td>{{ UserName }}</td>
-            <td>{{ Email }}</td>
-        </tr>
-        </script>
     </div>
 </div>
 
@@ -62,36 +58,36 @@
                     <div class="row">
                         <div class="form-group col">
                             <label class="control-label">Tên</label>
-                            <input id="txtFirstName" name="txtFirstName" class="form-control" />
+                            <input id="txtFirstNameAdd" name="txtFirstName" class="form-control" />
                         </div>
                         <div class="form-group col">
                             <label class="control-label">Họ</label>
-                            <input id="txtLastName" name="txtLastName" class="form-control" />
+                            <input id="txtLastNameAdd" name="txtLastName" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Ngày sinh</label>
-                        <input type="date" id="txtDob" name="txtDob" class="form-control" />
+                        <input type="date" id="txtDobAdd" name="txtDob" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label class="control-label">Email</label>
-                        <input id="txtEmail" name="txtEmail" class="form-control" />
+                        <input id="txtEmailAdd" name="txtEmail" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label class="control-label">Số điện thoại</label>
-                        <input id="txtPhoneNumber" name="txtPhoneNumber" class="form-control" />
+                        <input id="txtPhoneNumberAdd" name="txtPhoneNumber" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label class="control-label">Tài khoản</label>
-                        <input id="txtUserName" name="txtUserName" class="form-control" />
+                        <input id="txtUserNameAdd" name="txtUserName" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label class="control-label">Mật khẩu</label>
-                        <input type="password" id="txtPassword" name="txtPassword" class="form-control" />
+                        <input type="password" id="txtPasswordAdd" name="txtPassword" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label class="control-label">Xác nhận mật khẩu</label>
-                        <input type="password" id="txtConfirmPassword" name="txtConfirmPassword" class="form-control" />
+                        <input type="password" id="txtConfirmPasswordAdd" name="txtConfirmPassword" class="form-control" />
                     </div>
                 </form>
             </div>
@@ -102,3 +98,67 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Update User-->
+<div class="modal fade" id="modalUpdateUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Cập nhật người dùng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="frmUpdateUser">
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="control-label">Tên</label>
+                            <input id="txtFirstNameUpdate" name="txtFirstName" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="control-label">Họ</label>
+                            <input id="txtLastNameUpdate" name="txtLastName" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Ngày sinh</label>
+                        <input type="date" id="txtDobUpdate" name="txtDob" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Email</label>
+                        <input id="txtEmailUpdate" name="txtEmail" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Số điện thoại</label>
+                        <input id="txtPhoneNumberUpdate" name="txtPhoneNumber" class="form-control" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnCloseUpdate" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" id="btnSaveUpdate" class="btn btn-primary">Lưu lại</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="data-template" type="text/template">
+    <tr>
+        <td>{{ FirstName }}</td>
+        <td>{{ LastName }}</td>
+        <td>{{ PhoneNumber }}</td>
+        <td>{{ UserName }}</td>
+        <td>{{ Email }}</td>
+        <td>
+            <ul class="list-inline m-0">
+                <li class="list-inline-item">
+                    <button class="btn btn-success btn-sm rounded-0" id="btnUpdate" data-id="{{Id}}" data-toggle="modal" data-target="#modalUpdateUser" onclick="userController.setData()" type="button" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                </li>
+                <li class="list-inline-item">
+                    <button class="btn btn-danger btn-sm rounded-0" id="btnDelete" data-id="{{Id}}" onclick="userController.deleteConfirm()" type="button" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+                </li>
+            </ul>
+        </td>
+    </tr>
+</script>

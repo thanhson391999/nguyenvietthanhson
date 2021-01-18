@@ -8,10 +8,11 @@ $(document).ready(function () {
             login();
     });
     $('.bg-primary').keypress(function (e) {
-        if (e.which == 13)
+        if (e.which == 13) {
             frmLoginValidate();
             if ($('#frmLogin').valid())
                 login();
+        }
     });
 });
 
