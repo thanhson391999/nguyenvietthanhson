@@ -1,4 +1,3 @@
-using eShopSolution.AdminApp.Service;
 using eShopSolution.Utilities;
 using eShopSolution.ViewModels.Validator.Users;
 using FluentValidation.AspNetCore;
@@ -36,9 +35,6 @@ namespace eShopSolution.AdminApp
                 {
                     opt.LoginPath = "/Login/Index";
                 });
-
-            // Declare DI
-            services.AddTransient<IUserApiClient, UserApiClient>();
 
             services.AddControllersWithViews()
                     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());

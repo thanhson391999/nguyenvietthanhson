@@ -1,5 +1,4 @@
-﻿using eShopSolution.AdminApp.Service;
-using eShopSolution.ViewModels.System.Users;
+﻿using eShopSolution.ViewModels.System.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -19,12 +18,10 @@ namespace eShopSolution.AdminApp.Controllers
     public class LoginController : Controller
     {
         private readonly IConfiguration _configuration;
-        private readonly IUserApiClient _userApiClient;
 
-        public LoginController(IUserApiClient userApiClient, IConfiguration configuration)
+        public LoginController(IConfiguration configuration)
         {
             _configuration = configuration;
-            _userApiClient = userApiClient;
         }
 
         [HttpGet]

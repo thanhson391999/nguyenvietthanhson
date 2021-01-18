@@ -35,9 +35,7 @@ namespace eShopSolution.BackendApi.Controllers
             }
             var apiResult = await _userService.Login(request);
             if (apiResult.IsSuccessed == true)
-            {
                 return Ok(apiResult);
-            }
             else
                 return BadRequest(apiResult);
         }
@@ -49,9 +47,7 @@ namespace eShopSolution.BackendApi.Controllers
         {
             var apiResult = await _userService.Register(request);
             if (apiResult.IsSuccessed == true)
-            {
                 return Ok(apiResult);
-            }
             else
                 return BadRequest(apiResult);
         }
@@ -62,6 +58,39 @@ namespace eShopSolution.BackendApi.Controllers
         {
             var pagedResult = await _userService.GetUsersPaging(request);
             return pagedResult;
+        }
+
+        // PUT: api/users/1
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, UserUpdateRequest request)
+        {
+            var apiResult = await _userService.Update(id, request);
+            if (apiResult.IsSuccessed == true)
+                return Ok(apiResult);
+            else
+                return BadRequest(apiResult);
+        }
+
+        // GET: api/users/1
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var apiResult = await _userService.GetById(id);
+            if (apiResult.IsSuccessed == true)
+                return Ok(apiResult);
+            else
+                return BadRequest(apiResult);
+        }
+
+        // DELETE: api/users/1
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var apiResult = await _userService.Delete(id);
+            if (apiResult.IsSuccessed == true)
+                return Ok(apiResult);
+            else
+                return BadRequest(apiResult);
         }
     }
 }

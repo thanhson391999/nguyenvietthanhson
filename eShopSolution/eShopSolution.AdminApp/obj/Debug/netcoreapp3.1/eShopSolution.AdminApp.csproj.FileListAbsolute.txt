@@ -445,5 +445,4 @@ E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.AdminApp\bin\Debug\netc
 E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.AdminApp\bin\Debug\netcoreapp3.1\System.Net.Http.Formatting.dll
 E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.AdminApp\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
 E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.AdminApp\obj\Debug\netcoreapp3.1\Razor\Views\User\Index.cshtml.g.cs
-E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.AdminApp\obj\Debug\netcoreapp3.1\Razor\Views\User\Create.cshtml.g.cs
 E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.AdminApp\obj\Debug\netcoreapp3.1\Razor\Views\Login\Index.cshtml.g.cs
