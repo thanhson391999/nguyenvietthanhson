@@ -1,0 +1,55 @@
+﻿<!-- Modal Add User -->
+<div class="modal fade" id="modalAddUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm người dùng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="frmAddUser">
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="control-label">Tên</label>
+                            <input id="txtFirstNameAdd" name="txtFirstName" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="control-label">Họ</label>
+                            <input id="txtLastNameAdd" name="txtLastName" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Ngày sinh</label>
+                        <input type="date" id="txtDobAdd" name="txtDob" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Email</label>
+                        <input id="txtEmailAdd" name="txtEmail" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Số điện thoại</label>
+                        <input id="txtPhoneNumberAdd" name="txtPhoneNumber" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Tài khoản</label>
+                        <input id="txtUserNameAdd" name="txtUserName" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Mật khẩu</label>
+                        <input type="password" id="txtPasswordAdd" name="txtPassword" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Xác nhận mật khẩu</label>
+                        <input type="password" id="txtConfirmPasswordAdd" name="txtConfirmPassword" class="form-control" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnCloseAdd" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" id="btnSaveAdd" class="btn btn-primary">Lưu lại</button>
+            </div>
+        </div>
+    </div>
+</div>

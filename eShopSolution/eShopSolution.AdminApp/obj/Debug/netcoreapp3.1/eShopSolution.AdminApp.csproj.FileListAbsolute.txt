@@ -446,3 +446,6 @@ E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.AdminApp\bin\Debug\netc
 E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.AdminApp\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
 E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.AdminApp\obj\Debug\netcoreapp3.1\Razor\Views\User\Index.cshtml.g.cs
 E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.AdminApp\obj\Debug\netcoreapp3.1\Razor\Views\Login\Index.cshtml.g.cs
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.AdminApp\obj\Debug\netcoreapp3.1\Razor\Views\User\_AddUserModal.cshtml.g.cs
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.AdminApp\obj\Debug\netcoreapp3.1\Razor\Views\User\_UpdateUserModal.cshtml.g.cs
+E:\Github\nguyenvietthanhson\eShopSolution\eShopSolution.AdminApp\obj\Debug\netcoreapp3.1\Razor\Views\User\_MustacheTemplate.cshtml.g.cs

@@ -1,0 +1,20 @@
+﻿<script id="data-template" type="text/template">
+    <tr>
+        <td>{{ FirstName }}</td>
+        <td>{{ LastName }}</td>
+        <td>{{ Dob }}</td>
+        <td>{{ PhoneNumber }}</td>
+        <td>{{ UserName }}</td>
+        <td>{{ Email }}</td>
+        <td>
+            <ul class="list-inline m-0">
+                <li class="list-inline-item">
+                    <button class="btn btn-success btn-sm rounded-0" id="btnUpdate" data-id="{{Id}}" data-toggle="modal" data-target="#modalUpdateUser" onclick="userController.setData()" type="button" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                </li>
+                <li class="list-inline-item">
+                    <button class="btn btn-danger btn-sm rounded-0" id="btnDelete" data-id="{{Id}}" onclick="userController.deleteConfirm()" type="button" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+                </li>
+            </ul>
+        </td>
+    </tr>
+</script>

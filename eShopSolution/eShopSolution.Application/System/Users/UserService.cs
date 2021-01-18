@@ -86,6 +86,7 @@ namespace eShopSolution.Application.System.Users
                                 FirstName = x.FirstName,
                                 Email = x.Email,
                                 Id = x.Id,
+                                Dob = x.Dob,
                                 LastName = x.LastName,
                                 PhoneNumber = x.PhoneNumber,
                                 UserName = x.UserName

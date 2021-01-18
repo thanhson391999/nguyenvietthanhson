@@ -5,7 +5,9 @@ var userConfig = {
 };
 // common (promise object)
 var deferred = $.Deferred();
+// save user from function get user by id
 var user;
+// controller
 var userController = {
     init: function () {
         // Load data
@@ -24,16 +26,27 @@ var userController = {
                 userController.updateUser(id);
             };
         });
+        // Filter User
+        $('#btnSearch').click(function () {
+            var keyword = $('#txtSearch').val();
+            userController.searchUser(keyword);
+        });
+        $('#txtSearch').off('keypress').on('keypress', function (e) {
+            if (e.which == 13) {
+                var keyword = $('#txtSearch').val();
+                userController.searchUser(keyword);
+            }
+        });
     },
     // Get User
-    getUser: async function () {
+    getUser: async function (changePageSize, keyword) {
         await $.ajax({
             url: atob(window.sessionStorage.getItem("urlApi")) + "/api/users/paging",
             type: "GET",
             data: {
                 PageIndex: userConfig.PageIndex,
                 PageSize: userConfig.PageSize,
-                Keyword: null
+                Keyword: keyword
             },
             dataType: "json",
             headers: {
@@ -48,6 +61,7 @@ var userController = {
                         Id: item.id,
                         FirstName: item.firstName,
                         LastName: item.lastName,
+                        Dob: new moment(item.dob).format('MM-DD-YYYY'),
                         PhoneNumber: item.phoneNumber,
                         UserName: item.userName,
                         Email: item.email
@@ -55,8 +69,8 @@ var userController = {
                 });
                 $('#tblData').html(html);
                 userController.paging(response.totalRecord, function () {
-                    userController.getUser();
-                });
+                    userController.getUser(false, keyword);
+                }, changePageSize);
                 deferred.resolve();
             },
             error: function () {
@@ -98,7 +112,7 @@ var userController = {
                 $('#modalAddUser').modal('hide');
                 $('#frmAddUser').validate().destroy();
                 $('#frmAddUser')[0].reset();
-                userController.getUser();
+                userController.getUser(true);
             },
             error: function (response) {
                 Swal.fire({
@@ -203,7 +217,7 @@ var userController = {
                     showConfirmButton: false,
                     timer: 2000
                 })
-                userController.getUser();
+                userController.getUser(true);
             },
             error: function (response) {
                 Swal.fire({
@@ -402,9 +416,14 @@ var userController = {
         });
     },
     // Pagination
-    paging: function (totalRow, callBack) {
+    paging: function (totalRow, callBack, changePageSize) {
         var totalPages = Math.ceil(totalRow / userConfig.PageSize);
         if (totalPages > 1) {
+            if ($('#pagination a').length == 0 || changePageSize == true) {
+                $('#pagination').empty();
+                $('#pagination').removeData("twbs-pagination");
+                $('#pagination').unbind("page");
+            }
             $('#pagination').twbsPagination({
                 totalPages: totalPages,
                 visiblePages: 5,
@@ -420,6 +439,11 @@ var userController = {
         }
         else
             $('#pagination').twbsPagination('destroy');
+    },
+    // Filter
+    searchUser: function (keyword) {
+        userConfig.PageIndex = 1;
+        userController.getUser(true, keyword);
     }
 }
 userController.init();
